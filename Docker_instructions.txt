@@ -1,0 +1,168 @@
+КРАТКОЕ ОПИСАНИЕ КАК ПОЛЬЗОВАТЬСЯ DOCKER
+ОТКУДА СКАЧАТЬ: https://www.docker.com/products/docker-desktop
+
+/=======================================================/
+ФАЙЛЫ DOCKER
+/=======================================================/
+
+Dockerfile
+Example of Dockerfile
+/*********************************/
+//на основе какого image создается текущий image
+FROM node
+
+//создает рабочую директорию в imge
+WORKDIR /app
+
+//копирует файл package.json из текущей директории в директории docker image /app
+COPY package.json /app 
+
+//выполняет команду npm install
+RUN npm install
+
+//копирует все файлы из текущей директории в директории docker image /app
+COPY . /app  
+
+//значение переменной среды по умолчанию
+ENV SERVER_API_URL="http://localhost:5000"
+
+//пробрасывает порты из image (не влияет ни на что, но нужно)
+EXPOSE 3000
+
+//выполняет команду npm start
+CMD ["npm", "start"]
+/********************************/
+
+
+/***********************************/
+.dockerignore
+/***********************************/
+в этом файле указываются которые не должны копироваться в docker image
+Например,
+node_modules
+Dockerfile
+.git
+.dockerignore
+.env
+
+
+/=======================================================/
+НЕКОТОРЫЕ КОМАНДЫ DOCKER
+/=======================================================/
+
+/*******************************************/
+СОЗДАНИЕ DOCKER IMAGE
+/*******************************************/
+Создать Docker image с указанием пути к Dockerfile
+docker build -f <path_to_dockerfile>
+Создать Docker image используя файлы текущей директории (в которой Dockerfile) 
+docker build .
+Создать Docker image с указанным названием name_of_image в текущей директории
+docker build -t <name_of_image> .
+Создать Docker image с указанием пути к Dockerfile
+docker build -f "dockerfile_full_path" -t <name_of_image> "path_to_workdir" 
+/*******************************************/
+ПРОСМОТР ДОСТУПНЫХ DOCKER IMAGES
+/*******************************************/
+Посмотреть какие image есть в Docker
+docker image ls
+
+/*******************************************/
+УДАЛЕНИЕ DOCKER IMAGES
+/*******************************************/
+Удалить image из Docker
+docker image rm <image_id or image_name>
+
+
+/*************************************/
+СОЗДАНИЕ И ЗАПУСК DOCKER CONTAINER
+/*************************************/
+Создать и запустить Docker Container с названием name_of_container на основе name_of_image
+docker run -d --name <name_of_container> <name_of_image>
+
+Создать и запустить Docker Container с названием name_of_container на основе name_of_image
+при этом перенаправлять трафик с external_port на docker_port
+то есть если в браузере зайти на external_port, то он будет перенаправлен на docker_port
+на docker_port в docker container крутится наше приложение (например Reactjs)
+docker run -d -p <external_port>:<docker_port> --name <name_of_container> <name_of_image>
+
+-d указывает что запустить контейнер в фоновом режиме
+-p <external_port>:<[docker_port> - указывает откуда и куда перенаправлять трафик
+
+/*************************************/
+СОЗДАНИЕ И ЗАПУСК DOCKER CONTAINER
+СИНХРОНИЗАЦИЯ КОДА ПРОЕКТА С КОДОМ В DOCKER CONATAINER
+/*************************************/
+При изменении кода проекта, чтобы снова запустить новый код в docker
+нужно удалить прошлый container и image, собрать новый image
+и заново запустить container
+Это не очень удобно.
+Можно синхронизировать код проекта с кодом в container
+docker run -v <local_project_directory>:<container_directory> -d -p <external_port>:docker_port --name <name_of_container> <name_of_image>
+local_project_directory - директория проекта на локальном компьютере
+container_directory - директория в container
+
+В таком случае изменения в docker container также будут переноситься и в проект на локальной машине
+Можно  сделать docker container только для чтения, в таком случае docker container не сможет записывать на локальную машину
+docker run -v <local_project_directory>:<container_directory>:ro -d -p <external_port>:docker_port --name <name_of_container> <name_of_image>
+
+ro - указывает что только для чтения read only
+
+Example:
+docker run -v D:\project\src:/app/src -d -p <external_port>:<docker_port> --name <name_of_container> <name_of_image>
+
+For Power Shell
+docker run -v ${pwd}/src:/app/src -d -p <external_port>:<docker_port> --name <name_of_container> <name_of_image>
+
+For Windows command line
+docker run -v %cd%/src:/app/src -d -p <external_port>:<docker_port> --name <name_of_container> <name_of_image>
+
+For linux
+docker run -v $(pwd)/src:/app/src -d -p <external_port>:<docker_port> --name <name_of_container> <name_of_image>
+
+
+Windows ISSUE (если не будет запускаться под Windows то добавить штуку с CHOKIDAR_USEPOLLING)
+docker run -e CHOKIDAR_USEPOLLING=true -v %cd%:/app -d -p <external_port>:<docker_port> --name <name_of_container> <name_of_image>
+
+
+/*************************************/
+ПЕРЕМЕННЫЕ СРЕДЫ ДЛЯ REACT APP
+/*************************************/
+process.env.NAME_OF_ENV_VARIABLE - доступ к переменным среды из React
+Для переменных среды можно создать файл .env и в нем указывать переменные среды
+Пример:
+BROWSER=none
+CHOKIDAR_USEPOLLING=true
+итд...
+
+Также можно запускать docker container с указанием переменных среды
+docker run -e REACT_VAR_NAME_1=true -e REACT_VAR_NAME_2=localhost:5000 -v <local_project_directory>:<container_directory>:ro -d -p <external_port>:docker_port --name <name_of_container> <name_of_image>
+
+-e REACT_VAR_NAME_1=true -e REACT_VAR_NAME_2=localhost:5000 - добавляют 2 переменные среды REACT_VAR_NAME_1 и REACT_VAR_NAME_2
+
+Также можно запускать docker container с копированием файла .env
+docker run --env-file ./.env -v <local_project_directory>:<container_directory>:ro -d -p <external_port>:docker_port --name <name_of_container> <name_of_image>
+
+
+/*************************************/
+УДАЛИТЬ/ОСТАНОВИТЬ РАБОТАЮЩИЙ DOCKER CONATAINERS
+/*************************************/
+
+docker rm <name_of_container> -f
+
+/*************************************/
+ПОСМОТРЕТЬ РАБОТАЮЩИЕ DOCKER CONATAINERS
+/*************************************/
+
+docker ps
+
+/*************************************/
+ЗАЙТИ В BASH В DOCKER CONATAINERS (ЗАЙТИ В КОНСОЛЬ CONTAINER)
+/*************************************/
+
+docker exec -it <name_of_container> bash
+
+/*************************************/
+ОБНОВИТЬ DOCKER CONTAINER (НАПРИМЕР СДЕЛАТЬ АВТОЗАПУСК КОНТЕЙНЕРА)
+/*************************************/
+docker update --restart unless-stopped <name_of_container>

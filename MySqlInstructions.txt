@@ -1,0 +1,7 @@
+3306 - порт по умолчанию на котором запускается MySql
+
+Запуск MySql в докере
+docker run -e MYSQL_ROOT_PASSWORD=qwerty -d -p 3306:3306 --name mysql-cont mysql
+
+войти в MySql под root с запросом пароля
+mysql -u root -p

@@ -1,0 +1,8 @@
+Create migrations from Rider or from console
+dotnet ef migrations add  MigrationName --context SqlLiteDbContext(if several contexts in the same project) --project DataAccess.SqlLite --startup-project BackendWashMe
+dotnet ef migrations add  MigrationName --context MySqlDbContext(if several contexts in the same project) --project DataAccess.MySql --startup-project BackendWashMe
+
+Create migrations from Visual Studio using Package Manager Console
+select default project before executing commands and select startup project
+Add-Migration MigrationName -Context MySqlDbContext
+Add-Migration MigrationName -Context SqlLiteDbContext

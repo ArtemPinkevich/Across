@@ -1,0 +1,10 @@
+ЗАПУСК С УСТАНОВКОЙ ПЕРЕМЕННЫХ СРЕДЫ (ТЕ ЧТО НАХОДЯТСЯ В appsettings.json)
+
+docker run -e ASPNETCORE_IsDevelopment=false
+ -e ASPNETCORE_ConnectionStrings__MySqlConnection="server=51.250.96.161;port=3306;user=root;password=qazxsw123;database=washmedb;"
+ -d
+ --name [name_of_cotainer]
+ -p 5000:5000 [name_of_image]
+ 
+ПАРОЛЬ ОТ MYSQL БД
+qazxsw123
