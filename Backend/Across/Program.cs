@@ -1,15 +1,15 @@
-namespace BackendWashMe
-{
-    using DataAccess.Interfaces;
-    using DataAccess.BaseImplementation;
-    using Entities;
-    using Microsoft.AspNetCore.Hosting;
-    using Microsoft.AspNetCore.Identity;
-    using Microsoft.EntityFrameworkCore;
-    using Microsoft.Extensions.DependencyInjection;
-    using Microsoft.Extensions.Hosting;
-    using System.Threading.Tasks;
+using System.Threading.Tasks;
+using DataAccess.BaseImplementation;
+using DataAccess.Interfaces;
+using Entities;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
+namespace Across
+{
     public class Program
     {
         public static async Task Main(string[] args)
@@ -24,10 +24,8 @@ namespace BackendWashMe
                 var rolesManager = services.GetRequiredService<RoleManager<IdentityRole>>();
                 var userManager = services.GetRequiredService<UserManager<User>>();
                 var carWashesRepository = services.GetRequiredService<IRepository<CarWash>>();
-                var carBodiesRepository = services.GetRequiredService<IRepository<CarBody>>();
                 await DbRolesInitializer.InitDbRoles(rolesManager);
                 await DbDefaultUserInitializer.InitDbUser(userManager, carWashesRepository);
-                await DbCarBodiesSeed.InitDbCarBodies(carBodiesRepository);
             }
 
             host.Run();

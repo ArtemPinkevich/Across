@@ -31,6 +31,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAccess.MySql", "DataAcc
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAccess.BaseImplementation", "DataAccess.BaseImplementation\DataAccess.BaseImplementation.csproj", "{FD4D92ED-3452-4546-A3E8-D0E08422B99A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Storage.Implementation", "Storage.Implementation\Storage.Implementation.csproj", "{5EC1E856-E76D-4417-AD55-A12D0A333C50}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Storage.Interfaces", "Storage.Interfaces\Storage.Interfaces.csproj", "{5D58CE56-8D6D-44CF-BE6E-B06A8EFECB07}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -85,6 +89,14 @@ Global
 		{FD4D92ED-3452-4546-A3E8-D0E08422B99A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FD4D92ED-3452-4546-A3E8-D0E08422B99A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FD4D92ED-3452-4546-A3E8-D0E08422B99A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5EC1E856-E76D-4417-AD55-A12D0A333C50}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5EC1E856-E76D-4417-AD55-A12D0A333C50}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5EC1E856-E76D-4417-AD55-A12D0A333C50}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5EC1E856-E76D-4417-AD55-A12D0A333C50}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5D58CE56-8D6D-44CF-BE6E-B06A8EFECB07}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5D58CE56-8D6D-44CF-BE6E-B06A8EFECB07}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5D58CE56-8D6D-44CF-BE6E-B06A8EFECB07}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5D58CE56-8D6D-44CF-BE6E-B06A8EFECB07}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -98,6 +110,8 @@ Global
 		{FEFDBA07-1A29-4899-BEBD-71115E4F5DD9} = {BEDD3BC5-F9D3-43D1-9133-112758D6EF81}
 		{1C216E0A-2FA9-460F-BC9C-60BF621A81D8} = {BEDD3BC5-F9D3-43D1-9133-112758D6EF81}
 		{FD4D92ED-3452-4546-A3E8-D0E08422B99A} = {BEDD3BC5-F9D3-43D1-9133-112758D6EF81}
+		{5EC1E856-E76D-4417-AD55-A12D0A333C50} = {BEDD3BC5-F9D3-43D1-9133-112758D6EF81}
+		{5D58CE56-8D6D-44CF-BE6E-B06A8EFECB07} = {BEDD3BC5-F9D3-43D1-9133-112758D6EF81}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {80DA8417-5047-4F7F-BDD2-63D2654A0A2F}

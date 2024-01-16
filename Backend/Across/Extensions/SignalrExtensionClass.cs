@@ -1,9 +1,9 @@
-﻿namespace BackendWashMe.Extensions
-{
-    using BackendWashMe.SignalRHubs;
-    using Microsoft.AspNetCore.SignalR;
-    using Microsoft.Extensions.DependencyInjection;
+﻿using Across.SignalRHubs;
+using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.DependencyInjection;
 
+namespace Across.Extensions
+{
     public static class SignalrExtension
     {
         public static void AddSignalRWithAddition(this IServiceCollection services)

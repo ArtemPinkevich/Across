@@ -29,12 +29,7 @@
         public string StartWorkTime { set; get; }
 
         public string EndWorkTime { set; get; }
-
-        public WorkSchedule WorkSchedule { set; get; }
-
         public int BoxesQuantity { set; get; }
-
-        public List<WashService> Services { set; get; }
 
         /// <summary>
         ///список пользователей, которые имеют отношение к этой автомойке (админы и владельцы) 

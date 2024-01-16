@@ -1,12 +1,12 @@
-﻿namespace BackendWashMe.Middlewares
-{
-    using Infrastructure.SmsGateway.Exceptions;
-    using Microsoft.AspNetCore.Http;
-    using System;
-    using System.Net;
-    using System.Threading.Tasks;
-    using UseCases.Exceptions;
+﻿using System;
+using System.Net;
+using System.Threading.Tasks;
+using Infrastructure.SmsGateway.Exceptions;
+using Microsoft.AspNetCore.Http;
+using UseCases.Exceptions;
 
+namespace Across.Middlewares
+{
     public class ExceptionHandlerMiddleware
     {
         private readonly RequestDelegate _next;

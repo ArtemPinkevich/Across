@@ -1,12 +1,12 @@
-﻿namespace BackendWashMe.Controllers
-{
-    using MediatR;
-    using Microsoft.AspNetCore.Mvc;
-    using System;
-    using System.Threading.Tasks;
-    using UseCases.Handlers.Authorization;
-    using UseCases.Handlers.Authorization.Queries;
+﻿using System;
+using System.Threading.Tasks;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
+using UseCases.Handlers.Authorization;
+using UseCases.Handlers.Authorization.Queries;
 
+namespace Across.Controllers
+{
     [Route("api/[controller]")]
     [ApiController]
     public class AuthorizationController : ControllerBase

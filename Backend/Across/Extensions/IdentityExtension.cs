@@ -1,12 +1,12 @@
-﻿namespace BackendWashMe.Extensions
-{
-    using DataAccess.BaseImplementation;
-    using Entities;
-    using Microsoft.AspNetCore.Identity;
-    using Microsoft.Extensions.DependencyInjection;
-    using Microsoft.Extensions.Configuration;
-    using BackendWashMe.IdentityTokenProviders;
+﻿using Across.IdentityTokenProviders;
+using DataAccess.BaseImplementation;
+using Entities;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
+namespace Across.Extensions
+{
     public static class IdentityExtension
     {
         public static void AddIdentity(this IServiceCollection services, IConfiguration configuration)

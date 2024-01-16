@@ -1,12 +1,12 @@
-﻿namespace BackendWashMe.Controllers
-{
-    using MediatR;
-    using Microsoft.AspNetCore.Mvc;
-    using System;
-    using System.Threading.Tasks;
-    using UseCases.Handlers.Registration.Commands;
-    using UseCases.Handlers.Registration.Dto;
+﻿using System;
+using System.Threading.Tasks;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
+using UseCases.Handlers.Registration.Commands;
+using UseCases.Handlers.Registration.Dto;
 
+namespace Across.Controllers
+{
     [Route("api/[controller]")]
     [ApiController]
     public class RegisterController : ControllerBase

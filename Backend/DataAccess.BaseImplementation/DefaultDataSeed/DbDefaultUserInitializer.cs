@@ -36,7 +36,6 @@
                     StartWorkTime = "09-00",
                     EndWorkTime = "21-00",
                     BoxesQuantity = 5,
-                    Services = null,
                     Users = new List<User>()
                 };
                 carWash.Users.Add(user);
@@ -74,7 +73,6 @@
                     StartWorkTime = "09-00",
                     EndWorkTime = "21-00",
                     BoxesQuantity = 5,
-                    Services = null,
                     Users = new List<User>()
                 };
                 carWash.Users.Add(user);

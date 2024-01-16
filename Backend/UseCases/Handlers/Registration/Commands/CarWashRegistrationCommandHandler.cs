@@ -12,13 +12,10 @@
     public class CarWashRegistrationCommandHandler : IRequestHandler<CarWashRegistrationCommand, CarWashRegistrationResult>
     {
         private readonly IRepository<CarWash> _carWashRepository;
-        private readonly IRepository<WorkSchedule> _workScheduleRepository;
 
-        public CarWashRegistrationCommandHandler(IRepository<CarWash> carWashRepository,
-                                                 IRepository<WorkSchedule> workScheduleRepository)
+        public CarWashRegistrationCommandHandler(IRepository<CarWash> carWashRepository)
         {
             _carWashRepository = carWashRepository;
-            _workScheduleRepository = workScheduleRepository;
         }
 
         public async Task<CarWashRegistrationResult> Handle(CarWashRegistrationCommand request, CancellationToken cancellationToken)
@@ -31,16 +28,7 @@
             await _carWashRepository.AddAsync(new List<CarWash>{ newCarWash });
             await _carWashRepository.SaveAsync();
             
-            var success = await AddScheduleToCarWash(newCarWash.Id, request.UtcOffset);
-            if (!success)
-            {
-                await _carWashRepository.DeleteAsync(x => x.Id == newCarWash.Id);
-                await _carWashRepository.SaveAsync();
-                return CreateErrorResult("Ошибка регистрации автомойки");
-            }
-
-            await _workScheduleRepository.SaveAsync();
-            return CreateSuccessResult("Автомойка зарегистрирована", newCarWash);
+        return CreateSuccessResult("Автомойка зарегистрирована", newCarWash);
         }
 
         private CarWashRegistrationResult CreateSuccessResult(string reason, CarWash carWash)
@@ -70,19 +58,6 @@
                 Name = carWashName,
                 Users = new List<User>()
             };
-        }
-
-        private async Task<bool> AddScheduleToCarWash(int carWashId, int utcOffset)
-        {
-            var schedule = await _workScheduleRepository.GetAsync(item => item.CarWashId == carWashId);
-            if (schedule != null)
-                return false;
-
-            schedule = new WorkSchedule();
-            schedule.UtcOffset = utcOffset;
-            schedule.CarWashId = carWashId;
-            await _workScheduleRepository.AddAsync(new List<WorkSchedule>() { schedule });
-            return true;
         }
     }
 }

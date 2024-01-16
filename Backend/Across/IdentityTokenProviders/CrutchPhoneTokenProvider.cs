@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 
-namespace BackendWashMe.IdentityTokenProviders
+namespace Across.IdentityTokenProviders
 {
     [Obsolete("Temporary Crutch to emulate sms gateway")]
     public class CrutchPhoneTokenProvider<TUser> : TotpSecurityStampBasedTokenProvider<TUser>

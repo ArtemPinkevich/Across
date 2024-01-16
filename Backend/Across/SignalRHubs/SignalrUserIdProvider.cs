@@ -1,8 +1,8 @@
-﻿namespace BackendWashMe.SignalRHubs
-{
-    using Microsoft.AspNetCore.SignalR;
-    using UseCases.Handlers.Authorization;
+﻿using Microsoft.AspNetCore.SignalR;
+using UseCases.Handlers.Authorization;
 
+namespace Across.SignalRHubs
+{
     public class SignalrUserIdProvider : IUserIdProvider
     {
         public string GetUserId(HubConnectionContext connection)

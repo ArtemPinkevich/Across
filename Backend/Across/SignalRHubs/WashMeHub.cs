@@ -1,29 +1,25 @@
-﻿namespace BackendWashMe.SignalRHubs
-{
-    using ApplicationServices;
-    using Entities;
-    using MediatR;
-    using Microsoft.AspNetCore.Authentication.JwtBearer;
-    using Microsoft.AspNetCore.Authorization;
-    using Microsoft.AspNetCore.Identity;
-    using Microsoft.AspNetCore.SignalR;
-    using System;
-    using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
+using Entities;
+using MediatR;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.SignalR;
 
+namespace Across.SignalRHubs
+{
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public partial class WashMeHub: Hub
     {
         private readonly IMediator _mediator;
         private readonly UserManager<User> _userManager;
-        private readonly IMessageReceiversCreatorService _messageReceiversCreatorService;
 
         public WashMeHub(IMediator mediator,
-                         UserManager<User> userManager,
-                         IMessageReceiversCreatorService messageReceiversCreatorService)
+                         UserManager<User> userManager)
         {
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
-            _messageReceiversCreatorService = messageReceiversCreatorService ?? throw new ArgumentNullException(nameof(messageReceiversCreatorService));
         }
 
         //клиенты могут вызывать метод Send сервера
@@ -34,6 +30,7 @@
             await Clients.All.SendAsync("Notify", message);
         }
 
+        [Authorize(Roles = UserRoles.MobileClient)]
         //клиенты могут вызывать метод GetShedule сервера
         public async Task GetShedule(string message)
         {

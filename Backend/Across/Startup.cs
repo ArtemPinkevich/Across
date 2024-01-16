@@ -1,20 +1,17 @@
-using FluentValidation;
-using UseCases.PipelineBehaviours;
+using System.Reflection;
+using Across.Extensions;
+using Across.SignalRHubs;
+using MediatR;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http.Connections;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using UseCases.Handlers.Authorization.Queries;
 
-namespace BackendWashMe
+namespace Across
 {
-    using BackendWashMe.Extensions;
-    using BackendWashMe.SignalRHubs;
-    using MediatR;
-    using Microsoft.AspNetCore.Builder;
-    using Microsoft.AspNetCore.Hosting;
-    using Microsoft.AspNetCore.Http.Connections;
-    using Microsoft.Extensions.Configuration;
-    using Microsoft.Extensions.DependencyInjection;
-    using Microsoft.Extensions.Hosting;
-    using System.Reflection;
-    using UseCases.Handlers.Authorization.Queries;
-
     public class Startup
     {
         public Startup(IConfiguration configuration)
@@ -36,7 +33,6 @@ namespace BackendWashMe
             services.AddControllersWithViews();
             services.AddSignalRWithAddition();
             services.AddInfrastructure(Configuration);
-            services.AddApplicationServices();
             services.AddCors();
             services.AddValidation(useCasesAssembly);
         }

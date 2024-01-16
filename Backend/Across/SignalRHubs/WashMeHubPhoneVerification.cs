@@ -1,12 +1,12 @@
-﻿namespace BackendWashMe.SignalRHubs
-{
-    using Entities;
-    using Microsoft.AspNetCore.Authorization;
-    using System.Threading.Tasks;
-    using UseCases.Handlers.Registration.Commands;
-    using UseCases.Handlers.Registration.Dto;
-    using UseCases.Handlers.Registration.Queries;
+﻿using System.Threading.Tasks;
+using Entities;
+using Microsoft.AspNetCore.Authorization;
+using UseCases.Handlers.Registration.Commands;
+using UseCases.Handlers.Registration.Dto;
+using UseCases.Handlers.Registration.Queries;
 
+namespace Across.SignalRHubs
+{
     public partial class WashMeHub
     {
         [Authorize(Roles = UserRoles.MobileClient)]

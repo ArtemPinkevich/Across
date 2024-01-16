@@ -33,9 +33,7 @@
         public async Task<CarWash> GetAsync(Expression<Func<CarWash, bool>> condition)
         {
             return await _context.CarWashes
-                .Include(item => item.Services)
                 .Include(item => item.Users)
-                .Include(item => item.WorkSchedule)
                 .Include(item => item.SelectedByUsers)
                 .FirstOrDefaultAsync(condition);
         }
@@ -43,9 +41,7 @@
         public async Task<List<CarWash>> GetAllAsync()
         {
             return await _context.CarWashes
-                .Include(item => item.Services)
                 .Include(item => item.Users)
-                .Include(item => item.WorkSchedule)
                 .Include(item => item.SelectedByUsers)
                 .ToListAsync();
         }
@@ -53,9 +49,7 @@
         public async Task<List<CarWash>> GetAllAsync(Expression<Func<CarWash, bool>> condition)
         {
             return await _context.CarWashes
-                .Include(item => item.Services)
                 .Include(item => item.Users)
-                .Include(item => item.WorkSchedule)
                 .Include(item => item.SelectedByUsers)
                 .Where(condition)
                 .AsQueryable()
@@ -65,9 +59,7 @@
         public async Task<List<CarWash>> GetFirstAsync(Expression<Func<CarWash, bool>> condition, int limit)
         {
             return await _context.CarWashes
-                .Include(item => item.Services)
-                .Include(item => item.Users)
-                .Include(item => item.WorkSchedule)
+  .Include(item => item.Users)
                 .Include(item => item.SelectedByUsers)
                 .Where(condition)
                 .Take(limit)
@@ -78,9 +70,7 @@
         public async Task<List<CarWash>> GetLastAsync(Expression<Func<CarWash, bool>> condition, int limit)
         {
             return await _context.CarWashes
-                .Include(item => item.Services)
                 .Include(item => item.Users)
-                .Include(item => item.WorkSchedule)
                 .Include(item => item.SelectedByUsers)
                 .Where(condition)
                 .TakeLast(limit)

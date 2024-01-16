@@ -4,7 +4,7 @@ using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using UseCases.PipelineBehaviours;
 
-namespace BackendWashMe.Extensions
+namespace Across.Extensions
 {
     public static class ValidationExtension
     {

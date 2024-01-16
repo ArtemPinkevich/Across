@@ -1,13 +1,13 @@
-﻿namespace BackendWashMe.Extensions
-{
-    using Microsoft.AspNetCore.Authentication.JwtBearer;
-    using Microsoft.Extensions.Configuration;
-    using Microsoft.Extensions.DependencyInjection;
-    using Microsoft.IdentityModel.Tokens;
-    using System.Text;
-    using System.Threading.Tasks;
-    using UseCases.Handlers.Authorization;
+﻿using System.Text;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
+using UseCases.Handlers.Authorization;
 
+namespace Across.Extensions
+{
     public static class AuthenticationExtension
     {
         public static void AddJwtAuthentication(this IServiceCollection services, IConfiguration configuration)
