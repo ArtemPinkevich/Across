@@ -34,9 +34,10 @@
 
                 IdentityResult result = await _userManager.CreateAsync(user);
 
+                #warning TODO
                 if (result.Succeeded)
                 {
-                    await _userManager.AddToRoleAsync(user, UserRoles.MobileClient);
+                    await _userManager.AddToRoleAsync(user, UserRoles.All);
                 }
             }
 

@@ -30,7 +30,7 @@ namespace Across.SignalRHubs
             await Clients.All.SendAsync("Notify", message);
         }
 
-        [Authorize(Roles = UserRoles.MobileClient)]
+        [Authorize(Roles = UserRoles.Admin)]
         //клиенты могут вызывать метод GetShedule сервера
         public async Task GetShedule(string message)
         {

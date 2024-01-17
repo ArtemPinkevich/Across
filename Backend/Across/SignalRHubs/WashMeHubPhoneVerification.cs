@@ -9,14 +9,14 @@ namespace Across.SignalRHubs
 {
     public partial class WashMeHub
     {
-        [Authorize(Roles = UserRoles.MobileClient)]
+        [Authorize(Roles = UserRoles.Admin)]
         public async Task<bool> is_phone_acked(string phoneNumber)
         {
             bool result = await _mediator.Send(new PhoneAcknowledgmentStatusQuery(phoneNumber));
             return result;
         }
 
-        [Authorize(Roles = UserRoles.MobileClient)]
+        [Authorize(Roles = UserRoles.Admin)]
         public async Task<SendVerificationCodeResult> verify_code_to_sms_request(string phoneNumber)
         {
             var command = new SendVerificationCodeCommand() { PhoneNumber = phoneNumber };
@@ -24,7 +24,7 @@ namespace Across.SignalRHubs
             return result;
         }
 
-        [Authorize(Roles = UserRoles.MobileClient)]
+        [Authorize(Roles = UserRoles.Admin)]
         public async Task<PhoneVerificationDto> verify_phone(MobilePhoneVerificationCommand command)
         {
             var result = await _mediator.Send(command);

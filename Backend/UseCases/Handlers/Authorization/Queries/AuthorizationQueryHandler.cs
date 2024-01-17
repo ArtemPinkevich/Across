@@ -58,8 +58,14 @@
             if (await _userManager.IsInRoleAsync(user, UserRoles.Owner))
                 return UserRoles.Owner;
 
-            if (await _userManager.IsInRoleAsync(user, UserRoles.MobileClient))
-                return UserRoles.MobileClient;
+            if (await _userManager.IsInRoleAsync(user, UserRoles.Driver))
+                return UserRoles.Driver;
+            
+            if (await _userManager.IsInRoleAsync(user, UserRoles.Shipper))
+                return UserRoles.Shipper;
+            
+            if (await _userManager.IsInRoleAsync(user, UserRoles.Lawyer))
+                return UserRoles.Lawyer;
             return null;
         }
     }

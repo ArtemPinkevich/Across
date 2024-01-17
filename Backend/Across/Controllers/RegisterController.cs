@@ -18,10 +18,10 @@ namespace Across.Controllers
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
 
-        [HttpPost("mobile")]
-        public async Task<RegistrationDto> Register([FromBody] MobileRegistrationCommand mobileRegistrationCommand)
+        [HttpPost("shipper")]
+        public async Task<RegistrationDto> Register([FromBody] ShipperRegistrationCommand shipperRegistrationCommand)
         {
-            var res = await _mediator.Send(mobileRegistrationCommand);
+            var res = await _mediator.Send(shipperRegistrationCommand);
             return res;
         }
 

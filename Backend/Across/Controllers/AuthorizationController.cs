@@ -27,7 +27,7 @@ namespace Across.Controllers
         [HttpGet("mobile/{phone}")]
         public async Task<AuthorizationDto> MobileAuthorize(string phone)
         {
-            MobileAuthorizationQuery auth = new MobileAuthorizationQuery() { Phone = phone };
+            ShipperAuthorizationQuery auth = new ShipperAuthorizationQuery() { Phone = phone };
             return await _mediator.Send(auth);
         }
     }

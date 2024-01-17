@@ -12,10 +12,22 @@
             {
                 await roleManager.CreateAsync(new IdentityRole(UserRoles.Admin));
             }
-            if (await roleManager.FindByNameAsync(UserRoles.MobileClient) == null)
+            
+            if (await roleManager.FindByNameAsync(UserRoles.Shipper) == null)
             {
-                await roleManager.CreateAsync(new IdentityRole(UserRoles.MobileClient));
+                await roleManager.CreateAsync(new IdentityRole(UserRoles.Shipper));
             }
+            
+            if (await roleManager.FindByNameAsync(UserRoles.Driver) == null)
+            {
+                await roleManager.CreateAsync(new IdentityRole(UserRoles.Driver));
+            }
+            
+            if (await roleManager.FindByNameAsync(UserRoles.Lawyer) == null)
+            {
+                await roleManager.CreateAsync(new IdentityRole(UserRoles.Lawyer));
+            }
+            
             if (await roleManager.FindByNameAsync(UserRoles.Owner) == null)
             {
                 await roleManager.CreateAsync(new IdentityRole(UserRoles.Owner));

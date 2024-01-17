@@ -15,7 +15,7 @@
                 var user = new User() { UserName = "Mobile" };
                 var result = await userManager.CreateAsync(user, "Moblie_0");
                 if (result.Succeeded)
-                    await userManager.AddToRoleAsync(user, UserRoles.MobileClient);
+                    await userManager.AddToRoleAsync(user, UserRoles.Shipper);
             }
 
             //администратор автомойки 1

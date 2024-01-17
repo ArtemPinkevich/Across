@@ -26,6 +26,8 @@ namespace Across.Extensions
                     .LogTo(Console.WriteLine, LogLevel.Debug));
             else
                 services.AddDbContext<DatabaseContext, MySqlDbContext>(opt => opt.UseMySql(mysqlConnection, ServerVersion.AutoDetect(mysqlConnection)));
+
+            services.AddScoped<IRepository<CarWash>, CarWashesRepository>();
         }
     }
 }
