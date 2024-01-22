@@ -1,4 +1,5 @@
-﻿using Infrastructure.Interfaces;
+﻿using System.Linq;
+using Infrastructure.Interfaces;
 
 namespace UseCases.Handlers.Registration.Commands
 {
@@ -25,9 +26,13 @@ namespace UseCases.Handlers.Registration.Commands
         {
             var user = new User()
             {
+                UserName = request.PhoneNumber,
                 Name = request.Name,
-                PhoneNumber = request.Phone,
-                UserName = request.Phone,
+                Surname = request.Surname,
+                Patronymic = request.Patronymic,
+                BirthDate = request.BirthDate,
+                PhoneNumber = request.PhoneNumber,
+                
             };
 
             var result = await _userManager.CreateAsync(user);
@@ -35,8 +40,8 @@ namespace UseCases.Handlers.Registration.Commands
             {
                 await _userManager.AddToRoleAsync(user, UserRoles.Shipper);
                 
-                var code = await _userManager.GenerateChangePhoneNumberTokenAsync(user, user.PhoneNumber);
-                await _smsGateway.SendSms(user.PhoneNumber, $"{code}");
+                //var code = await _userManager.GenerateChangePhoneNumberTokenAsync(user, user.PhoneNumber);
+                //await _smsGateway.SendSms(user.PhoneNumber, $"{code}");
 
                 return new RegistrationDto()
                 {
@@ -47,7 +52,7 @@ namespace UseCases.Handlers.Registration.Commands
             return new RegistrationDto()
             {
                 Result = RegistrationResult.Error,
-                Reasons = new string[1] { "Не удалось зарегистрировать пользователя" }
+                Reasons = result.Errors.Select(x => x.Description).ToArray()
             };
         }
     }

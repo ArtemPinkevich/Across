@@ -25,6 +25,13 @@ namespace Across.Controllers
             return res;
         }
 
+        [HttpPost("driver")]
+        public async Task<RegistrationDto> Register([FromBody] DriverRegistrationCommand driverRegistrationCommand)
+        {
+            var res = await _mediator.Send(driverRegistrationCommand);
+            return res;
+        }
+        
         [HttpPost("admin")]
         public async Task<RegistrationDto> Register([FromBody] AdminRegistrationCommand adminRegistrationCommand)
         {
@@ -32,11 +39,6 @@ namespace Across.Controllers
             return res;
         }
 
-        [HttpPost("carwash")]
-        public async Task<CarWashRegistrationResult> Register([FromBody] CarWashRegistrationCommand carWashRegistrationCommand)
-        {
-            var res = await _mediator.Send(carWashRegistrationCommand);
-            return res;
-        }
+
     }
 }

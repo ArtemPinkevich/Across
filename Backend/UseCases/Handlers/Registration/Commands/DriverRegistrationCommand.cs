@@ -3,7 +3,7 @@
     using MediatR;
     using UseCases.Handlers.Registration.Dto;
 
-    public class ShipperRegistrationCommand : IRequest<RegistrationDto>
+    public class DriverRegistrationCommand : IRequest<RegistrationDto>
     {
         public string Name { set; get; }
         
@@ -11,11 +11,8 @@
         
         public string Patronymic { set; get; }
         
-        public string BirthDate { set; get; }
-        
         public string PhoneNumber { set; get; }
         
         public string Password { set; get; }
-        
     }
 }
