@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http.Connections;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
 using UseCases.Handlers.Authorization.Queries;
 
 namespace Across
@@ -35,7 +36,14 @@ namespace Across
             services.AddInfrastructure(Configuration);
             services.AddCors();
             services.AddValidation(useCasesAssembly);
-            services.AddSwaggerGen();
+            services.AddSwaggerGen(options =>
+                options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme()
+                {
+                    Description = "Standard Authorization header using the Bearer scheme. Example: \"bearer {token}\"",
+                    In = ParameterLocation.Header,
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.ApiKey
+                }));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

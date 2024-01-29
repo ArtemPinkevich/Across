@@ -4,26 +4,27 @@ using System.Threading.Tasks;
 using Entities;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Options;
 using UseCases.Exceptions;
 
 namespace UseCases.Handlers.Authorization.Queries;
 
-public class DriverAuthorizationQueryHandler : IRequestHandler<ShipperAuthorizationQuery, AuthorizationDto>
+public class DriverAuthorizationQueryHandler : IRequestHandler<DriverAuthorizationQuery, AuthorizationDto>
 {
     private readonly IJwtGenerator _jwtGenerator;
     private readonly SignInManager<User> _signInManager;
     private readonly UserManager<User> _userManager;
 
     public DriverAuthorizationQueryHandler(UserManager<User> userManager,
-        IJwtGenerator jwtGenerator,
+        IOptions<JwtConfiguration> options,
         SignInManager<User> signInManager)
     {
         _userManager = userManager;
-        _jwtGenerator = jwtGenerator;
+        _jwtGenerator = new JwtGenerator(options.Value);
         _signInManager = signInManager;
     }
 
-    public async Task<AuthorizationDto> Handle(ShipperAuthorizationQuery request, CancellationToken cancellationToken)
+    public async Task<AuthorizationDto> Handle(DriverAuthorizationQuery request, CancellationToken cancellationToken)
     {
         var user = await _userManager.FindByNameAsync(request.Phone);
         if (user == null) throw new NotAuthorizedException { AuthMessage = "No such user" };
