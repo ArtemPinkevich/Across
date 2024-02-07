@@ -15,5 +15,7 @@
         public string BirthDate { set; get; }
 
         public Gender Gender { set; get; }
+        
+        public List<Truck> Trucks { set; get; }
     }
 }

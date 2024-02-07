@@ -1,6 +1,8 @@
-﻿namespace Entities;
+﻿using Entities;
 
-public class Truck: EntityBase
+namespace UseCases.Handlers.Truck.Dto;
+
+public class TruckDto
 {
     public string createdId { set; get; }
     
@@ -47,7 +49,4 @@ public class Truck: EntityBase
     public bool Tir { set; get; }
     
     public bool Ekmt { set; get; }
-    
-    public string UserId { set; get; }
-    public User User { set; get; }
 }

@@ -59,7 +59,7 @@
         public async Task<List<CarWash>> GetFirstAsync(Expression<Func<CarWash, bool>> condition, int limit)
         {
             return await _context.CarWashes
-  .Include(item => item.Users)
+                .Include(item => item.Users)
                 .Include(item => item.SelectedByUsers)
                 .Where(condition)
                 .Take(limit)

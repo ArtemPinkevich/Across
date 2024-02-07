@@ -28,6 +28,7 @@ namespace Across.Extensions
                 services.AddDbContext<DatabaseContext, MySqlDbContext>(opt => opt.UseMySql(mysqlConnection, ServerVersion.AutoDetect(mysqlConnection)));
 
             services.AddScoped<IRepository<CarWash>, CarWashesRepository>();
+            services.AddScoped<IRepository<Truck>, TrucksRepository>();
         }
     }
 }

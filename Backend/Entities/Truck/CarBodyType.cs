@@ -1,4 +1,4 @@
-﻿namespace Entities.Truck;
+﻿namespace Entities;
 
 public enum CarBodyType
 {

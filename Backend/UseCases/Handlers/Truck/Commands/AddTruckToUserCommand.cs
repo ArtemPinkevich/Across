@@ -6,4 +6,6 @@ namespace UseCases.Handlers.Truck.Commands;
 public class AddTruckToUserCommand: IRequest<TruckResultDto>
 {
     public string UserId { set; get; }
+    
+    public TruckDto TruckDto { set; get; }
 }

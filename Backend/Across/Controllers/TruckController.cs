@@ -26,12 +26,27 @@ public class TruckController: ControllerBase
 
     [Authorize(Roles = UserRoles.Driver)]
     [HttpPost("add_truck")]
-    public async Task<TruckResultDto> AddTruck([FromBody] AddTruckToUserDto addTruckToUserDto)
+    public async Task<TruckResultDto> AddTruck([FromBody] TruckDto addTruckToUserDto)
     {
         string userId = HttpContext.User.Claims.FirstOrDefault( x => x.Type == JwtClaimsTypes.Id)?.Value;
         return await _mediator.Send(new AddTruckToUserCommand()
         {
             UserId = userId,
+            TruckDto = addTruckToUserDto
         });
+    }
+
+    [Authorize(Roles = UserRoles.Driver)]
+    [HttpPost("update_truck")]
+    public async Task<TruckResultDto> UpdateTruck()
+    {
+        return new TruckResultDto() { };
+    }
+    
+    [Authorize(Roles = UserRoles.Driver)]
+    [HttpPost("delete_truck")]
+    public async Task<TruckResultDto> DeleteTruck()
+    {
+        return new TruckResultDto() { };
     }
 }

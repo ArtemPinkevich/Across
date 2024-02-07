@@ -12,6 +12,8 @@
         }
 
         public DbSet<CarWash> CarWashes { set; get; }
+        
+        public DbSet<Truck> Trucks { set; get; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
