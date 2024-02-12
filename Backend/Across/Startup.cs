@@ -37,13 +37,31 @@ namespace Across
             services.AddCors();
             services.AddValidation(useCasesAssembly);
             services.AddSwaggerGen(options =>
+            {
                 options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme()
                 {
-                    Description = "Standard Authorization header using the Bearer scheme. Example: \"bearer {token}\"",
+                    Description = "Standard Authorization header using the Bearer scheme. Example: \"{token}\"",
                     In = ParameterLocation.Header,
                     Name = "Authorization",
-                    Type = SecuritySchemeType.ApiKey
-                }));
+                    Type = SecuritySchemeType.Http,
+                    BearerFormat = "JWT",
+                    Scheme = "Bearer"
+                });
+                options.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type=ReferenceType.SecurityScheme,
+                                Id="oauth2"
+                            }
+                        },
+                        new string[]{}
+                    }
+                });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
