@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Entities;
@@ -9,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using UseCases.Handlers.Authorization;
 using UseCases.Handlers.Truck.Commands;
 using UseCases.Handlers.Truck.Dto;
+using UseCases.Handlers.Truck.Queries;
 
 namespace Across.Controllers;
 
@@ -25,6 +27,17 @@ public class TruckController: ControllerBase
     }
 
     [Authorize(Roles = UserRoles.Driver)]
+    [HttpGet("get_trucks")]
+    public async Task<TrucksListResultDto> GetTrucks()
+    {
+        string userId = HttpContext.User.Claims.FirstOrDefault( x => x.Type == JwtClaimsTypes.Id)?.Value;
+        return await _mediator.Send(new GetTrucksQuery()
+        {
+            UserId = userId,
+        });
+    }
+
+    [Authorize(Roles = UserRoles.Driver)]
     [HttpPost("add_or_update_truck")]
     public async Task<TruckResultDto> AddTruck([FromBody] TruckDto addTruckToUserDto)
     {
@@ -37,7 +50,7 @@ public class TruckController: ControllerBase
     }
     
     [Authorize(Roles = UserRoles.Driver)]
-    [HttpPost("delete_truck")]
+    [HttpDelete("delete_truck")]
     public async Task<TruckResultDto> DeleteTruck([FromBody] DeleteTruckCommand deleteTruckCommand)
     {
         return await _mediator.Send(deleteTruckCommand);

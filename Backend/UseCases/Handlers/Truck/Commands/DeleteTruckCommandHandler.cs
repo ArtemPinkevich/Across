@@ -10,7 +10,7 @@ public class DeleteTruckCommandHandler:IRequestHandler<DeleteTruckCommand, Truck
 {
     private readonly IRepository<Entities.Truck> _repository;
 
-    private DeleteTruckCommandHandler(IRepository<Entities.Truck> repository)
+    public DeleteTruckCommandHandler(IRepository<Entities.Truck> repository)
     {
         _repository = repository;
     }
