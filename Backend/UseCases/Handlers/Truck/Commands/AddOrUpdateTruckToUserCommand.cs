@@ -3,7 +3,7 @@ using UseCases.Handlers.Truck.Dto;
 
 namespace UseCases.Handlers.Truck.Commands;
 
-public class AddTruckToUserCommand: IRequest<TruckResultDto>
+public class AddOrUpdateTruckToUserCommand: IRequest<TruckResultDto>
 {
     public string UserId { set; get; }
     

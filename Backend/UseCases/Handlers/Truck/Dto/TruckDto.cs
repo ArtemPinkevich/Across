@@ -4,6 +4,8 @@ namespace UseCases.Handlers.Truck.Dto;
 
 public class TruckDto
 {
+    public int? TruckId { set; get; }
+    
     public string createdId { set; get; }
     
     public string regNumber { set; get; }
