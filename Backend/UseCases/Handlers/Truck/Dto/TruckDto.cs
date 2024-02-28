@@ -14,7 +14,7 @@ public class TruckDto
     
     public CarBodyType CarBodyType { set; get; }
     
-    public LoadingType LoadingType { set; get; }
+    public LoadingTypeDto[] LoadingType { set; get; }
     
     public bool HasLTtl { set; get; }
     

@@ -3,72 +3,72 @@
 public enum CarBodyType
 {
         // все закр.+изотерм
-    tentTruck,              // тентованный
-    container,              // контейнер
-    van,                    // фургон
-    allMetal,               // цельнометалл
-    isothermal,             // изотермический
+    TentTruck,              // тентованный
+    Container,              // контейнер
+    Van,                    // фургон
+    AllMetal,               // цельнометалл
+    Isothermal,             // изотермический
 
     // реф.+изотерм
-    refrigerator,           // рефрижератор
-    refrigeratorMult,       // реф. мультирежимный
-    bulkheadRefr,           // реф. с перегородкой
-    meatRailsRef,           // реф.-тушевоз
+    Refrigerator,           // рефрижератор
+    RefrigeratorMult,       // реф. мультирежимный
+    BulkheadRefr,           // реф. с перегородкой
+    MeatRailsRef,           // реф.-тушевоз
     
     // Открытые
-    flatbed,                // бортовой
-    opentop,                // открытый конт.
-    opentrailer,            // площадка без бортов
-    dumpTruck,              // самосвал
-    barge,                  // шаланда
+    Flatbed,                // бортовой
+    Opentop,                // открытый конт.
+    Opentrailer,            // площадка без бортов
+    DumpTruck,              // самосвал
+    Barge,                  // шаланда
 
     // Негабарит
-    dolly,                  // низкорамный
-    dollyPlat,              // низкорам.платф.
-    adjustable,             // телескопический
-    tral,                   // трал
-    beamTruckNgb,           // балковоз(негабарит)
+    Dolly,                  // низкорамный
+    DollyPlat,              // низкорам.платф.
+    Adjustable,             // телескопический
+    Tral,                   // трал
+    BeamTruckNgb,           // балковоз(негабарит)
 
     // Остальные
-    bus,                    // автобус
+    Bus,                    // автобус
     Autocart,               // автовоз
-    autotower,              // автовышка
-    autoCarrier,            // автотранспортер
-    сoncreteTruck,          // бетоновоз
-    bitumenTruck,           // битумовоз
-    fuelTank,               // бензовоз
-    offRoader,              // вездеход
-    gas,                    // газовоз
-    grainTruck,             // зерновоз
-    horseTruck,             // коневоз
-    containerTrail,         // контейнеровоз
-    furageTuck,             // кормовоз
-    crane,                  // кран
-    timberTruck,            // лесовоз
-    scrapTruck,             // ломовоз
-    manipulator,            // манипулятор
-    microbus,               // микроавтобус
-    flourTruck,             // муковоз
-    panelsTruck,            // панелевоз
-    pickup,                 // пикап
-    ripetruck,              // пухтовоз
-    pyramid,                // пирамида
-    rollTruck,              // рулоновоз
-    tractor,                // седельный тягач
-    cattle,                 // скотовоз
-    innloader,              // стекловоз
-    pipeTruck,              // трубовоз
-    cementTruck,            // цементовоз
-    tankerTruck,            // автоцистерна
-    chipTruck,              // щеповоз
-    wrecker,                // эвакуатор
-    dualPurpose,            // грузопассажирский
-    klyushkovoz,            // клюшковоз
-    garbageTruck,           // мусоровоз
-    jumbo,                  // jumbo
-    tankContainer20,        // 20' танк-контейнер
-    tankContainer40,        // 40' танк-контейнер
-    mega,                   // мега фура
-    doppelstock,            // допельшток
-    slidingSemiTrailer2040, // Раздвижной полуприцеп 20'/40'
+    Autotower,              // автовышка
+    AutoCarrier,            // автотранспортер
+    СoncreteTruck,          // бетоновоз
+    BitumenTruck,           // битумовоз
+    FuelTank,               // бензовоз
+    OffRoader,              // вездеход
+    Gas,                    // газовоз
+    GrainTruck,             // зерновоз
+    HorseTruck,             // коневоз
+    ContainerTrail,         // контейнеровоз
+    FurageTuck,             // кормовоз
+    Crane,                  // кран
+    TimberTruck,            // лесовоз
+    ScrapTruck,             // ломовоз
+    Manipulator,            // манипулятор
+    Microbus,               // микроавтобус
+    FlourTruck,             // муковоз
+    PanelsTruck,            // панелевоз
+    Pickup,                 // пикап
+    Ripetruck,              // пухтовоз
+    Pyramid,                // пирамида
+    RollTruck,              // рулоновоз
+    Tractor,                // седельный тягач
+    Cattle,                 // скотовоз
+    Innloader,              // стекловоз
+    PipeTruck,              // трубовоз
+    CementTruck,            // цементовоз
+    TankerTruck,            // автоцистерна
+    ChipTruck,              // щеповоз
+    Wrecker,                // эвакуатор
+    DualPurpose,            // грузопассажирский
+    Klyushkovoz,            // клюшковоз
+    GarbageTruck,           // мусоровоз
+    Jumbo,                  // jumbo
+    TankContainer20,        // 20' танк-контейнер
+    TankContainer40,        // 40' танк-контейнер
+    Mega,                   // мега фура
+    Doppelstock,            // допельшток
+    SlidingSemiTrailer2040, // Раздвижной полуприцеп 20'/40'
 }

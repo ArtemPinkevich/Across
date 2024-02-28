@@ -51,7 +51,7 @@ public class AddOrUpdateTruckToUserCommandHandler : IRequestHandler<AddOrUpdateT
             truck.regNumber = request.TruckDto.regNumber;
             truck.TrailerType = request.TruckDto.TrailerType;
             truck.CarBodyType = request.TruckDto.CarBodyType;
-            truck.LoadingType = request.TruckDto.LoadingType;
+            truck.LoadingType = _mapper.Map<LoadingType>(request.TruckDto.LoadingType);
             truck.HasLTtl = request.TruckDto.HasLTtl;
             truck.HasLiftGate = request.TruckDto.HasLiftGate;
             truck.HasStanchionTrailer = request.TruckDto.HasStanchionTrailer;
@@ -83,7 +83,7 @@ public class AddOrUpdateTruckToUserCommandHandler : IRequestHandler<AddOrUpdateT
             Result = TruckResult.Ok,
         };
     }
-
+    
     private TruckResultDto CreateNoUserFoundResult()
     {
         return new TruckResultDto()
