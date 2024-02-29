@@ -1,7 +1,10 @@
 ﻿namespace Entities;
 
-public class TransportationOrder
+public class TransportationOrder : EntityBase
 {
+    public string UserId { set; get; }
+    public User User { set; get; }
+    
     public Cargo Cargo { set; get; }
     
     public TruckRequirements TruckRequirements { set; get; }

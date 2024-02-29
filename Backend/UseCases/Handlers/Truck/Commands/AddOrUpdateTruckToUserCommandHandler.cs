@@ -47,14 +47,15 @@ public class AddOrUpdateTruckToUserCommandHandler : IRequestHandler<AddOrUpdateT
                 return CreateNoTruckFoundResult(request.TruckDto.TruckId);
             }
 
-            truck.createdId = request.TruckDto.createdId;
-            truck.regNumber = request.TruckDto.regNumber;
+            truck.CreatedId = request.TruckDto.CreatedId;
+            truck.RegNumber = request.TruckDto.RegNumber;
             truck.TrailerType = request.TruckDto.TrailerType;
             truck.CarBodyType = request.TruckDto.CarBodyType;
             truck.LoadingType = _mapper.Map<LoadingType>(request.TruckDto.LoadingType);
             truck.HasLTtl = request.TruckDto.HasLTtl;
             truck.HasLiftGate = request.TruckDto.HasLiftGate;
             truck.HasStanchionTrailer = request.TruckDto.HasStanchionTrailer;
+            truck.CarryingCapacity = request.TruckDto.CarryingCapacity;
             truck.BodyVolume = request.TruckDto.BodyVolume;
             truck.InnerBodyLength = request.TruckDto.InnerBodyLength;
             truck.InnerBodyWidth = request.TruckDto.InnerBodyWidth;

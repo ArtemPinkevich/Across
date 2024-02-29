@@ -1,20 +1,15 @@
-﻿using Entities;
+﻿namespace Entities;
 
-namespace UseCases.Handlers.Truck.Dto;
-
-public class TruckDto
+public class TruckRequirements: EntityBase
 {
-    public int? TruckId { set; get; }
+    public int TransportationOrderId { set; get; }
+    public TransportationOrder TransportationOrder { set; get; }
     
-    public string CreatedId { set; get; }
+    public LoadingType LoadingType { set; get; }
     
-    public string RegNumber { set; get; }
-    
-    public TrailerType TrailerType { set; get; }
-    
-    public CarBodyType CarBodyType { set; get; }
-    
-    public LoadingTypeDto[] LoadingType { set; get; }
+    public LoadingType UnloadingType { set; get; }
+
+    public CarBodyRequirement CarBodyRequirement{ set; get; }
     
     public bool HasLTtl { set; get; }
     
@@ -23,14 +18,6 @@ public class TruckDto
     public bool HasStanchionTrailer { set; get; }
     
     public int CarryingCapacity { set; get; }
-    
-    public int BodyVolume { set; get; }
-    
-    public int InnerBodyLength { set; get; }
-    
-    public int InnerBodyWidth { set; get; }
-    
-    public int InnerBodyHeight { set; get; }
     
     public bool Adr1 { set; get; }
     

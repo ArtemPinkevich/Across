@@ -2,9 +2,9 @@
 
 public class Truck: EntityBase
 {
-    public string createdId { set; get; }
+    public string CreatedId { set; get; }
     
-    public string regNumber { set; get; }
+    public string RegNumber { set; get; }
     
     public TrailerType TrailerType { set; get; }
     
@@ -17,6 +17,8 @@ public class Truck: EntityBase
     public bool HasLiftGate { set; get; }
     
     public bool HasStanchionTrailer { set; get; }
+    
+    public int CarryingCapacity { set; get; }
     
     public int BodyVolume { set; get; }
     

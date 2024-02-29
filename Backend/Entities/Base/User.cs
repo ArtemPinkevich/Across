@@ -17,5 +17,7 @@
         public Gender Gender { set; get; }
         
         public List<Truck> Trucks { set; get; }
+        
+        public List<TransportationOrder> TransportationOrders { set; get; }
     }
 }
