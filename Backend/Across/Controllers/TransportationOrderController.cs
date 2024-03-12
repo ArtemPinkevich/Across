@@ -7,27 +7,27 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using UseCases.Handlers.Authorization;
-using UseCases.Handlers.Cargo.Commands;
 using UseCases.Handlers.Cargo.Dto;
 using UseCases.Handlers.Cargo.Queries;
+using UseCases.Handlers.TransportationOrder.Commands;
 
 namespace Across.Controllers;
 
 [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 [Route("api/[controller]")]
 [ApiController]
-public class LoadController:ControllerBase
+public class TransportationOrderController:ControllerBase
 {
     private readonly IMediator _mediator;
     
-    public LoadController(IMediator mediator)
+    public TransportationOrderController(IMediator mediator)
     {
         _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
     }
 
     [Authorize(Roles = $"{UserRoles.Shipper}")]
-    [HttpPost("get_loads")]
-    public async Task<CargosListDto> GetLoads()
+    [HttpPost("get_orders")]
+    public async Task<TransportationOrdersListDto> GetLoads()
     {
         string userId = HttpContext.User.Claims.FirstOrDefault( x => x.Type == JwtClaimsTypes.Id)?.Value;
         return await _mediator.Send(new GetCargosQuery()
@@ -37,20 +37,20 @@ public class LoadController:ControllerBase
     }
 
     [Authorize(Roles = UserRoles.Shipper)]
-    [HttpPost("add_or_update_load")]
-    public async Task<CargoResult> AddOrUpdateLoad([FromBody] CargoDto cargo)
+    [HttpPost("add_or_update_order")]
+    public async Task<TransportationOrderResult> AddOrUpdateLoad([FromBody] TransportationOrderDto transportationOrder)
     {
         string userId = HttpContext.User.Claims.FirstOrDefault( x => x.Type == JwtClaimsTypes.Id)?.Value;
-        return await _mediator.Send(new AddOrUpdateCargoCommand()
+        return await _mediator.Send(new AddOrUpdateTransportationOrderCommand()
         {
             UserId = userId,
-            CargoDto = cargo
+            TransportationOrderDto = transportationOrder
         });
     }
     
     [Authorize(Roles = UserRoles.Shipper)]
     [HttpPost("delete_load")]
-    public async Task<CargoResult> DeleteLoad([FromBody] DeleteCargoCommand command)
+    public async Task<TransportationOrderResult> DeleteLoad([FromBody] DeleteTransportationOrderCommand command)
     {
         return await _mediator.Send(command);
     }

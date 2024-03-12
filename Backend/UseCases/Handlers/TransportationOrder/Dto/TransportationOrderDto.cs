@@ -2,7 +2,7 @@
 
 namespace UseCases.Handlers.Cargo.Dto;
 
-public class CargoDto
+public class TransportationOrderDto
 {
     public int? Id { set; get; }
     public string CreatedId { set; get; }

@@ -8,7 +8,7 @@ using UseCases.Handlers.Cargo.Dto;
 
 namespace UseCases.Handlers.Cargo.Queries;
 
-public class GetCargosQueryHandler: IRequestHandler<GetCargosQuery, CargosListDto>
+public class GetCargosQueryHandler: IRequestHandler<GetCargosQuery, TransportationOrdersListDto>
 {
     private readonly IMapper _mapper;
     private readonly IRepository<Entities.Cargo> _repository;
@@ -19,17 +19,17 @@ public class GetCargosQueryHandler: IRequestHandler<GetCargosQuery, CargosListDt
         _mapper = mapper;
     }
     
-    public async Task<CargosListDto> Handle(GetCargosQuery request, CancellationToken cancellationToken)
+    public async Task<TransportationOrdersListDto> Handle(GetCargosQuery request, CancellationToken cancellationToken)
     {
         var cargos = await _repository.GetAllAsync(x => x.UserId == request.UserId);
 
-        return new CargosListDto()
+        return new TransportationOrdersListDto()
         {
-            Result = new CargoResult()
+            Result = new TransportationOrderResult()
             {
                 Result = Result.Ok,
             },
-            Cargos = cargos.Select(x => _mapper.Map<CargoDto>(x)).ToList()
+            Cargos = cargos.Select(x => _mapper.Map<TransportationOrderDto>(x)).ToList()
         };
     }
 }
