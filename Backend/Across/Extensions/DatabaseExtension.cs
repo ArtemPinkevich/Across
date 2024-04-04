@@ -30,6 +30,7 @@ namespace Across.Extensions
             services.AddScoped<IRepository<CarWash>, CarWashesRepository>();
             services.AddScoped<IRepository<Truck>, TrucksRepository>();
             services.AddScoped<IRepository<Cargo>, CargosRepository>();
+            services.AddScoped<IRepository<TransportationOrder>, TransportationOrderRepository>();
         }
     }
 }

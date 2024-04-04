@@ -1,6 +1,6 @@
 ﻿namespace Entities;
 
-public class CarBodyRequirement
+public class CarBodyRequirement : EntityBase
 {
     // все закр.+изотерм
     public bool TentTruck { set; get; }              // тентованный
