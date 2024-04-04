@@ -9,7 +9,6 @@ public class TruckRequirements: EntityBase
     
     public LoadingType UnloadingType { set; get; }
 
-    public int CarBodyRequirementId { set; get; }
     public CarBodyRequirement CarBodyRequirement{ set; get; }
     
     public bool HasLTtl { set; get; }

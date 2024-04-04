@@ -2,6 +2,9 @@
 
 public class CarBodyRequirement : EntityBase
 {
+    public int TruckRequirementsId { set; get; }
+    public TruckRequirements TruckRequirements { set; get; }
+    
     // все закр.+изотерм
     public bool TentTruck { set; get; }              // тентованный
     public bool Container { set; get; }              // контейнер

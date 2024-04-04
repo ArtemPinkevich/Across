@@ -29,7 +29,7 @@ public class GetCargosQueryHandler: IRequestHandler<GetTransportationOrdersQuery
             {
                 Result = Result.Ok,
             },
-            Cargos = transportationOrders.Select(x => _mapper.Map<TransportationOrderDto>(x)).ToList()
+            TransportationOrderDtos = transportationOrders.Select(x => _mapper.Map<TransportationOrderDto>(x)).ToList()
         };
     }
 }

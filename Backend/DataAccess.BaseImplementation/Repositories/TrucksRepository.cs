@@ -63,7 +63,7 @@ public class TrucksRepository:IRepository<Truck>
 
     public async Task AddAsync(List<Truck> items)
     {
-        await _context.AddRangeAsync(items);
+        await _context.Trucks.AddRangeAsync(items);
     }
 
     public Task UpdateAsync(Truck item)

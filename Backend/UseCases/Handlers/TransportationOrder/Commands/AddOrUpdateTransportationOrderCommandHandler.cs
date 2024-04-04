@@ -36,44 +36,33 @@ public class AddOrUpdateTransportationOrderCommandHandler: IRequestHandler<AddOr
             };
         }
 
-        if (request.TransportationOrderDto.Id == null)
+        Entities.TransportationOrder order;
+        if (request.TransportationOrderDto.TransportationOrderId == null)
         {
-            var cargo = _mapper.Map<Entities.TransportationOrder>(request.TransportationOrderDto);
-            cargo.UserId = user.Id;
-            await _repository.AddAsync(new List<Entities.TransportationOrder>() {cargo});
+            order = _mapper.Map<Entities.TransportationOrder>(request.TransportationOrderDto);
+            order.UserId = user.Id;
+            await _repository.AddAsync(new List<Entities.TransportationOrder>() {order});
         }
         else
         {
-            var cargo = await _repository.GetAsync(x => x.Id == request.TransportationOrderDto.Id);
-            if (cargo == null)
+            order = await _repository.GetAsync(x => x.Id == request.TransportationOrderDto.TransportationOrderId);
+            if (order == null)
             {
                 return new TransportationOrderResult()
                 {
                     Result = Result.Error,
-                    Reasons = new[] { $"no cargo found with Id={request.TransportationOrderDto.Id}" }
+                    Reasons = new[] { $"no cargo found with Id={request.TransportationOrderDto.TransportationOrderId}" }
                 };
             }
-            
-/*
-            cargo.CreatedId = request.TransportationOrderDto.CreatedId;
-            cargo.Name = request.TransportationOrderDto.Name;
-            cargo.Weight = request.TransportationOrderDto.Weight;
-            cargo.Volume = request.TransportationOrderDto.Volume;
-            cargo.PackagingType = request.TransportationOrderDto.PackagingType;
-            cargo.PackagingQuantity = request.TransportationOrderDto.PackagingQuantity;
-            cargo.Length = request.TransportationOrderDto.Length;
-            cargo.Width = request.TransportationOrderDto.Width;
-            cargo.Height = request.TransportationOrderDto.Height;
-            cargo.Diameter = request.TransportationOrderDto.Diameter;
-            cargo.UserId = user.Id;
-*/
-            await _repository.UpdateAsync(cargo);
+
+            await _repository.UpdateAsync(order);
         }
 
         await _repository.SaveAsync();
 
         return new TransportationOrderResult()
         {
+            TransportationId = order.Id,
             Result = Result.Ok,
         };
     }

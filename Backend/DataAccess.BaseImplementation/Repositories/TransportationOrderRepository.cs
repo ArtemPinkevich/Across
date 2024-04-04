@@ -1,56 +1,96 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using DataAccess.Interfaces;
 using Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace DataAccess.BaseImplementation.Repositories;
 
 public class TransportationOrderRepository: IRepository<TransportationOrder>
 {
-    public Task<TransportationOrder> GetAsync(Expression<Func<TransportationOrder, bool>> condition)
+    private readonly DatabaseContext _context;
+    
+    public TransportationOrderRepository(DatabaseContext context)
     {
-        throw new NotImplementedException();
+        _context = context;
+    }
+    
+    public async Task<TransportationOrder> GetAsync(Expression<Func<TransportationOrder, bool>> condition)
+    {
+        return await _context.TransportationOrders
+            .Include(item => item.User)
+            .Include(item => item.Cargo)
+            .Include(item => item.TruckRequirements)
+            .FirstOrDefaultAsync(condition);
     }
 
-    public Task<List<TransportationOrder>> GetAllAsync()
+    public async Task<List<TransportationOrder>> GetAllAsync()
     {
-        throw new NotImplementedException();
+        return await _context.TransportationOrders
+            .Include(item => item.User)
+            .Include(item => item.Cargo)
+            .Include(item => item.TruckRequirements)
+            .ToListAsync();
     }
 
-    public Task<List<TransportationOrder>> GetAllAsync(Expression<Func<TransportationOrder, bool>> condition)
+    public async Task<List<TransportationOrder>> GetAllAsync(Expression<Func<TransportationOrder, bool>> condition)
     {
-        throw new NotImplementedException();
+        return await _context.TransportationOrders
+            .Include(item => item.User)
+            .Include(item => item.Cargo)
+            .Include(item => item.TruckRequirements)
+            .Where(condition)
+            .AsQueryable()
+            .ToListAsync();
     }
 
-    public Task<List<TransportationOrder>> GetLastAsync(Expression<Func<TransportationOrder, bool>> condition, int limit)
+    public async Task<List<TransportationOrder>> GetLastAsync(Expression<Func<TransportationOrder, bool>> condition, int limit)
     {
-        throw new NotImplementedException();
+        return await _context.TransportationOrders
+            .Include(item => item.User)
+            .Include(item => item.Cargo)
+            .Include(item => item.TruckRequirements)
+            .Where(condition)
+            .TakeLast(limit)
+            .AsQueryable()
+            .ToListAsync();
     }
 
-    public Task<List<TransportationOrder>> GetFirstAsync(Expression<Func<TransportationOrder, bool>> condition, int limit)
+    public async Task<List<TransportationOrder>> GetFirstAsync(Expression<Func<TransportationOrder, bool>> condition, int limit)
     {
-        throw new NotImplementedException();
+        return await _context.TransportationOrders
+            .Include(item => item.User)
+            .Include(item => item.Cargo)
+            .Include(item => item.TruckRequirements)
+            .Where(condition)
+            .Take(limit)
+            .AsQueryable()
+            .ToListAsync();
     }
 
-    public Task AddAsync(List<TransportationOrder> items)
+    public async Task AddAsync(List<TransportationOrder> items)
     {
-        throw new NotImplementedException();
+        await _context.TransportationOrders.AddRangeAsync(items);
     }
 
     public Task UpdateAsync(TransportationOrder item)
     {
-        throw new NotImplementedException();
+        _context.TransportationOrders.Update(item);
+        return Task.CompletedTask;
     }
 
     public Task DeleteAsync(Expression<Func<TransportationOrder, bool>> condition)
     {
-        throw new NotImplementedException();
+        IEnumerable<TransportationOrder> removeItems = _context.TransportationOrders.Where(condition);
+        _context.RemoveRange(removeItems);
+        return Task.CompletedTask;
     }
 
-    public Task SaveAsync()
+    public async Task SaveAsync()
     {
-        throw new NotImplementedException();
+        await _context.SaveChangesAsync();
     }
 }

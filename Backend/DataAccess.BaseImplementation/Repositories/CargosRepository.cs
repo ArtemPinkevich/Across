@@ -63,7 +63,7 @@ public class CargosRepository:IRepository<Cargo>
 
     public async Task AddAsync(List<Cargo> items)
     {
-        await _context.AddRangeAsync(items);
+        await _context.Cargos.AddRangeAsync(items);
     }
 
     public Task UpdateAsync(Cargo item)
