@@ -16,6 +16,10 @@
         public DbSet<Truck> Trucks { set; get; }
         
         public DbSet<Cargo> Cargos { set; get; }
+        
+        public DbSet<TransportationOrder> TransportationOrders { set; get; }
+        
+        public DbSet<TruckRequirements> TruckRequirements { set; get; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

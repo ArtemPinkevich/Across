@@ -35,6 +35,6 @@ public class Cargo: EntityBase
 
     public double Diameter { set; get; }
     
-    public string UserId { set; get; }
-    public User User { set; get; }
+    public int TransportationOrderId { set; get; }
+    public TransportationOrder TransportationOrder { set; get; }
 }

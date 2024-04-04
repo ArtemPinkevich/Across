@@ -30,7 +30,7 @@ public class TransportationOrderController:ControllerBase
     public async Task<TransportationOrdersListDto> GetLoads()
     {
         string userId = HttpContext.User.Claims.FirstOrDefault( x => x.Type == JwtClaimsTypes.Id)?.Value;
-        return await _mediator.Send(new GetCargosQuery()
+        return await _mediator.Send(new GetTransportationOrdersQuery()
         {
             UserId = userId
         });

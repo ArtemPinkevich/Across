@@ -14,10 +14,10 @@ public class AddOrUpdateTransportationOrderCommandHandler: IRequestHandler<AddOr
 {
     private readonly IMapper _mapper;
     private readonly UserManager<User> _userManager;
-    private readonly IRepository<Entities.Cargo> _repository;
+    private readonly IRepository<Entities.TransportationOrder> _repository;
 
     public AddOrUpdateTransportationOrderCommandHandler(UserManager<User> userManager,
-        IRepository<Entities.Cargo> repository,
+        IRepository<Entities.TransportationOrder> repository,
         IMapper mapper)
     {
         _userManager = userManager;
@@ -38,9 +38,9 @@ public class AddOrUpdateTransportationOrderCommandHandler: IRequestHandler<AddOr
 
         if (request.TransportationOrderDto.Id == null)
         {
-            var cargo = _mapper.Map<Entities.Cargo>(request.TransportationOrderDto);
+            var cargo = _mapper.Map<Entities.TransportationOrder>(request.TransportationOrderDto);
             cargo.UserId = user.Id;
-            await _repository.AddAsync(new List<Entities.Cargo>() {cargo});
+            await _repository.AddAsync(new List<Entities.TransportationOrder>() {cargo});
         }
         else
         {
@@ -53,7 +53,8 @@ public class AddOrUpdateTransportationOrderCommandHandler: IRequestHandler<AddOr
                     Reasons = new[] { $"no cargo found with Id={request.TransportationOrderDto.Id}" }
                 };
             }
-
+            
+/*
             cargo.CreatedId = request.TransportationOrderDto.CreatedId;
             cargo.Name = request.TransportationOrderDto.Name;
             cargo.Weight = request.TransportationOrderDto.Weight;
@@ -65,7 +66,7 @@ public class AddOrUpdateTransportationOrderCommandHandler: IRequestHandler<AddOr
             cargo.Height = request.TransportationOrderDto.Height;
             cargo.Diameter = request.TransportationOrderDto.Diameter;
             cargo.UserId = user.Id;
-
+*/
             await _repository.UpdateAsync(cargo);
         }
 

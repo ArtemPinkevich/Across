@@ -5,8 +5,10 @@ public class TransportationOrder : EntityBase
     public string UserId { set; get; }
     public User User { set; get; }
     
+    public int CargoId { set; get; }
     public Cargo Cargo { set; get; }
     
+    public int TruckRequirementsId { set; get; }
     public TruckRequirements TruckRequirements { set; get; }
     
     public TransportationStatus TransportationStatus { set; get; }

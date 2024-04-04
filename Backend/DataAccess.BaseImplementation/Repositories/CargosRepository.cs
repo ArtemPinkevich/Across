@@ -21,21 +21,21 @@ public class CargosRepository:IRepository<Cargo>
     public async Task<Cargo> GetAsync(Expression<Func<Cargo, bool>> condition)
     {
         return await _context.Cargos
-            .Include(item => item.User)
+            .Include(item => item.TransportationOrder)
             .FirstOrDefaultAsync(condition);
     }
 
     public async Task<List<Cargo>> GetAllAsync()
     {
         return await _context.Cargos
-            .Include(item => item.User)
+            .Include(item => item.TransportationOrder)
             .ToListAsync();
     }
 
     public async Task<List<Cargo>> GetAllAsync(Expression<Func<Cargo, bool>> condition)
     {
         return await _context.Cargos
-            .Include(item => item.User)
+            .Include(item => item.TransportationOrder)
             .Where(condition)
             .AsQueryable()
             .ToListAsync();
@@ -44,7 +44,7 @@ public class CargosRepository:IRepository<Cargo>
     public async Task<List<Cargo>> GetLastAsync(Expression<Func<Cargo, bool>> condition, int limit)
     {
         return await _context.Cargos
-            .Include(item => item.User)
+            .Include(item => item.TransportationOrder)
             .Where(condition)
             .TakeLast(limit)
             .AsQueryable()
@@ -54,7 +54,7 @@ public class CargosRepository:IRepository<Cargo>
     public async Task<List<Cargo>> GetFirstAsync(Expression<Func<Cargo, bool>> condition, int limit)
     {
         return await _context.Cargos
-            .Include(item => item.User)
+            .Include(item => item.TransportationOrder)
             .Where(condition)
             .Take(limit)
             .AsQueryable()
