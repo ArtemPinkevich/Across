@@ -22,7 +22,7 @@ public class TruckRequirementsForLoadDto
 {
     public CarBodyType[] CarBodies { set; get; }
     public LoadingTypeDto[] LoadingTypeDtos { set; get; }
-    public LoadingTypeDto[] UnloadingType { set; get; }
+    public LoadingTypeDto[] UnloadingTypeDtos { set; get; }
     
     public bool Adr1 { set; get; }
     public bool Adr2 { set; get; }

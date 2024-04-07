@@ -30,20 +30,19 @@ public class MobileAuthorizationQueryHandler : IRequestHandler<ShipperAuthorizat
         if (user == null) throw new NotAuthorizedException { AuthMessage = "No such user" };
 
         var result = await _signInManager.CheckPasswordSignInAsync(user, request.Password, false);
-        if (result.Succeeded)
-        {
-            var userRole = await GetUserRole(user);
-            if (userRole == null)
-                throw new NotAuthorizedException { AuthMessage = "Error user role identification" };
-            return new AuthorizationDto
-            {
-                AccessToken = _jwtGenerator.CreateAccessToken(user, userRole),
-                RefreshToken = _jwtGenerator.CreateRefreshToken(),
-                ExpireDateTime = DateTime.Now.AddDays(7).ToString()
-            };
-        }
+        
+        if (!result.Succeeded) throw new NotAuthorizedException { AuthMessage = "Password is incorrect" };
 
-        return null;
+        var userRole = await GetUserRole(user);
+        
+        if (userRole == null) throw new NotAuthorizedException { AuthMessage = "Error user role identification" };
+        
+        return new AuthorizationDto
+        {
+            AccessToken = _jwtGenerator.CreateAccessToken(user, userRole),
+            RefreshToken = _jwtGenerator.CreateRefreshToken(),
+            ExpireDateTime = DateTime.Now.AddDays(7).ToString()
+        };
     }
 
     private async Task<string> GetUserRole(User user)

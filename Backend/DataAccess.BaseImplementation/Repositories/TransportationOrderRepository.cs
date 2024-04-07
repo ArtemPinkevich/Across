@@ -24,6 +24,7 @@ public class TransportationOrderRepository: IRepository<TransportationOrder>
             .Include(item => item.User)
             .Include(item => item.Cargo)
             .Include(item => item.TruckRequirements)
+            .ThenInclude(item => item.CarBodyRequirement)
             .FirstOrDefaultAsync(condition);
     }
 
@@ -33,6 +34,7 @@ public class TransportationOrderRepository: IRepository<TransportationOrder>
             .Include(item => item.User)
             .Include(item => item.Cargo)
             .Include(item => item.TruckRequirements)
+            .ThenInclude(item => item.CarBodyRequirement)
             .ToListAsync();
     }
 
@@ -42,6 +44,7 @@ public class TransportationOrderRepository: IRepository<TransportationOrder>
             .Include(item => item.User)
             .Include(item => item.Cargo)
             .Include(item => item.TruckRequirements)
+            .ThenInclude(item => item.CarBodyRequirement)
             .Where(condition)
             .AsQueryable()
             .ToListAsync();
@@ -53,6 +56,7 @@ public class TransportationOrderRepository: IRepository<TransportationOrder>
             .Include(item => item.User)
             .Include(item => item.Cargo)
             .Include(item => item.TruckRequirements)
+            .ThenInclude(item => item.CarBodyRequirement)
             .Where(condition)
             .TakeLast(limit)
             .AsQueryable()
