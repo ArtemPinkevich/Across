@@ -50,9 +50,14 @@ public class TruckController: ControllerBase
     }
     
     [Authorize(Roles = UserRoles.Driver)]
-    [HttpDelete("delete_truck")]
-    public async Task<TruckResultDto> DeleteTruck([FromBody] DeleteTruckCommand deleteTruckCommand)
+    [HttpDelete("delete_truck/{id}")]
+    public async Task<TruckResultDto> DeleteTruck(int id)
     {
+        var deleteTruckCommand = new DeleteTruckCommand()
+        {
+            TruckId = id,
+        };
+
         return await _mediator.Send(deleteTruckCommand);
     }
 }
