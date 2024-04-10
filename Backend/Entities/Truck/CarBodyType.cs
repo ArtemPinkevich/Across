@@ -34,7 +34,7 @@ public enum CarBodyType
     Autocart,               // автовоз
     Autotower,              // автовышка
     AutoCarrier,            // автотранспортер
-    СoncreteTruck,          // бетоновоз
+    ConcreteTruck,          // бетоновоз
     BitumenTruck,           // битумовоз
     FuelTank,               // бензовоз
     OffRoader,              // вездеход
