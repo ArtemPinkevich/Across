@@ -226,6 +226,8 @@ public class CargoAutoMapperProfile : Profile
         });
         
         CreateMap<TransportationOrderDto, Entities.TransportationOrder>()
+            .ForMember(d => d.Id,
+                opt => opt.MapFrom(s => s.TransportationOrderId))
             .ForMember(d => d.LoadingAddress, 
                 opt => opt.MapFrom(s => s.LoadPublishInfo.LoadingAddress))
             .ForMember(d => d.UnloadingAddress, 

@@ -26,7 +26,7 @@ public class TransportationOrderController:ControllerBase
     }
 
     [Authorize(Roles = $"{UserRoles.Shipper}")]
-    [HttpPost("get_orders")]
+    [HttpGet("get_orders")]
     public async Task<TransportationOrdersListDto> GetLoads()
     {
         string userId = HttpContext.User.Claims.FirstOrDefault( x => x.Type == JwtClaimsTypes.Id)?.Value;
@@ -49,9 +49,14 @@ public class TransportationOrderController:ControllerBase
     }
     
     [Authorize(Roles = UserRoles.Shipper)]
-    [HttpPost("delete_load")]
-    public async Task<TransportationOrderResult> DeleteLoad([FromBody] DeleteTransportationOrderCommand command)
+    [HttpDelete("delete_load/{id}")]
+    public async Task<TransportationOrderResult> DeleteLoad(int id)
     {
+        var command = new DeleteTransportationOrderCommand()
+        {
+            TransportationOrderId = id,
+        };
+
         return await _mediator.Send(command);
     }
 }
