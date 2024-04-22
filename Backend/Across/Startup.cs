@@ -90,7 +90,7 @@ namespace Across
             app.UseCors(builder => builder.AllowAnyOrigin()
                                           .AllowAnyMethod()
                                           .AllowAnyHeader()
-                                          .AllowCredentials());
+                                          .SetIsOriginAllowed(_ => true));
 
             app.UseAuthentication();
             app.UseAuthorization();

@@ -1,4 +1,6 @@
-﻿namespace UseCases.Handlers.Authorization.Queries
+﻿using UseCases.Handlers.Common.Extensions;
+
+namespace UseCases.Handlers.Authorization.Queries
 {
     using Entities;
     using MediatR;
@@ -10,6 +12,7 @@
     using UseCases.Exceptions;
     using UseCases.Handlers.Helpers;
 
+    #warning obsolete unused
     public class AuthorizationQueryHandler : IRequestHandler<AuthorizationQuery, AuthorizationDto>
     {
         private readonly IJwtGenerator _jwtGenerator;
@@ -36,36 +39,15 @@
             var result = await _signInManager.CheckPasswordSignInAsync(user, request.Password, false);
             if (result.Succeeded)
             {
-                var userRole = await GetUserRole(user);
+                var userRole = await _userManager.GetUserRole(user);
                 if (userRole == null)
                     throw new NotAuthorizedException() { AuthMessage = "Ошибка в определении роли пользователя" };
                 return new AuthorizationDto()
                 {
                     AccessToken = _jwtGenerator.CreateAccessToken(user, userRole),
-                    RefreshToken = _jwtGenerator.CreateRefreshToken(),
-                    ExpireDateTime = DateTime.Now.AddDays(7).ToString()
                 };
             }
 
-            return null;
-        }
-
-        private async Task<string> GetUserRole(User user)
-        {
-            if (await _userManager.IsInRoleAsync(user, UserRoles.Admin))
-                return UserRoles.Admin;
-
-            if (await _userManager.IsInRoleAsync(user, UserRoles.Owner))
-                return UserRoles.Owner;
-
-            if (await _userManager.IsInRoleAsync(user, UserRoles.Driver))
-                return UserRoles.Driver;
-            
-            if (await _userManager.IsInRoleAsync(user, UserRoles.Shipper))
-                return UserRoles.Shipper;
-            
-            if (await _userManager.IsInRoleAsync(user, UserRoles.Lawyer))
-                return UserRoles.Lawyer;
             return null;
         }
     }

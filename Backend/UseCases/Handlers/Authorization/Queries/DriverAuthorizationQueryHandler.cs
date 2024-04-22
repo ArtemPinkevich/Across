@@ -3,9 +3,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using Entities;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using UseCases.Exceptions;
+using UseCases.Handlers.Common.Extensions;
 
 namespace UseCases.Handlers.Authorization.Queries;
 
@@ -14,14 +16,17 @@ public class DriverAuthorizationQueryHandler : IRequestHandler<DriverAuthorizati
     private readonly IJwtGenerator _jwtGenerator;
     private readonly SignInManager<User> _signInManager;
     private readonly UserManager<User> _userManager;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
     public DriverAuthorizationQueryHandler(UserManager<User> userManager,
         IOptions<JwtConfiguration> options,
-        SignInManager<User> signInManager)
+        SignInManager<User> signInManager,
+        IHttpContextAccessor httpContextAccessor)
     {
         _userManager = userManager;
         _jwtGenerator = new JwtGenerator(options.Value);
         _signInManager = signInManager;
+        _httpContextAccessor = httpContextAccessor;
     }
 
     public async Task<AuthorizationDto> Handle(DriverAuthorizationQuery request, CancellationToken cancellationToken)
@@ -32,36 +37,18 @@ public class DriverAuthorizationQueryHandler : IRequestHandler<DriverAuthorizati
         var result = await _signInManager.CheckPasswordSignInAsync(user, request.Password, false);
         if (result.Succeeded)
         {
-            var userRole = await GetUserRole(user);
+            var userRole = await _userManager.GetUserRole(user);
             if (userRole == null)
                 throw new NotAuthorizedException { AuthMessage = "Error user role identification" };
+            
+            _httpContextAccessor.HttpContext.Response.Cookies.Append("refresh_token", _jwtGenerator.CreateRefreshToken(user));
+            
             return new AuthorizationDto
             {
                 AccessToken = _jwtGenerator.CreateAccessToken(user, userRole),
-                RefreshToken = _jwtGenerator.CreateRefreshToken(),
-                ExpireDateTime = DateTime.Now.AddDays(7).ToString()
             };
         }
 
-        return null;
-    }
-
-    private async Task<string> GetUserRole(User user)
-    {
-        if (await _userManager.IsInRoleAsync(user, UserRoles.Admin))
-            return UserRoles.Admin;
-
-        if (await _userManager.IsInRoleAsync(user, UserRoles.Owner))
-            return UserRoles.Owner;
-
-        if (await _userManager.IsInRoleAsync(user, UserRoles.Driver))
-            return UserRoles.Driver;
-
-        if (await _userManager.IsInRoleAsync(user, UserRoles.Shipper))
-            return UserRoles.Shipper;
-
-        if (await _userManager.IsInRoleAsync(user, UserRoles.Lawyer))
-            return UserRoles.Lawyer;
         return null;
     }
 }

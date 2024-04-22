@@ -7,6 +7,7 @@ using DataAccess.Interfaces;
 using Entities;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
+using UseCases.Handlers.Common.Dto;
 using UseCases.Handlers.Truck.Dto;
 
 namespace UseCases.Handlers.Truck.Queries;
@@ -32,7 +33,7 @@ public class GetQueriesCommandHandler:IRequestHandler<GetTrucksQuery, TrucksList
             {
                 Result = new TruckResultDto()
                 {
-                    Result = TruckResult.Error,
+                    Result = ApiResult.Failed,
                     Reasons = new []{"no user found"}
                 }
             };
@@ -43,7 +44,7 @@ public class GetQueriesCommandHandler:IRequestHandler<GetTrucksQuery, TrucksList
         {
             Result = new TruckResultDto()
             {
-                Result = TruckResult.Ok,
+                Result = ApiResult.Success,
             },
             Trucks = trucks.Select(x => _mapper.Map<TruckDto>(x)).ToList(),
         };

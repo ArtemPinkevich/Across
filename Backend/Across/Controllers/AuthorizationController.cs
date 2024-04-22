@@ -29,5 +29,11 @@ namespace Across.Controllers
         {
             return await _mediator.Send(new ShipperAuthorizationQuery() { Phone = phone, Password = password });
         }
+        
+        [HttpGet("refresh_access_token")]
+        public async Task<AuthorizationDto> MobileAuthorize()
+        {
+            return await _mediator.Send(new UpdateAccessTokenQuery());
+        }
     }
 }

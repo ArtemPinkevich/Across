@@ -9,5 +9,7 @@
         public string Audience { set; get; }
 
         public int DurationDays { set; get; }
+        
+        public int RefreshTokenDurationDays { set; get; }
     }
 }

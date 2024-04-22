@@ -8,6 +8,7 @@ using Entities;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using UseCases.Handlers.Cargo.Dto;
+using UseCases.Handlers.Common.Dto;
 
 namespace UseCases.Handlers.TransportationOrder.Commands;
 
@@ -32,7 +33,7 @@ public class AddOrUpdateTransportationOrderCommandHandler: IRequestHandler<AddOr
         {
             return new TransportationOrderResult()
             {
-                Result = Result.Error,
+                Result = ApiResult.Failed,
                 Reasons = new[] { "no user found" }
             };
         }
@@ -51,7 +52,7 @@ public class AddOrUpdateTransportationOrderCommandHandler: IRequestHandler<AddOr
             {
                 return new TransportationOrderResult()
                 {
-                    Result = Result.Error,
+                    Result = ApiResult.Failed,
                     Reasons = new[] { $"no cargo found with Id={request.TransportationOrderDto.TransportationOrderId}" }
                 };
             }
@@ -153,7 +154,7 @@ public class AddOrUpdateTransportationOrderCommandHandler: IRequestHandler<AddOr
         return new TransportationOrderResult()
         {
             TransportationId = order.Id,
-            Result = Result.Ok,
+            Result = ApiResult.Success,
         };
     }
 }

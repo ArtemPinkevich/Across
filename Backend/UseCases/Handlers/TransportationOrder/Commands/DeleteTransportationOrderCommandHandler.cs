@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using DataAccess.Interfaces;
 using MediatR;
 using UseCases.Handlers.Cargo.Dto;
+using UseCases.Handlers.Common.Dto;
 
 namespace UseCases.Handlers.TransportationOrder.Commands;
 
@@ -22,7 +23,7 @@ public class DeleteTransportationOrderCommandHandler:IRequestHandler<DeleteTrans
         {
             return new TransportationOrderResult()
             {
-                Result = Result.Error,
+                Result = ApiResult.Failed,
                 Reasons = new[] { $"no cargo found with id = {request.TransportationOrderId}" }
             };
         }
@@ -32,7 +33,7 @@ public class DeleteTransportationOrderCommandHandler:IRequestHandler<DeleteTrans
 
         return new TransportationOrderResult()
         {
-            Result = Result.Ok,
+            Result = ApiResult.Success,
         };
     }
 }

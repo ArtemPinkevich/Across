@@ -6,6 +6,7 @@ using DataAccess.Interfaces;
 using Entities;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
+using UseCases.Handlers.Common.Dto;
 using UseCases.Handlers.Truck.Dto;
 
 namespace UseCases.Handlers.Truck.Commands;
@@ -81,7 +82,7 @@ public class AddOrUpdateTruckToUserCommandHandler : IRequestHandler<AddOrUpdateT
         
         return new TruckResultDto()
         {
-            Result = TruckResult.Ok,
+            Result = ApiResult.Success,
         };
     }
     
@@ -89,7 +90,7 @@ public class AddOrUpdateTruckToUserCommandHandler : IRequestHandler<AddOrUpdateT
     {
         return new TruckResultDto()
         {
-            Result = TruckResult.Error,
+            Result = ApiResult.Failed,
             Reasons = new[] { "No user found" }
         };
     }
@@ -98,7 +99,7 @@ public class AddOrUpdateTruckToUserCommandHandler : IRequestHandler<AddOrUpdateT
     {
         return new TruckResultDto()
         {
-            Result = TruckResult.Error,
+            Result = ApiResult.Failed,
             Reasons = new[] { $"no truck with id={truckId} was found" },
         };
     }

@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using DataAccess.Interfaces;
 using MediatR;
+using UseCases.Handlers.Common.Dto;
 using UseCases.Handlers.Truck.Dto;
 
 namespace UseCases.Handlers.Truck.Commands;
@@ -22,7 +23,7 @@ public class DeleteTruckCommandHandler:IRequestHandler<DeleteTruckCommand, Truck
         {
             return new TruckResultDto()
             {
-                Result = TruckResult.Error,
+                Result = ApiResult.Failed,
                 Reasons = new[] { $"no truck with id={request.TruckId} found" }
             };
         }
@@ -32,7 +33,7 @@ public class DeleteTruckCommandHandler:IRequestHandler<DeleteTruckCommand, Truck
         
         return new TruckResultDto()
         {
-            Result = TruckResult.Ok,
+            Result = ApiResult.Success,
         };
     }
 }

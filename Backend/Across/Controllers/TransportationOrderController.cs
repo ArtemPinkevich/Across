@@ -8,8 +8,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using UseCases.Handlers.Authorization;
 using UseCases.Handlers.Cargo.Dto;
-using UseCases.Handlers.Cargo.Queries;
 using UseCases.Handlers.TransportationOrder.Commands;
+using UseCases.Handlers.TransportationOrder.Queries;
 
 namespace Across.Controllers;
 

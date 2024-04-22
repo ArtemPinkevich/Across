@@ -1,4 +1,6 @@
-﻿namespace UseCases.Handlers.Authorization
+﻿using System.Security.Claims;
+
+namespace UseCases.Handlers.Authorization
 {
     using Entities;
 
@@ -6,6 +8,8 @@
     {
         string CreateAccessToken(User user, string role);
 
-        string CreateRefreshToken();
+        string CreateRefreshToken(User user);
+
+        public ClaimsPrincipal GetPrincipalRefreshToken(string token);
     }
 }

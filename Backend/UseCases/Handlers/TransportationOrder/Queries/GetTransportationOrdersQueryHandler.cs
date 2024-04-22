@@ -5,8 +5,9 @@ using AutoMapper;
 using DataAccess.Interfaces;
 using MediatR;
 using UseCases.Handlers.Cargo.Dto;
+using UseCases.Handlers.Common.Dto;
 
-namespace UseCases.Handlers.Cargo.Queries;
+namespace UseCases.Handlers.TransportationOrder.Queries;
 
 public class GetCargosQueryHandler: IRequestHandler<GetTransportationOrdersQuery, TransportationOrdersListDto>
 {
@@ -27,7 +28,7 @@ public class GetCargosQueryHandler: IRequestHandler<GetTransportationOrdersQuery
         {
             Result = new TransportationOrderResult()
             {
-                Result = Result.Ok,
+                Result = ApiResult.Success,
             },
             TransportationOrderDtos = transportationOrders.Select(x => _mapper.Map<TransportationOrderDto>(x)).ToList()
         };

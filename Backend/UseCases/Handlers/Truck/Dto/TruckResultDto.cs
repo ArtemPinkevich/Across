@@ -1,8 +1,10 @@
-﻿namespace UseCases.Handlers.Truck.Dto;
+﻿using UseCases.Handlers.Common.Dto;
+
+namespace UseCases.Handlers.Truck.Dto;
 
 public class TruckResultDto
 {
-    public TruckResult Result { set; get; }
+    public ApiResult Result { set; get; }
     
     public string[] Reasons { set; get; }
 }

@@ -1,13 +1,10 @@
-﻿namespace UseCases.Handlers.Cargo.Dto;
+﻿using UseCases.Handlers.Common.Dto;
 
-public enum Result
-{
-    Ok,
-    Error
-}
+namespace UseCases.Handlers.Cargo.Dto;
+
 public class TransportationOrderResult
 {
     public int? TransportationId { set; get; }
-    public Result Result { set; get; }
+    public ApiResult Result { set; get; }
     public string[] Reasons { set; get; }
 }
