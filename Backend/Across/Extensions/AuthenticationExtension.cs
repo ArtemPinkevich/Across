@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
@@ -24,9 +25,10 @@ namespace Across.Extensions
                         ValidIssuer = configuration["Jwt:Issuer"],
                         ValidateAudience = true,
                         ValidAudience = configuration["Jwt:Audience"],
-                        ValidateLifetime = false,
+                        ValidateLifetime = true,
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"])),
                         ValidateIssuerSigningKey = true,
+                        ClockSkew = TimeSpan.Zero
                     };
                     options.Events = new JwtBearerEvents
                     {

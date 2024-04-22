@@ -36,7 +36,7 @@ public class UpdateAccessTokenQueryHandler: IRequestHandler<UpdateAccessTokenQue
         if (DateTime.TryParse(claims.FindFirst(x => x.Type == JwtClaimsTypes.RefreshTokenExpireDateTime)!.Value,
                 out DateTime expireDateTime))
         {
-            if (expireDateTime < DateTime.Now) throw new NotAuthorizedException() { AuthMessage = "Refresh token is expired. Please, authorize again" };
+            if (expireDateTime < DateTime.Now.ToUniversalTime()) throw new NotAuthorizedException() { AuthMessage = "Refresh token is expired. Please, authorize again" };
         }
         
         var user = await _userManager.FindByIdAsync(userId);

@@ -34,9 +34,9 @@ namespace UseCases.Handlers.Authorization
             var jwt = new JwtSecurityToken(
                     issuer: _jwtConfiguration.Issuer,
                     audience: _jwtConfiguration.Audience,
-                    notBefore: DateTime.Now,
+                    notBefore: DateTime.Now.ToUniversalTime(),
                     claims: claims,
-                    expires: DateTime.Now.Add(TimeSpan.FromDays(_jwtConfiguration.DurationDays)),
+                    expires: DateTime.Now.Add(TimeSpan.FromDays(_jwtConfiguration.DurationDays)).ToUniversalTime(),
                     signingCredentials: credentials);
             return new JwtSecurityTokenHandler().WriteToken(jwt);
         }
@@ -56,9 +56,9 @@ namespace UseCases.Handlers.Authorization
             var jwt = new JwtSecurityToken(
                 issuer: _jwtConfiguration.Issuer,
                 audience: _jwtConfiguration.Audience,
-                notBefore: DateTime.Now,
+                notBefore: DateTime.Now.ToUniversalTime(),
                 claims: claims,
-                expires: DateTime.Now.Add(TimeSpan.FromDays(_jwtConfiguration.RefreshTokenDurationDays)),
+                expires: DateTime.Now.Add(TimeSpan.FromDays(_jwtConfiguration.RefreshTokenDurationDays)).ToUniversalTime(),
                 signingCredentials: credentials);
             return new JwtSecurityTokenHandler().WriteToken(jwt);
         }
