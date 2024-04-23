@@ -9,7 +9,7 @@ namespace Across.IdentityTokenProviders
     public class CrutchPhoneTokenProvider<TUser> : TotpSecurityStampBasedTokenProvider<TUser>
         where TUser : class
     {
-        private const int CRUTCH_PHONE_VERIFICATION_CODE = 123456;
+        private const int CrutchPhoneVerificationCode = 123456;
 
         public override async Task<bool> CanGenerateTwoFactorTokenAsync(UserManager<TUser> manager, TUser user)
         {
@@ -30,7 +30,7 @@ namespace Across.IdentityTokenProviders
                 throw new ArgumentNullException(nameof(manager));
             }
 
-            return Task.FromResult(CRUTCH_PHONE_VERIFICATION_CODE.ToString("D6", CultureInfo.InvariantCulture));
+            return Task.FromResult(CrutchPhoneVerificationCode.ToString("D6", CultureInfo.InvariantCulture));
         }
 
         public override Task<bool> ValidateAsync(string purpose, string token, UserManager<TUser> manager,
@@ -41,7 +41,10 @@ namespace Across.IdentityTokenProviders
                 throw new ArgumentNullException(nameof(manager));
             }
 
-            return Task.FromResult(true);
+            if(token == CrutchPhoneVerificationCode.ToString("D6", CultureInfo.InvariantCulture))
+                return Task.FromResult(true);
+
+            return Task.FromResult(false);
         }
     }
 }
