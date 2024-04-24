@@ -35,19 +35,19 @@ public class DriverAuthorizationQueryHandler : IRequestHandler<DriverAuthorizati
     {
         var user = await _userManager.FindByNameAsync(request.Phone);
         if (user == null)
-            throw new NotAuthorizedException { AuthMessage = $"No such user {request.Phone}" };
+            throw new NotAuthorizedException { AuthorizationMessage = $"No such user {request.Phone}" };
 
         var requestCookiePhoneConfirmed = _httpContextAccessor.HttpContext.Request.Cookies[Constants.PhoneConfirmed];
         if (requestCookiePhoneConfirmed == null && requestCookiePhoneConfirmed != true.ToString())
-            throw new NotAuthorizedException { AuthMessage = $"At cookies phone number is not confirmed {request.Phone}" };
+            throw new NotAuthorizedException { AuthorizationMessage = $"At cookies phone number is not confirmed {request.Phone}" };
         
         var isPhoneConfirmed = await _userManager.IsPhoneNumberConfirmedAsync(user);
         if (!isPhoneConfirmed)
-            throw new NotAuthorizedException { AuthMessage = $"Phone number is not confirmed {user.UserName}" };
+            throw new NotAuthorizedException { AuthorizationMessage = $"Phone number is not confirmed {user.UserName}" };
         
         var userRole = await _userManager.GetUserRole(user);
         if (userRole == null)
-            throw new NotAuthorizedException { AuthMessage = $"Error user role identification {user.UserName}" };
+            throw new NotAuthorizedException { AuthorizationMessage = $"Error user role identification {user.UserName}" };
         
         _httpContextAccessor.HttpContext.Response.Cookies.Append(Constants.RefreshTokenKey, _jwtGenerator.CreateRefreshToken(user));
         

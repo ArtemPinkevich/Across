@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Net;
+using System.Text.Json;
 using System.Threading.Tasks;
+using Across.Middlewares.Dto;
 using Infrastructure.SmsGateway.Exceptions;
 using Microsoft.AspNetCore.Http;
+using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 using UseCases.Exceptions;
 
 namespace Across.Middlewares
@@ -37,7 +41,24 @@ namespace Across.Middlewares
             {
                 case NotAuthorizedException exc:
                     httpContext.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
-                    await httpContext.Response.WriteAsync($"{exc.AuthMessage} {exception.Message}");
+                    var json = JsonConvert.SerializeObject(new NotAuthorizedDto()
+                    {
+                        ErrorCode = exc.ErrorCode,
+                        AuthorizationMessage = exc.AuthorizationMessage,
+                        ExceptionMessage = exc.Message
+                    }, Formatting.Indented);
+                    await httpContext.Response.WriteAsync(json);
+                    break;
+                case SecurityTokenExpiredException exc:
+                    httpContext.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+                    var tokenExpiredDto = JsonConvert.SerializeObject(new NotAuthorizedDto()
+                    {
+                        ErrorCode = NotAuthorizedErrorCode.AccessTokenExpired,
+                        AuthorizationMessage = "Access token expired",
+                        ExceptionMessage = exc.Message
+                    }, Formatting.Indented);
+                    await httpContext.Response.WriteAsync(tokenExpiredDto);
+                    break;
                     break;
                 case SendSmsErrorException exc:
                     httpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;

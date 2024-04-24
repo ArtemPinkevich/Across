@@ -37,11 +37,11 @@ public class UpdateAccessTokenQueryHandler: IRequestHandler<UpdateAccessTokenQue
         if (DateTime.TryParse(claims.FindFirst(x => x.Type == JwtClaimsTypes.RefreshTokenExpireDateTime)!.Value,
                 out DateTime expireDateTime))
         {
-            if (expireDateTime < DateTime.Now.ToUniversalTime()) throw new NotAuthorizedException() { AuthMessage = "Refresh token is expired. Please, authorize again" };
+            if (expireDateTime < DateTime.Now.ToUniversalTime()) throw new NotAuthorizedException() { ErrorCode = NotAuthorizedErrorCode.RefreshTokenExpired, AuthorizationMessage = "Refresh token is expired. Please, authorize again" };
         }
         
         var user = await _userManager.FindByIdAsync(userId);
-        if (user == null) throw new NotAuthorizedException { AuthMessage = "No such user" };
+        if (user == null) throw new NotAuthorizedException { AuthorizationMessage = "No such user" };
 
         var userRole = await _userManager.GetUserRole(user);
         

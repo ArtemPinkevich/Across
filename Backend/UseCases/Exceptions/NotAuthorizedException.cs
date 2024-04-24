@@ -1,9 +1,11 @@
 ﻿namespace UseCases.Exceptions
 {
     using System;
-
+    
     public class NotAuthorizedException: Exception
     {
-        public string AuthMessage { set; get; }
+        public NotAuthorizedErrorCode ErrorCode { set; get; }
+        
+        public string AuthorizationMessage { set; get; }
     }
 }

@@ -38,10 +38,20 @@ namespace Across.Extensions
 
                             var path = context.HttpContext.Request.Path;
                             if (!string.IsNullOrEmpty(accessToken) &&
-                                (path.StartsWithSegments("/washme")))
+                                (path.StartsWithSegments("/across")))
                             {
                                 context.Token = accessToken;
                             }
+                            return Task.CompletedTask;
+                        },
+                        
+                        OnAuthenticationFailed = context =>
+                        {
+                            if (context.Exception is SecurityTokenExpiredException)
+                            {
+                                throw context.Exception;
+                            }
+
                             return Task.CompletedTask;
                         }
                     };

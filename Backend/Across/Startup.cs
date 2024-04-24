@@ -100,7 +100,7 @@ namespace Across
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller}/{action=Index}/{id?}");
-                endpoints.MapHub<WashMeHub>("/washme", options =>
+                endpoints.MapHub<WashMeHub>("/across", options =>
                 {
                     options.ApplicationMaxBufferSize = 64;
                     options.TransportMaxBufferSize = 64;
