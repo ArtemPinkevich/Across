@@ -19,8 +19,14 @@ public class VerificationController: ControllerBase
     }
     
     [HttpGet("verify/{phone}/{code}")]
-    public async Task<VerificationResultDto> GetProfile(string phone, string code)
+    public async Task<VerificationResultDto> VerifyPhone(string phone, string code)
     {
         return await _mediator.Send(new VerifyPhoneCommand(){PhoneNumber = phone, Code = code});
+    }
+
+    [HttpPost("send_sms/{phone}")]
+    public async Task<VerificationResultDto> SendSmsCode(string phone)
+    {
+        return await _mediator.Send(new SendSmsCommand() { PhoneNumber = phone });
     }
 }

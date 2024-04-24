@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using UseCases.Exceptions;
+using UseCases.Handlers.Common;
 using UseCases.Handlers.Common.Extensions;
 
 namespace UseCases.Handlers.Authorization.Queries;
@@ -28,7 +29,7 @@ public class UpdateAccessTokenQueryHandler: IRequestHandler<UpdateAccessTokenQue
     
     public async Task<AuthorizationDto> Handle(UpdateAccessTokenQuery request, CancellationToken cancellationToken)
     {
-        var refreshToken = _httpContextAccessor.HttpContext.Request.Cookies["refresh_token"];
+        var refreshToken = _httpContextAccessor.HttpContext.Request.Cookies[Constants.RefreshTokenKey];
         
         var claims = _jwtGenerator.GetPrincipalRefreshToken(refreshToken);
         var userId = claims.FindFirst(x => x.Type == JwtClaimsTypes.Id)!.Value;
@@ -44,7 +45,7 @@ public class UpdateAccessTokenQueryHandler: IRequestHandler<UpdateAccessTokenQue
 
         var userRole = await _userManager.GetUserRole(user);
         
-        _httpContextAccessor.HttpContext.Response.Cookies.Append("refresh_token", _jwtGenerator.CreateRefreshToken(user));
+        _httpContextAccessor.HttpContext.Response.Cookies.Append(Constants.RefreshTokenKey, _jwtGenerator.CreateRefreshToken(user));
 
         return new AuthorizationDto()
         {

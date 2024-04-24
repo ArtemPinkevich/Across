@@ -4,8 +4,6 @@
 
     public class AuthorizationQuery: IRequest<AuthorizationDto>
     {
-        public string Login { set; get; }
-
-        public string Password { set; get; }
+        public string Phone { set; get; }
     }
 }

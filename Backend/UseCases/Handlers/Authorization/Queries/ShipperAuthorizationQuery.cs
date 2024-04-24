@@ -5,7 +5,5 @@
     public class ShipperAuthorizationQuery: IRequest<AuthorizationDto>
     {
         public string Phone { set; get; }
-        
-        public bool WithVerification { set; get; }
     }
 }

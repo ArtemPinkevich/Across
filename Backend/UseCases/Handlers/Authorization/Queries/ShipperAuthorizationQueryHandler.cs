@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using UseCases.Exceptions;
+using UseCases.Handlers.Common;
 using UseCases.Handlers.Common.Extensions;
 
 namespace UseCases.Handlers.Authorization.Queries;
@@ -38,16 +39,9 @@ public class MobileAuthorizationQueryHandler : IRequestHandler<ShipperAuthorizat
         if (user == null)
             throw new NotAuthorizedException { AuthMessage = $"No such user {request.Phone}" };
 
-        if (request.WithVerification)
-        {
-            user.PhoneNumberConfirmed = false;
-            var updateResult = await _userManager.UpdateAsync(user);
-            if (updateResult == IdentityResult.Failed())
-                throw new NotAuthorizedException() { AuthMessage = $"Cannot update user IsPhoneNumberConfirmed field {user.UserName}" };
-            
-            var code = await _userManager.GenerateChangePhoneNumberTokenAsync(user, user.PhoneNumber);
-            await _smsGateway.SendSms(request.Phone, code);
-        }
+        var requestCookiePhoneConfirmed = _httpContextAccessor.HttpContext.Request.Cookies[Constants.PhoneConfirmed];
+        if (requestCookiePhoneConfirmed == null && requestCookiePhoneConfirmed != true.ToString())
+            throw new NotAuthorizedException { AuthMessage = $"At cookies phone number is not confirmed {request.Phone}" };
         
         var isPhoneConfirmed = await _userManager.IsPhoneNumberConfirmedAsync(user);
         if (!isPhoneConfirmed)
@@ -57,7 +51,7 @@ public class MobileAuthorizationQueryHandler : IRequestHandler<ShipperAuthorizat
         if (userRole == null)
             throw new NotAuthorizedException { AuthMessage = $"Error user role identification {user.UserName}" };
         
-        _httpContextAccessor.HttpContext.Response.Cookies.Append("refresh_token", _jwtGenerator.CreateRefreshToken(user));
+        _httpContextAccessor.HttpContext.Response.Cookies.Append(Constants.RefreshTokenKey, _jwtGenerator.CreateRefreshToken(user));
         
         return new AuthorizationDto
         {
