@@ -35,6 +35,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Storage.Implementation", "S
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Storage.Interfaces", "Storage.Interfaces\Storage.Interfaces.csproj", "{5D58CE56-8D6D-44CF-BE6E-B06A8EFECB07}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GeoService", "GeoService", "{7FF9427E-72C3-42E3-B5D7-BF0F3F8B766D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeoService", "GeoService\GeoService\GeoService.csproj", "{CFC0331F-875C-451B-8464-966D289EE90E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -97,6 +101,10 @@ Global
 		{5D58CE56-8D6D-44CF-BE6E-B06A8EFECB07}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5D58CE56-8D6D-44CF-BE6E-B06A8EFECB07}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5D58CE56-8D6D-44CF-BE6E-B06A8EFECB07}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CFC0331F-875C-451B-8464-966D289EE90E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CFC0331F-875C-451B-8464-966D289EE90E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CFC0331F-875C-451B-8464-966D289EE90E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CFC0331F-875C-451B-8464-966D289EE90E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -112,6 +120,7 @@ Global
 		{FD4D92ED-3452-4546-A3E8-D0E08422B99A} = {BEDD3BC5-F9D3-43D1-9133-112758D6EF81}
 		{5EC1E856-E76D-4417-AD55-A12D0A333C50} = {BEDD3BC5-F9D3-43D1-9133-112758D6EF81}
 		{5D58CE56-8D6D-44CF-BE6E-B06A8EFECB07} = {BEDD3BC5-F9D3-43D1-9133-112758D6EF81}
+		{CFC0331F-875C-451B-8464-966D289EE90E} = {7FF9427E-72C3-42E3-B5D7-BF0F3F8B766D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {80DA8417-5047-4F7F-BDD2-63D2654A0A2F}
