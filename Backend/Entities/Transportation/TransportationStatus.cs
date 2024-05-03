@@ -3,6 +3,8 @@
 public enum TransportationStatus
 {
     NotPublished,
+    ApprovedByManager,
+    ApprovedByLawyer,
     ReadyToLoad,
     WaitingForLoading,
     Transporting,

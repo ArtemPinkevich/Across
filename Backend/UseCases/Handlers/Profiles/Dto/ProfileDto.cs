@@ -9,5 +9,7 @@
         public string Patronymic { set; get; }
 
         public string BirthDate { set; get; }
+        
+        public string Role { set; get; }
     }
 }
