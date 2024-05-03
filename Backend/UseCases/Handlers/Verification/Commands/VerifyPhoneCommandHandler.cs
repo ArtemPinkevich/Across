@@ -48,7 +48,5 @@ public class VerifyPhoneCommandHandler: IRequestHandler<VerifyPhoneCommand, Veri
         _httpContextAccessor.HttpContext.Response.Cookies.Append(Constants.PhoneConfirmed, true.ToString());
             
         return new VerificationResultDto() { Result = ApiResult.Success };
-
-
     }
 }

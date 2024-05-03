@@ -18,6 +18,7 @@ namespace Across.Controllers
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
         
+        [Obsolete("use for custom driver authorization")]
         [HttpGet("auth/{phone}")]
         public async Task<AuthorizationDto> Authorize(string phone)
         {

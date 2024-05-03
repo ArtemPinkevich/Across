@@ -48,4 +48,14 @@ public class ProfilesController: ControllerBase
             ProfileDto = profileDto
         });
     }
+    
+    [Authorize(Roles = $"{UserRoles.Driver},{UserRoles.Shipper}")]
+    [HttpPost("change_role/{role}")]
+    public async Task<AuthorizationDto> ChangeRole(string role)
+    {
+        return await Task.FromResult(new AuthorizationDto()
+        {
+            AccessToken = "access token"
+        });
+    }
 }

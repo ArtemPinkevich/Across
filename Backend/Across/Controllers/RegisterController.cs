@@ -18,6 +18,7 @@ namespace Across.Controllers
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
 
+        [Obsolete("")]
         [HttpPost("shipper")]
         public async Task<RegistrationDto> Register([FromBody] ShipperRegistrationCommand shipperRegistrationCommand)
         {
@@ -25,6 +26,7 @@ namespace Across.Controllers
             return res;
         }
 
+        [Obsolete("")]
         [HttpPost("driver")]
         public async Task<RegistrationDto> Register([FromBody] DriverRegistrationCommand driverRegistrationCommand)
         {
@@ -32,6 +34,7 @@ namespace Across.Controllers
             return res;
         }
         
+        [Obsolete("")]
         [HttpPost("admin")]
         public async Task<RegistrationDto> Register([FromBody] AdminRegistrationCommand adminRegistrationCommand)
         {
