@@ -28,14 +28,14 @@ public class SearchQueryHandler : IRequestHandler<SearchQuery, SearchResultDto>
         var result = new SearchResultDto();
 
         // Ожидаем в request.LoadDate дату в ISO формате
-        if (!DateTime.TryParse(request.LoadDate, out DateTime desiredLoadDate))
+        if (!DateTime.TryParse(request.LoadingDate, out DateTime desiredLoadDate))
         {
             result.Result = ApiResult.Failed;
             return result;
         }
 
 
-        var transportationOrders = await _repository.GetAllAsync(x => x.TransportationStatus == Entities.TransportationStatus.ReadyToLoad);
+        var transportationOrders = await _repository.GetAllAsync(x => x.TransportationStatus == Entities.TransportationStatus.CarrierFinding);
 
         var FromAddressLower = request.FromAddress.ToLower();
 

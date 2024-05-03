@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -57,21 +56,21 @@ public class AddOrUpdateTransportationOrderCommandHandler: IRequestHandler<AddOr
                 };
             }
 
-            order.LoadDateFrom = request.TransportationOrderDto.LoadPublishInfo.LoadDateFrom;
-            order.LoadDateTo = request.TransportationOrderDto.LoadPublishInfo.LoadDateTo;
-            order.LoadingLocalityName = request.TransportationOrderDto.LoadPublishInfo.LoadingLocalityName;
-            order.LoadingAddress = request.TransportationOrderDto.LoadPublishInfo.LoadingAddress;
-            order.UnloadingLocalityName = request.TransportationOrderDto.LoadPublishInfo.UnloadingLocalityName;
-            order.UnloadingAddress = request.TransportationOrderDto.LoadPublishInfo.UnloadingAddress;
+            order.LoadDateFrom = request.TransportationOrderDto.TransferInfo.LoadDateFrom;
+            order.LoadDateTo = request.TransportationOrderDto.TransferInfo.LoadDateTo;
+            order.LoadingLocalityName = request.TransportationOrderDto.TransferInfo.LoadingLocalityName;
+            order.LoadingAddress = request.TransportationOrderDto.TransferInfo.LoadingAddress;
+            order.UnloadingLocalityName = request.TransportationOrderDto.TransferInfo.UnloadingLocalityName;
+            order.UnloadingAddress = request.TransportationOrderDto.TransferInfo.UnloadingAddress;
             
             order.TransportationStatus = request.TransportationOrderDto.TransportationStatus;
 
             //думаю лучше использовать второй вариант, где каждое свойство обновляется отдельно
             //в первом варианте прежняя запись в бд удаляется и создается новая
 #if true
-            order.Cargo = _mapper.Map<Entities.Cargo>(request.TransportationOrderDto.Load);
+            order.Cargo = _mapper.Map<Entities.Cargo>(request.TransportationOrderDto.Cargo);
             order.TruckRequirements =
-                _mapper.Map<TruckRequirements>(request.TransportationOrderDto.Load.TruckRequirementsForLoadDto);
+                _mapper.Map<TruckRequirements>(request.TransportationOrderDto.Cargo.TruckRequirements);
 #else
             
             order.Cargo.Diameter = request.TransportationOrderDto.Load.Diameter;

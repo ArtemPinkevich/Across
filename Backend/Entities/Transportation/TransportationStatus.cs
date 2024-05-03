@@ -3,7 +3,7 @@
 public enum TransportationStatus
 {
     NotPublished,
-    ReadyToLoad,
+    CarrierFinding,
     WaitingForLoading,
     Transporting,
     Delivered

@@ -20,10 +20,10 @@ public class CargoAutoMapperProfile : Profile
 {
     public CargoAutoMapperProfile()
     {
-        CreateMap<LoadDto, Entities.Cargo>()
+        CreateMap<CargoDto, Entities.Cargo>()
             .ReverseMap();
         
-        CreateMap<TruckRequirementsForLoadDto, TruckRequirements>()
+        CreateMap<TruckRequirementsDto, TruckRequirements>()
             .ForMember(d => d.CarBodyRequirement, opt => opt.MapFrom(s => s.CarBodies))
             .ForMember(d => d.LoadingType, opt => opt.MapFrom(s => s.LoadingTypeDtos))
             .ForMember(d => d.UnloadingType, opt => opt.MapFrom(s => s.UnloadingTypeDtos))
@@ -229,20 +229,20 @@ public class CargoAutoMapperProfile : Profile
             .ForMember(d => d.Id,
                 opt => opt.MapFrom(s => s.TransportationOrderId))
             .ForMember(d => d.LoadingAddress, 
-                opt => opt.MapFrom(s => s.LoadPublishInfo.LoadingAddress))
+                opt => opt.MapFrom(s => s.TransferInfo.LoadingAddress))
             .ForMember(d => d.UnloadingAddress, 
-                opt => opt.MapFrom(s => s.LoadPublishInfo.UnloadingAddress))
+                opt => opt.MapFrom(s => s.TransferInfo.UnloadingAddress))
             .ForMember(d => d.LoadingLocalityName,
-                opt => opt.MapFrom(s => s.LoadPublishInfo.LoadingLocalityName))
+                opt => opt.MapFrom(s => s.TransferInfo.LoadingLocalityName))
             .ForMember(d => d.UnloadingLocalityName,
-                opt => opt.MapFrom(s => s.LoadPublishInfo.UnloadingLocalityName))
+                opt => opt.MapFrom(s => s.TransferInfo.UnloadingLocalityName))
             .ForMember(d => d.LoadDateFrom,
-                opt => opt.MapFrom(s => s.LoadPublishInfo.LoadDateFrom))
+                opt => opt.MapFrom(s => s.TransferInfo.LoadDateFrom))
             .ForMember(d => d.LoadDateTo,
-                opt => opt.MapFrom(s => s.LoadPublishInfo.LoadDateTo))
-            .ForMember(d => d.Cargo, opt => opt.MapFrom(s => s.Load))
+                opt => opt.MapFrom(s => s.TransferInfo.LoadDateTo))
+            .ForMember(d => d.Cargo, opt => opt.MapFrom(s => s.Cargo))
             .ForMember(d => d.TruckRequirements,
-                opt => opt.MapFrom(s => s.Load.TruckRequirementsForLoadDto))
+                opt => opt.MapFrom(s => s.Cargo.TruckRequirements))
             .AfterMap<CreateDefaultPropertiesAtTransportationOrder>()
             .ReverseMap();
     }

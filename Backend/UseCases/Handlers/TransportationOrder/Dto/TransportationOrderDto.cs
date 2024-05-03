@@ -3,7 +3,7 @@ using UseCases.Handlers.Truck.Dto;
 
 namespace UseCases.Handlers.Cargo.Dto;
 
-public class LoadPublishInfoDto
+public class TransferInfoDto
 {
     public string LoadDateFrom { set; get; }
     
@@ -18,7 +18,7 @@ public class LoadPublishInfoDto
     public string UnloadingAddress { set; get; }
 }
 
-public class TruckRequirementsForLoadDto
+public class TruckRequirementsDto
 {
     public CarBodyType[] CarBodies { set; get; }
     public LoadingTypeDto[] LoadingTypeDtos { set; get; }
@@ -40,10 +40,9 @@ public class TruckRequirementsForLoadDto
     public bool HasLiftGate { set; get; }
     public bool HasStanchionTrailer { set; get; }
     public int CarryingCapacity { set; get; }
-
 }
 
-public class LoadDto
+public class CargoDto
 {
     public int? Id { set; get; }
     public string CreatedId { set; get; }
@@ -56,16 +55,16 @@ public class LoadDto
     public double? Width { set; get; }
     public double? Height { set; get; }
     public double Diameter { set; get; }
-    public TruckRequirementsForLoadDto TruckRequirementsForLoadDto { set; get; }
+    public TruckRequirementsDto TruckRequirements { set; get; }
 }
 
 public class TransportationOrderDto
 {
     public int? TransportationOrderId { set; get; }
     
-    public LoadPublishInfoDto LoadPublishInfo { set; get; }
+    public TransferInfoDto TransferInfo { set; get; }
     
-    public LoadDto Load { set; get; }
+    public CargoDto Cargo { set; get; }
     
     public TransportationStatus TransportationStatus { set; get; }
 }

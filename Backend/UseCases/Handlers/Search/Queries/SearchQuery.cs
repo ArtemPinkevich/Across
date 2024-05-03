@@ -14,5 +14,5 @@ public class SearchQuery : IRequest<SearchResultDto>
     // Строка ISO формата:
     // на js это moment().toISOString(true)
     // на C# это DateTime.Now.ToString("O")
-    public string LoadDate { set; get; }
+    public string LoadingDate { set; get; }
 }
