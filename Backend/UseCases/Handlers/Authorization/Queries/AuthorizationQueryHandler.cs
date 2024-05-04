@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -11,6 +12,7 @@ using UseCases.Exceptions;
 
 namespace UseCases.Handlers.Authorization.Queries;
 
+[Obsolete]
 public class AuthorizationQueryHandler : IRequestHandler<AuthorizationQuery, AuthorizationDto>
 {
     private readonly IJwtGenerator _jwtGenerator;

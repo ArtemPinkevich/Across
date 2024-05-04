@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Entities;
 using Infrastructure.Interfaces;
@@ -12,6 +13,7 @@ using UseCases.Handlers.Common.Extensions;
 
 namespace UseCases.Handlers.Authorization.Queries;
 
+[Obsolete]
 public class DriverAuthorizationQueryHandler : IRequestHandler<DriverAuthorizationQuery, AuthorizationDto>
 {
     private readonly IJwtGenerator _jwtGenerator;

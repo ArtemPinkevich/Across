@@ -32,7 +32,7 @@ public class SendSmsCommandHandler: IRequestHandler<SendSmsCommand, SendSmsCodeR
             if (userResult != IdentityResult.Success)
                 return CreateErrorCreateUserResult(userResult);
 
-            IdentityResult roleResult = await _userManager.AddToRoleAsync(user, UserRoles.Shipper);
+            IdentityResult roleResult = await _userManager.AddToRoleAsync(user, UserRoles.Driver);
             if (roleResult != IdentityResult.Success)
                 return CreateErrorCreateUserResult(roleResult);
         }

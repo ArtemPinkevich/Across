@@ -14,6 +14,8 @@ using UseCases.Handlers.Common.Extensions;
 
 namespace UseCases.Handlers.Authorization.Queries;
 
+
+[Obsolete]
 public class MobileAuthorizationQueryHandler : IRequestHandler<ShipperAuthorizationQuery, AuthorizationDto>
 {
     private readonly IJwtGenerator _jwtGenerator;
