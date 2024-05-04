@@ -1,8 +1,10 @@
-﻿namespace UseCases.Handlers.Profiles.Dto;
+﻿using UseCases.Handlers.Common.Dto;
+
+namespace UseCases.Handlers.Profiles.Dto;
 
 public class ProfileResultDto
 {
-    public ProfileResult Result { set; get; }
+    public ApiResult Result { set; get; }
 
     public string[] Reasons { set; get; }
 }

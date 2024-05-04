@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Entities;
 using Infrastructure.Interfaces;
@@ -9,7 +10,7 @@ using UseCases.Handlers.Verification.Dto;
 
 namespace UseCases.Handlers.Verification.Commands;
 
-public class SendSmsCommandHandler: IRequestHandler<SendSmsCommand, VerificationResultDto>
+public class SendSmsCommandHandler: IRequestHandler<SendSmsCommand, SendSmsCodeResultDto>
 {
     private readonly UserManager<User> _userManager;
     private readonly ISmsGateway _smsGateway;
@@ -21,23 +22,46 @@ public class SendSmsCommandHandler: IRequestHandler<SendSmsCommand, Verification
         _smsGateway = smsGateway;
     }
     
-    public async Task<VerificationResultDto> Handle(SendSmsCommand request, CancellationToken cancellationToken)
+    public async Task<SendSmsCodeResultDto> Handle(SendSmsCommand request, CancellationToken cancellationToken)
     {
         var user = await _userManager.FindByNameAsync(request.PhoneNumber);
         if (user == null)
-            return new VerificationResultDto()
-            {
-                Result = ApiResult.Failed,
-                Errors = new[] { $"No user found with phone {request.PhoneNumber}" }
-            };
-        
+        {
+            user = CreateUser(request);
+            IdentityResult userResult =  await _userManager.CreateAsync(user);
+            if (userResult != IdentityResult.Success)
+                return CreateErrorCreateUserResult(userResult);
+
+            IdentityResult roleResult = await _userManager.AddToRoleAsync(user, UserRoles.Shipper);
+            if (roleResult != IdentityResult.Success)
+                return CreateErrorCreateUserResult(roleResult);
+        }
+
         var code = await _userManager.GenerateChangePhoneNumberTokenAsync(user, user.PhoneNumber);
         await _smsGateway.SendSms(request.PhoneNumber, code);
         
-        return new VerificationResultDto()
+        return new SendSmsCodeResultDto()
         {
             Result = ApiResult.Success,
             Errors = null
+        };
+    }
+    
+    private User CreateUser(SendSmsCommand request)
+    {
+        return new User()
+        {
+            UserName = request.PhoneNumber,
+            PhoneNumber = request.PhoneNumber
+        };
+    }
+
+    private SendSmsCodeResultDto CreateErrorCreateUserResult(IdentityResult result)
+    {
+        return new SendSmsCodeResultDto()
+        {
+            Result = ApiResult.Failed,
+            Errors = result.Errors.Select(x => x.Description).ToArray()
         };
     }
 }

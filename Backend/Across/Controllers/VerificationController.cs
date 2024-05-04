@@ -25,7 +25,7 @@ public class VerificationController: ControllerBase
     }
 
     [HttpPost("send_sms/{phone}")]
-    public async Task<VerificationResultDto> SendSmsCode(string phone)
+    public async Task<SendSmsCodeResultDto> SendSmsCode(string phone)
     {
         return await _mediator.Send(new SendSmsCommand() { PhoneNumber = phone });
     }

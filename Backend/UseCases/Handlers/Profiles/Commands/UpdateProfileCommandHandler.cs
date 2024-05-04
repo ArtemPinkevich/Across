@@ -6,6 +6,7 @@ using System.Threading;
 using UseCases.Handlers.Profiles.Dto;
 using Microsoft.EntityFrameworkCore;
 using System;
+using UseCases.Handlers.Common.Dto;
 
 namespace UseCases.Handlers.Profiles.Commands;
 
@@ -23,7 +24,7 @@ internal class UpdateProfileCommandHandler : IRequestHandler<UpdateProfileComman
     {
         try
         {
-            var user = await _userManager.Users.FirstOrDefaultAsync(item => item.Id == request.UserId, cancellationToken);
+            var user = await _userManager.FindByIdAsync(request.UserId);
             if (user != null)
             {
                 user.Name = request.ProfileDto.Name;
@@ -36,9 +37,9 @@ internal class UpdateProfileCommandHandler : IRequestHandler<UpdateProfileComman
         }
         catch (Exception exc)
         {
-            return new ProfileResultDto() { Result = ProfileResult.Error };
+            return new ProfileResultDto() { Result = ApiResult.Failed };
         }
 
-        return new ProfileResultDto() { Result = ProfileResult.Ok };
+        return new ProfileResultDto() { Result = ApiResult.Success };
     }
 }

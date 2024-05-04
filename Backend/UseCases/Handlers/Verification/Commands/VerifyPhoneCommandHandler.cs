@@ -5,20 +5,27 @@ using Entities;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Options;
+using UseCases.Exceptions;
+using UseCases.Handlers.Authorization;
 using UseCases.Handlers.Common;
 using UseCases.Handlers.Common.Dto;
+using UseCases.Handlers.Common.Extensions;
 using UseCases.Handlers.Verification.Dto;
 
 namespace UseCases.Handlers.Verification.Commands;
 
 public class VerifyPhoneCommandHandler: IRequestHandler<VerifyPhoneCommand, VerificationResultDto>
 {
+    private readonly IJwtGenerator _jwtGenerator;
     private readonly UserManager<User> _userManager;
     private readonly IHttpContextAccessor _httpContextAccessor;
     
-    public VerifyPhoneCommandHandler(UserManager<User> userManager,
+    public VerifyPhoneCommandHandler(IOptions<JwtConfiguration> options,
+        UserManager<User> userManager,
         IHttpContextAccessor httpContextAccessor)
     {
+        _jwtGenerator = new JwtGenerator(options.Value);
         _userManager = userManager;
         _httpContextAccessor = httpContextAccessor;
     }
@@ -40,13 +47,24 @@ public class VerifyPhoneCommandHandler: IRequestHandler<VerifyPhoneCommand, Veri
         {
             return new VerificationResultDto()
             {
+                AccessToken = null,
                 Result = ApiResult.Failed,
                 Errors = result.Errors.Select(x => x.Description).ToArray()
             };
         }
         
-        _httpContextAccessor.HttpContext.Response.Cookies.Append(Constants.PhoneConfirmed, true.ToString());
-            
-        return new VerificationResultDto() { Result = ApiResult.Success };
+        var userRole = await _userManager.GetUserRole(user);
+        if (userRole == null)
+            throw new NotAuthorizedException { ErrorCode = NotAuthorizedErrorCode.InternalServerError, AuthorizationMessage = $"Error user role identification {user.UserName}" };
+        
+        _httpContextAccessor.HttpContext.Response.Cookies.Append(Constants.RefreshTokenKey,
+            _jwtGenerator.CreateRefreshToken(user));
+
+        return new VerificationResultDto()
+        {
+            AccessToken = _jwtGenerator.CreateAccessToken(user, userRole),
+            Result = ApiResult.Success,
+            Errors = null
+        };
     }
 }
