@@ -37,13 +37,19 @@ public class SearchQueryHandler : IRequestHandler<SearchQuery, SearchResultDto>
 
         var transportationOrders = await _repository.GetAllAsync(x => x.TransportationStatus == Entities.TransportationStatus.CarrierFinding);
 
-        var FromAddressLower = request.FromAddress.ToLower();
+        var fromAddressLower = request.FromAddress?.ToLower();
+        var toAddressLower = request.ToAddress?.ToLower();
 
         var filtredOrders = new List<Entities.TransportationOrder>();
 
         transportationOrders.ForEach(order =>
         {
-            if (order.LoadingAddress.ToLower() != FromAddressLower)
+            if (order.LoadingAddress.ToLower() != fromAddressLower)
+            {
+                return;
+            }
+
+            if (!string.IsNullOrEmpty(toAddressLower) && toAddressLower != order.UnloadingAddress.ToLower())
             {
                 return;
             }
@@ -54,14 +60,19 @@ public class SearchQueryHandler : IRequestHandler<SearchQuery, SearchResultDto>
                 return;
             }
 
-            if (!DateTime.TryParse(order.LoadDateTo, out DateTime loadDateTo))
+            if (desiredLoadDate.Date == loadDateFrom.Date)
             {
+                filtredOrders.Add(order);
                 return;
             }
 
-            if (desiredLoadDate.Date >= loadDateFrom.Date && desiredLoadDate.Date <= loadDateTo.Date)
+            if (DateTime.TryParse(order.LoadDateTo, out DateTime loadDateTo))
             {
-                filtredOrders.Add(order);
+                if (desiredLoadDate.Date >= loadDateFrom.Date && desiredLoadDate.Date <= loadDateTo.Date)
+                {
+                    filtredOrders.Add(order);
+                }
+                return;
             }
         });
 

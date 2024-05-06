@@ -5,9 +5,9 @@ namespace UseCases.Handlers.Cargo.Dto;
 
 public class TransferInfoDto
 {
-    public string LoadDateFrom { set; get; }
+    public string LoadingDateFrom { set; get; }
     
-    public string LoadDateTo { set; get; }
+    public string loadingDateTo { set; get; }
     
     public string LoadingLocalityName { set; get; }
     

@@ -56,8 +56,8 @@ public class AddOrUpdateTransportationOrderCommandHandler: IRequestHandler<AddOr
                 };
             }
 
-            order.LoadDateFrom = request.TransportationOrderDto.TransferInfo.LoadDateFrom;
-            order.LoadDateTo = request.TransportationOrderDto.TransferInfo.LoadDateTo;
+            order.LoadDateFrom = request.TransportationOrderDto.TransferInfo.LoadingDateFrom;
+            order.LoadDateTo = request.TransportationOrderDto.TransferInfo.loadingDateTo;
             order.LoadingLocalityName = request.TransportationOrderDto.TransferInfo.LoadingLocalityName;
             order.LoadingAddress = request.TransportationOrderDto.TransferInfo.LoadingAddress;
             order.UnloadingLocalityName = request.TransportationOrderDto.TransferInfo.UnloadingLocalityName;

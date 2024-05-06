@@ -237,9 +237,9 @@ public class CargoAutoMapperProfile : Profile
             .ForMember(d => d.UnloadingLocalityName,
                 opt => opt.MapFrom(s => s.TransferInfo.UnloadingLocalityName))
             .ForMember(d => d.LoadDateFrom,
-                opt => opt.MapFrom(s => s.TransferInfo.LoadDateFrom))
+                opt => opt.MapFrom(s => s.TransferInfo.LoadingDateFrom))
             .ForMember(d => d.LoadDateTo,
-                opt => opt.MapFrom(s => s.TransferInfo.LoadDateTo))
+                opt => opt.MapFrom(s => s.TransferInfo.loadingDateTo))
             .ForMember(d => d.Cargo, opt => opt.MapFrom(s => s.Cargo))
             .ForMember(d => d.TruckRequirements,
                 opt => opt.MapFrom(s => s.Cargo.TruckRequirements))
