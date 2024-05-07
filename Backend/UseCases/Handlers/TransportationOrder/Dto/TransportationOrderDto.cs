@@ -36,8 +36,8 @@ public class TruckRequirementsDto
     public bool Tir { set; get; }
     public bool Ekmt { set; get; }
     
-    public bool HasLTtl { set; get; }
-    public bool HasLiftGate { set; get; }
+    public bool HasLtl { set; get; }
+    public bool HasLiftgate { set; get; }
     public bool HasStanchionTrailer { set; get; }
     public int CarryingCapacity { set; get; }
 }

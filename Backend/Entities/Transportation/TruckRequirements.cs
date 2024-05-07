@@ -11,9 +11,9 @@ public class TruckRequirements: EntityBase
 
     public CarBodyRequirement CarBodyRequirement{ set; get; }
     
-    public bool HasLTtl { set; get; }
+    public bool HasLtl { set; get; }
     
-    public bool HasLiftGate { set; get; }
+    public bool HasLiftgate { set; get; }
     
     public bool HasStanchionTrailer { set; get; }
     
