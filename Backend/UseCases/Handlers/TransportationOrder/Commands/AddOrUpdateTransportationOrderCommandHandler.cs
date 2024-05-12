@@ -62,8 +62,6 @@ public class AddOrUpdateTransportationOrderCommandHandler: IRequestHandler<AddOr
             order.LoadingAddress = request.TransportationOrderDto.TransferInfo.LoadingAddress;
             order.UnloadingLocalityName = request.TransportationOrderDto.TransferInfo.UnloadingLocalityName;
             order.UnloadingAddress = request.TransportationOrderDto.TransferInfo.UnloadingAddress;
-            
-            order.TransportationStatus = request.TransportationOrderDto.TransportationStatus;
 
             //думаю лучше использовать второй вариант, где каждое свойство обновляется отдельно
             //в первом варианте прежняя запись в бд удаляется и создается новая

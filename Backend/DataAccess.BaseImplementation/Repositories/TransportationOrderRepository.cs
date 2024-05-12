@@ -23,6 +23,7 @@ public class TransportationOrderRepository: IRepository<TransportationOrder>
         return await _context.TransportationOrders
             .Include(item => item.User)
             .Include(item => item.Cargo)
+            .Include(item => item.TransferChangeHistoryRecords)
             .Include(item => item.TruckRequirements)
             .ThenInclude(item => item.CarBodyRequirement)
             .FirstOrDefaultAsync(condition);
@@ -33,6 +34,7 @@ public class TransportationOrderRepository: IRepository<TransportationOrder>
         return await _context.TransportationOrders
             .Include(item => item.User)
             .Include(item => item.Cargo)
+            .Include(item => item.TransferChangeHistoryRecords)
             .Include(item => item.TruckRequirements)
             .ThenInclude(item => item.CarBodyRequirement)
             .ToListAsync();
@@ -43,6 +45,7 @@ public class TransportationOrderRepository: IRepository<TransportationOrder>
         return await _context.TransportationOrders
             .Include(item => item.User)
             .Include(item => item.Cargo)
+            .Include(item => item.TransferChangeHistoryRecords)
             .Include(item => item.TruckRequirements)
             .ThenInclude(item => item.CarBodyRequirement)
             .Where(condition)
@@ -55,6 +58,7 @@ public class TransportationOrderRepository: IRepository<TransportationOrder>
         return await _context.TransportationOrders
             .Include(item => item.User)
             .Include(item => item.Cargo)
+            .Include(item => item.TransferChangeHistoryRecords)
             .Include(item => item.TruckRequirements)
             .ThenInclude(item => item.CarBodyRequirement)
             .Where(condition)
@@ -68,6 +72,7 @@ public class TransportationOrderRepository: IRepository<TransportationOrder>
         return await _context.TransportationOrders
             .Include(item => item.User)
             .Include(item => item.Cargo)
+            .Include(item => item.TransferChangeHistoryRecords)
             .Include(item => item.TruckRequirements)
             .Where(condition)
             .Take(limit)

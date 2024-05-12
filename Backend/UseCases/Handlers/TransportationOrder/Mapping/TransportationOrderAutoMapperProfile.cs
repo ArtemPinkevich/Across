@@ -244,6 +244,8 @@ public class CargoAutoMapperProfile : Profile
             .ForMember(d => d.TruckRequirements,
                 opt => opt.MapFrom(s => s.Cargo.TruckRequirements))
             .AfterMap<CreateDefaultPropertiesAtTransportationOrder>()
-            .ReverseMap();
+            .ReverseMap()
+            .ForMember(s => s.TransportationStatus,
+                opt => opt.MapFrom( d => d.TransferChangeHistoryRecords.Last().TransportationStatus));
     }
 }

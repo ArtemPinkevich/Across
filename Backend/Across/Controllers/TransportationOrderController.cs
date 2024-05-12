@@ -26,8 +26,19 @@ public class TransportationOrderController:ControllerBase
     }
 
     [Authorize(Roles = $"{UserRoles.Shipper}")]
-    [HttpGet("get_orders")]
-    public async Task<TransportationOrdersListDto> GetLoads()
+    [HttpGet("get_shipper_orders")]
+    public async Task<TransportationOrdersListDto> GetShipperTransportationOrders()
+    {
+        string userId = HttpContext.User.Claims.FirstOrDefault( x => x.Type == JwtClaimsTypes.Id)?.Value;
+        return await _mediator.Send(new GetTransportationOrdersQuery()
+        {
+            UserId = userId
+        });
+    }
+    
+    [Authorize(Roles = $"{UserRoles.Driver}")]
+    [HttpGet("get_driver_orders")]
+    public async Task<TransportationOrdersListDto> GetDriverTransportationOrders()
     {
         string userId = HttpContext.User.Claims.FirstOrDefault( x => x.Type == JwtClaimsTypes.Id)?.Value;
         return await _mediator.Send(new GetTransportationOrdersQuery()

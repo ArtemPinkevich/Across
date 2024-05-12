@@ -1,4 +1,6 @@
-﻿namespace Entities;
+﻿using System.Collections.Generic;
+
+namespace Entities;
 
 public class TransportationOrder : EntityBase
 {
@@ -9,7 +11,7 @@ public class TransportationOrder : EntityBase
     
     public TruckRequirements TruckRequirements { set; get; }
     
-    public TransportationStatus TransportationStatus { set; get; }
+    public List<TransferChangeHistoryRecord> TransferChangeHistoryRecords { set; get; }
     
     public string LoadDateFrom { set; get; }
     

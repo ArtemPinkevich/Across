@@ -9,6 +9,7 @@ using UseCases.Handlers.Common.Dto;
 using UseCases.Handlers.Search.Dto;
 using System;
 using System.Collections.Generic;
+using Entities;
 
 namespace UseCases.Handlers.Search.Queries;
 
@@ -34,8 +35,8 @@ public class SearchQueryHandler : IRequestHandler<SearchQuery, SearchResultDto>
             return result;
         }
 
-
-        var transportationOrders = await _repository.GetAllAsync(x => x.TransportationStatus == Entities.TransportationStatus.CarrierFinding);
+        var transportationOrders = 
+            await _repository.GetAllAsync(x => x.TransferChangeHistoryRecords.Last().TransportationStatus == TransportationStatus.CarrierFinding);
 
         var fromAddressLower = request.FromAddress?.ToLower();
         var toAddressLower = request.ToAddress?.ToLower();
