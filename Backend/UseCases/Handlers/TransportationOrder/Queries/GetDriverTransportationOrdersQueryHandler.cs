@@ -46,6 +46,7 @@ public class GetDriverTransportationOrdersQueryHandler: IRequestHandler<GetDrive
         }
 
         var historyRecords = await _orderHistoryRepository.GetAllAsync(x => x.AssignedDriverId == user.Id);
+#warning эту логику нужно перенести в sql запрос, чтобы это выполнялоась в БД, но пока нет такого репозитория с такой функцией.
         var transportationOrderIds = historyRecords.Select(x => x.TransportationOrderId).Distinct();
         List<TransportationOrderDto> transportationOrderDtos = new List<TransportationOrderDto>();
         foreach (var orderId in transportationOrderIds)
