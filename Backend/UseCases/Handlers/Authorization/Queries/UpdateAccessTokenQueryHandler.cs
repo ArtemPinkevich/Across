@@ -37,7 +37,12 @@ public class UpdateAccessTokenQueryHandler: IRequestHandler<UpdateAccessTokenQue
         if (DateTime.TryParse(claims.FindFirst(x => x.Type == JwtClaimsTypes.RefreshTokenExpireDateTime)!.Value,
                 out DateTime expireDateTime))
         {
-            if (expireDateTime < DateTime.Now.ToUniversalTime()) throw new NotAuthorizedException() { ErrorCode = NotAuthorizedErrorCode.RefreshTokenExpired, AuthorizationMessage = "Refresh token is expired. Please, authorize again" };
+            if (expireDateTime < DateTime.Now.ToUniversalTime())
+                throw new NotAuthorizedException() { ErrorCode = NotAuthorizedErrorCode.RefreshTokenExpired, AuthorizationMessage = "Refresh token is expired. Please, verify phone again" };
+        }
+        else
+        {
+            throw new NotAuthorizedException() { ErrorCode = NotAuthorizedErrorCode.InternalServerError, AuthorizationMessage = "Unable to parse refresh token expire date" };
         }
         
         var user = await _userManager.FindByIdAsync(userId);

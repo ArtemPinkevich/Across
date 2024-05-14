@@ -87,10 +87,11 @@ namespace Across
 
             app.UseRouting();
 
-            app.UseCors(builder => builder.AllowAnyOrigin()
+            app.UseCors(builder => builder//.AllowAnyOrigin()
                                           .AllowAnyMethod()
                                           .AllowAnyHeader()
-                                          .SetIsOriginAllowed(_ => true));
+                                          .SetIsOriginAllowed(_ => true)
+                                          .AllowCredentials());
 
             app.UseAuthentication();
             app.UseAuthorization();
