@@ -8,8 +8,15 @@
 
     <ItemGroup>
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.29" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.30" />
         <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="7.5.1" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Update="geo.db">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
     </ItemGroup>
 
 </Project>

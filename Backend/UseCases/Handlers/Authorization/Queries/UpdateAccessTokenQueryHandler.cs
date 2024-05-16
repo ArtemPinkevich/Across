@@ -30,9 +30,13 @@ public class UpdateAccessTokenQueryHandler: IRequestHandler<UpdateAccessTokenQue
     public async Task<AuthorizationDto> Handle(UpdateAccessTokenQuery request, CancellationToken cancellationToken)
     {
         var refreshToken = _httpContextAccessor.HttpContext.Request.Cookies[Constants.RefreshTokenKey];
+        if (refreshToken == null)
+            throw new NotAuthorizedException() { ErrorCode = NotAuthorizedErrorCode.InternalServerError, AuthorizationMessage = "No refresh token found at cookies" };
         
         var claims = _jwtGenerator.GetPrincipalRefreshToken(refreshToken);
         var userId = claims.FindFirst(x => x.Type == JwtClaimsTypes.Id)!.Value;
+        if(userId == null)
+            throw new NotAuthorizedException() { ErrorCode = NotAuthorizedErrorCode.InternalServerError, AuthorizationMessage = "No userId found at refresh token" };
 
         if (DateTime.TryParse(claims.FindFirst(x => x.Type == JwtClaimsTypes.RefreshTokenExpireDateTime)!.Value,
                 out DateTime expireDateTime))

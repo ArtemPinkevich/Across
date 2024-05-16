@@ -31,11 +31,11 @@ public static class AuthenticationExtension
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     //ValidateIssuer = true,
-                    ValidIssuer = configuration["Jwt:Issuer"],
+                    ValidIssuer = issuer,
                     //ValidateAudience = true,
-                    ValidAudience = configuration["Jwt:Audience"],
+                    ValidAudience = audioence,
                     //ValidateLifetime = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"])),
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key)),
                     ValidateIssuerSigningKey = true,
                     //ClockSkew = TimeSpan.Zero
                 };

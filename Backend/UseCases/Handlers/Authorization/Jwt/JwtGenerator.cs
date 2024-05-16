@@ -43,7 +43,7 @@ namespace UseCases.Handlers.Authorization
 
         public string CreateRefreshToken(User user)
         {
-            var expireDateTime = DateTime.Now.AddDays(_jwtConfiguration.RefreshTokenDurationDays).ToString(CultureInfo.InvariantCulture);
+            var expireDateTime = DateTime.Now.ToUniversalTime().AddDays(_jwtConfiguration.RefreshTokenDurationDays).ToString(CultureInfo.InvariantCulture);
             var claims = new List<Claim>
             {
                 new Claim(JwtClaimsTypes.Id, user.Id),
