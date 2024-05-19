@@ -16,6 +16,19 @@ public class CreateDefaultPropertiesAtTransportationOrder :IMappingAction<Transp
     }
 }
 
+public class TransportationStatusFormatter : IValueConverter<List<TransferChangeHistoryRecord>, TransportationStatus>
+{
+    public TransportationStatus Convert(List<TransferChangeHistoryRecord> sourceMember, ResolutionContext context)
+    {
+        if (sourceMember == null || !sourceMember.Any())
+        {
+            return TransportationStatus.NotPublished;
+        }
+
+        return sourceMember.Last().TransportationStatus;
+    }
+}
+
 public class CargoAutoMapperProfile : Profile
 {
     public CargoAutoMapperProfile()
@@ -246,6 +259,7 @@ public class CargoAutoMapperProfile : Profile
             .AfterMap<CreateDefaultPropertiesAtTransportationOrder>()
             .ReverseMap()
             .ForMember(s => s.TransportationStatus,
-                opt => opt.MapFrom( d => d.TransferChangeHistoryRecords.Last().TransportationStatus));
+                opt => opt.ConvertUsing(new TransportationStatusFormatter(),
+                    src => src.TransferChangeHistoryRecords));
     }
 }
