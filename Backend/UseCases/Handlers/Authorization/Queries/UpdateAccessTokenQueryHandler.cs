@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
 using Entities;
@@ -38,7 +39,7 @@ public class UpdateAccessTokenQueryHandler: IRequestHandler<UpdateAccessTokenQue
         if(userId == null)
             throw new NotAuthorizedException() { ErrorCode = NotAuthorizedErrorCode.InternalServerError, AuthorizationMessage = "No userId found at refresh token" };
 
-        if (DateTime.TryParse(claims.FindFirst(x => x.Type == JwtClaimsTypes.RefreshTokenExpireDateTime)!.Value,
+        if (DateTime.TryParse(claims.FindFirst(x => x.Type == JwtClaimsTypes.RefreshTokenExpireDateTime)!.Value, CultureInfo.InvariantCulture, DateTimeStyles.None,
                 out DateTime expireDateTime))
         {
             if (expireDateTime < DateTime.Now.ToUniversalTime())
