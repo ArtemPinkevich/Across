@@ -25,20 +25,9 @@ public class TransportationOrderController:ControllerBase
         _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
     }
 
-    [Authorize(Roles = $"{UserRoles.Shipper}")]
-    [HttpGet("get_shipper_orders")]
+    [Authorize(Roles = $"{UserRoles.Driver},{UserRoles.Shipper}")]
+    [HttpGet("get_orders")]
     public async Task<TransportationOrdersListDto> GetShipperTransportationOrders()
-    {
-        string userId = HttpContext.User.Claims.FirstOrDefault( x => x.Type == JwtClaimsTypes.Id)?.Value;
-        return await _mediator.Send(new GetTransportationOrdersQuery()
-        {
-            UserId = userId
-        });
-    }
-    
-    [Authorize(Roles = $"{UserRoles.Driver}")]
-    [HttpGet("get_driver_orders")]
-    public async Task<TransportationOrdersListDto> GetDriverTransportationOrders()
     {
         string userId = HttpContext.User.Claims.FirstOrDefault( x => x.Type == JwtClaimsTypes.Id)?.Value;
         return await _mediator.Send(new GetTransportationOrdersQuery()
