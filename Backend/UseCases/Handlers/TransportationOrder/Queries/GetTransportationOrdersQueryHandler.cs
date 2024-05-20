@@ -17,17 +17,17 @@ public class GetTransportationOrdersQueryHandler: IRequestHandler<GetTransportat
 {
     private readonly IMapper _mapper;
     private readonly IRepository<Entities.TransportationOrder> _ordersRepository;
-    private readonly IRepository<TransferChangeHistoryRecord> _orderHistoryRepository;
+    private readonly IRepository<TransferAssignedDriverRecord> _ordersAssignedDriversRepository;
     private readonly UserManager<User> _userManager;
 
     public GetTransportationOrdersQueryHandler(UserManager<User> userManager,
         IRepository<Entities.TransportationOrder> ordersRepository,
-        IRepository<TransferChangeHistoryRecord> orderHistoryRepository,
+        IRepository<TransferAssignedDriverRecord> ordersAssignedDriversRepository,
         IMapper mapper)
     {
         _userManager = userManager;
         _ordersRepository = ordersRepository;
-        _orderHistoryRepository = orderHistoryRepository;
+        _ordersAssignedDriversRepository = ordersAssignedDriversRepository;
         _mapper = mapper;
     }
     
@@ -50,7 +50,7 @@ public class GetTransportationOrdersQueryHandler: IRequestHandler<GetTransportat
 
     private async Task<TransportationOrdersListDto> GetDriverOrders(User user)
     {
-        var historyRecords = await _orderHistoryRepository.GetAllAsync(x => x.AssignedDriverId == user.Id);
+        var historyRecords = await _ordersAssignedDriversRepository.GetAllAsync(x => x.UserId == user.Id);
 #warning эту логику нужно перенести в sql запрос, чтобы это выполнялоась в БД, но пока нет такого репозитория с такой функцией.
         var transportationOrderIds = historyRecords.Select(x => x.TransportationOrderId).Distinct();
         List<TransportationOrderDto> transportationOrderDtos = new List<TransportationOrderDto>();

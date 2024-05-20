@@ -16,9 +16,9 @@ public class CreateDefaultPropertiesAtTransportationOrder :IMappingAction<Transp
     }
 }
 
-public class TransportationStatusFormatter : IValueConverter<List<TransferChangeHistoryRecord>, TransportationStatus>
+public class TransportationStatusFormatter : IValueConverter<List<TransferChangeStatusRecord>, TransportationStatus>
 {
-    public TransportationStatus Convert(List<TransferChangeHistoryRecord> sourceMember, ResolutionContext context)
+    public TransportationStatus Convert(List<TransferChangeStatusRecord> sourceMember, ResolutionContext context)
     {
         if (sourceMember == null || !sourceMember.Any())
         {

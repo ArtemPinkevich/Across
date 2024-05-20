@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -16,13 +17,16 @@ public class AddOrUpdateTransportationOrderCommandHandler: IRequestHandler<AddOr
     private readonly IMapper _mapper;
     private readonly UserManager<User> _userManager;
     private readonly IRepository<Entities.TransportationOrder> _repository;
+    private readonly IRepository<TransferChangeStatusRecord> _orderChangeStatusRepository;
 
     public AddOrUpdateTransportationOrderCommandHandler(UserManager<User> userManager,
         IRepository<Entities.TransportationOrder> repository,
+        IRepository<TransferChangeStatusRecord> orderChangeStatusRepository,
         IMapper mapper)
     {
         _userManager = userManager;
         _repository = repository;
+        _orderChangeStatusRepository = orderChangeStatusRepository; 
         _mapper = mapper;
     }
     public async Task<TransportationOrderResult> Handle(AddOrUpdateTransportationOrderCommand request, CancellationToken cancellationToken)
@@ -43,6 +47,15 @@ public class AddOrUpdateTransportationOrderCommandHandler: IRequestHandler<AddOr
             order = _mapper.Map<Entities.TransportationOrder>(request.TransportationOrderDto);
             order.UserId = user.Id;
             await _repository.AddAsync(new List<Entities.TransportationOrder>() {order});
+            await _orderChangeStatusRepository.AddAsync(new List<TransferChangeStatusRecord>()
+            {
+                new ()
+                {
+                    ChangeDatetime = DateTime.Now,
+                    TransportationOrderId = order.Id,
+                    TransportationStatus = TransportationStatus.CarrierFinding
+                }
+            });
         }
         else
         {

@@ -21,8 +21,9 @@
         
         public DbSet<TruckRequirements> TruckRequirements { set; get; }
         
-        public DbSet<TransferChangeHistoryRecord> TransferChangeHistoryRecords { set; get; }
+        public DbSet<TransferChangeStatusRecord> TransferChangeHistoryRecords { set; get; }
 
+        public DbSet<TransferAssignedDriverRecord> TransferAssignedDriverRecords { set; get; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

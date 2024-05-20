@@ -10,7 +10,7 @@ using Entities;
 using Microsoft.EntityFrameworkCore;
 
 
-public class TransferChangeHistoryRepository: IRepository<TransferChangeHistoryRecord>
+public class TransferChangeHistoryRepository: IRepository<TransferChangeStatusRecord>
 {
     private readonly DatabaseContext _context;
     
@@ -19,21 +19,21 @@ public class TransferChangeHistoryRepository: IRepository<TransferChangeHistoryR
         _context = context;
     }
     
-    public async Task<TransferChangeHistoryRecord> GetAsync(Expression<Func<TransferChangeHistoryRecord, bool>> condition)
+    public async Task<TransferChangeStatusRecord> GetAsync(Expression<Func<TransferChangeStatusRecord, bool>> condition)
     {
         return await _context.TransferChangeHistoryRecords
             .Include(item => item.TransportationOrder)
             .FirstOrDefaultAsync(condition);
     }
 
-    public async Task<List<TransferChangeHistoryRecord>> GetAllAsync()
+    public async Task<List<TransferChangeStatusRecord>> GetAllAsync()
     {
         return await _context.TransferChangeHistoryRecords
             .Include(item => item.TransportationOrder)
             .ToListAsync();
     }
 
-    public async Task<List<TransferChangeHistoryRecord>> GetAllAsync(Expression<Func<TransferChangeHistoryRecord, bool>> condition)
+    public async Task<List<TransferChangeStatusRecord>> GetAllAsync(Expression<Func<TransferChangeStatusRecord, bool>> condition)
     {
         return await _context.TransferChangeHistoryRecords
             .Include(item => item.TransportationOrder)
@@ -42,7 +42,7 @@ public class TransferChangeHistoryRepository: IRepository<TransferChangeHistoryR
             .ToListAsync();
     }
 
-    public async Task<List<TransferChangeHistoryRecord>> GetLastAsync(Expression<Func<TransferChangeHistoryRecord, bool>> condition, int limit)
+    public async Task<List<TransferChangeStatusRecord>> GetLastAsync(Expression<Func<TransferChangeStatusRecord, bool>> condition, int limit)
     {
         return await _context.TransferChangeHistoryRecords
             .Include(item => item.TransportationOrder)
@@ -52,7 +52,7 @@ public class TransferChangeHistoryRepository: IRepository<TransferChangeHistoryR
             .ToListAsync();
     }
 
-    public async Task<List<TransferChangeHistoryRecord>> GetFirstAsync(Expression<Func<TransferChangeHistoryRecord, bool>> condition, int limit)
+    public async Task<List<TransferChangeStatusRecord>> GetFirstAsync(Expression<Func<TransferChangeStatusRecord, bool>> condition, int limit)
     {
         return await _context.TransferChangeHistoryRecords
             .Include(item => item.TransportationOrder)
@@ -62,20 +62,20 @@ public class TransferChangeHistoryRepository: IRepository<TransferChangeHistoryR
             .ToListAsync();
     }
 
-    public async Task AddAsync(List<TransferChangeHistoryRecord> items)
+    public async Task AddAsync(List<TransferChangeStatusRecord> items)
     {
         await _context.TransferChangeHistoryRecords.AddRangeAsync(items);
     }
 
-    public Task UpdateAsync(TransferChangeHistoryRecord item)
+    public Task UpdateAsync(TransferChangeStatusRecord item)
     {
         _context.TransferChangeHistoryRecords.Update(item);
         return Task.CompletedTask;
     }
 
-    public Task DeleteAsync(Expression<Func<TransferChangeHistoryRecord, bool>> condition)
+    public Task DeleteAsync(Expression<Func<TransferChangeStatusRecord, bool>> condition)
     {
-        IEnumerable<TransferChangeHistoryRecord> removeItems = _context.TransferChangeHistoryRecords.Where(condition);
+        IEnumerable<TransferChangeStatusRecord> removeItems = _context.TransferChangeHistoryRecords.Where(condition);
         _context.RemoveRange(removeItems);
         return Task.CompletedTask;
     }

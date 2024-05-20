@@ -11,7 +11,9 @@ public class TransportationOrder : EntityBase
     
     public TruckRequirements TruckRequirements { set; get; }
     
-    public List<TransferChangeHistoryRecord> TransferChangeHistoryRecords { set; get; }
+    public List<TransferAssignedDriverRecord> TransferAssignedDriverRecords { set; get; }
+    
+    public List<TransferChangeStatusRecord> TransferChangeHistoryRecords { set; get; }
     
     public string LoadDateFrom { set; get; }
     
