@@ -6,7 +6,7 @@ namespace GeoService.Services;
 
 public class PlacesService:IPlacesService
 {
-    private const int MaxCities = 100;
+    private const int MaxCities = 50;
     
     private readonly GeoDbContext _geoDbContext;
     
@@ -17,6 +17,20 @@ public class PlacesService:IPlacesService
 
     public IEnumerable<PlaceDto> GetPlaces(string startsWith)
     {
+        var cities = _geoDbContext.Cities
+            .Where(x => x.Name.StartsWith(startsWith))
+            .Include(x => x.Country)
+            .Include(x => x.Region)
+            .Take(MaxCities)
+            .ToList();
+
+        IEnumerable<PlaceDto> places = cities.Select(x => new PlaceDto()
+        {
+            Country = x.Country == null ? "" : x.Country.Name,
+            Region = x.Region == null ? "" : x.Region.Name,
+            City = x.Name,
+        });
+        
         return new List<PlaceDto>()
         {
             new PlaceDto()
