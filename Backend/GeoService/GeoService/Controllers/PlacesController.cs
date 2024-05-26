@@ -1,3 +1,4 @@
+using GeoService.Dto;
 using GeoService.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -21,40 +22,10 @@ public class PlacesController : ControllerBase
     }
 
     //[Authorize(Roles = $"Driver,Shipper")]
-    [HttpGet("get_all_countries")]
-    public IEnumerable<string> GetCountries()
+   
+    [HttpGet("get_places/{startswith}")]
+    public IEnumerable<PlaceDto> GetCountriesStartsWith(string startswith)
     {
-        return _placesService.GetAllCountries();
-    }
-    
-    [HttpGet("get_countries_startswith/{startswith}")]
-    public IEnumerable<string> GetCountriesStartsWith(string startswith)
-    {
-        return _placesService.GetCountries(startswith);
-    }
-    
-    //[Authorize(Roles = $"Driver,Shipper")]
-    [HttpGet("get_all_cities")]
-    public IEnumerable<string> GetCities()
-    {
-        return _placesService.GetAllCities();
-    }
-    
-    [HttpGet("get_cities_bycountry/{country}")]
-    public IEnumerable<string> GetCities(string country)
-    {
-        return _placesService.GetCitiesByCountry(country);
-    }
-    
-    [HttpGet("get_cities_startswith/{startswith}")]
-    public IEnumerable<string> GetCitiesStartsWith(string startswith)
-    {
-        return _placesService.GetCities(startswith);
-    }
-    
-    [HttpGet("get_cities_bycountry_startswith/{country}/{startswith}")]
-    public IEnumerable<string> GetCitiesStartsWith(string country, string startswith)
-    {
-        return _placesService.GetCitiesByCountry(country, startswith);
+        return _placesService.GetPlaces(startswith);
     }
 }

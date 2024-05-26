@@ -1,6 +1,6 @@
 ﻿namespace GeoService.Entities;
 
-public class City
+public class Region
 {
     public int Id { set; get; }
     
@@ -8,7 +8,4 @@ public class City
     
     public int CountryId { set; get; }
     public Country Country { set; get; }
-    
-    public int RegionId { set; get; }
-    public Region Region { set; get; }
 }
