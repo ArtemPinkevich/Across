@@ -8,4 +8,6 @@ public class Region
     
     public int CountryId { set; get; }
     public Country Country { set; get; }
+    
+    public List<City> Cities { set; get; }
 }

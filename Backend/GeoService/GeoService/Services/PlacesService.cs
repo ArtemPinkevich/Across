@@ -6,7 +6,7 @@ namespace GeoService.Services;
 
 public class PlacesService:IPlacesService
 {
-    private const int MaxCities = 50;
+    private const int MaxCities = 20;
     
     private readonly GeoDbContext _geoDbContext;
     
@@ -17,8 +17,9 @@ public class PlacesService:IPlacesService
 
     public IEnumerable<PlaceDto> GetPlaces(string startsWith)
     {
+        var start = startsWith.ToLower();
         var cities = _geoDbContext.Cities
-            .Where(x => x.Name.StartsWith(startsWith))
+            .Where(x => EF.Functions.Like(x.Name, $"{start}%"))
             .Include(x => x.Country)
             .Include(x => x.Region)
             .Take(MaxCities)
@@ -26,49 +27,21 @@ public class PlacesService:IPlacesService
 
         IEnumerable<PlaceDto> places = cities.Select(x => new PlaceDto()
         {
-            Country = x.Country == null ? "" : x.Country.Name,
-            Region = x.Region == null ? "" : x.Region.Name,
-            City = x.Name,
+            Country = x.Country == null ? "" : FirstCharToUpper(x.Country.Name),
+            Region = x.Region == null ? "" : FirstCharToUpper(x.Region.Name),
+            City = FirstCharToUpper(x.Name),
         });
-        
-        return new List<PlaceDto>()
+
+        return places;
+    }
+
+    private string FirstCharToUpper(string input)
+    {
+        if (string.IsNullOrEmpty(input))
         {
-            new PlaceDto()
-            {
-                Country = "Россия",
-                City = "Москва",
-                Region = "Московская обл"
-            },
-            new PlaceDto()
-            {
-                Country = "Россия",
-                City = "Томск",
-                Region = "Томска обл"
-            },
-            new PlaceDto()
-            {
-                Country = "Россия",
-                City = "Новосибирск",
-                Region = "Ноовосибирская обл"
-            },
-            new PlaceDto()
-            {
-                Country = "Казахстан",
-                City = "Астана",
-                Region = "Акмоолинская обл"
-            },
-            new PlaceDto()
-            {
-                Country = "Казахстан",
-                City = "Алматы",
-                Region = "Алматинская обл"
-            },
-            new PlaceDto()
-            {
-                Country = "Казахстан",
-                City = "Павлодар",
-                Region = "Павлодарская обл"
-            },
-        };
+            return string.Empty;
+        }
+
+        return $"{char.ToUpper(input[0])}{input[1..]}";
     }
 }
