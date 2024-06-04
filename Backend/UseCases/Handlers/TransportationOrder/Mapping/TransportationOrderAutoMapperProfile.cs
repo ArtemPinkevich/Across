@@ -16,7 +16,29 @@ public class CreateDefaultPropertiesAtTransportationOrder :IMappingAction<Transp
     }
 }
 
-public class TransportationStatusFormatter : IValueConverter<List<TransferChangeStatusRecord>, TransportationStatus>
+public class TransportationOrderLocationConverter : IValueConverter<LocationDto, string>
+{
+    public string Convert(LocationDto sourceMember, ResolutionContext context)
+    {
+        return $"{sourceMember.Country}-{sourceMember.Region}-{sourceMember.City}";
+    }
+}
+
+public class TransportationOrderLocationReverseConverter : IValueConverter<string, LocationDto>
+{
+    public LocationDto Convert(string sourceMember, ResolutionContext context)
+    {
+        var res = sourceMember.Split("-");
+        return new LocationDto()
+        {
+            Country = res[0],
+            Region = res[1],
+            City = res[2],
+        };
+    }
+}
+
+public class TransportationStatusConverter : IValueConverter<List<TransferChangeStatusRecord>, TransportationStatus>
 {
     public TransportationStatus Convert(List<TransferChangeStatusRecord> sourceMember, ResolutionContext context)
     {
@@ -237,29 +259,37 @@ public class CargoAutoMapperProfile : Profile
 
             return carBodyTypes.ToArray();
         });
-        
+
         CreateMap<TransportationOrderDto, Entities.TransportationOrder>()
             .ForMember(d => d.Id,
                 opt => opt.MapFrom(s => s.TransportationOrderId))
-            .ForMember(d => d.LoadingAddress, 
+            .ForMember(d => d.LoadingAddress,
                 opt => opt.MapFrom(s => s.TransferInfo.LoadingAddress))
-            .ForMember(d => d.UnloadingAddress, 
+            .ForMember(d => d.UnloadingAddress,
                 opt => opt.MapFrom(s => s.TransferInfo.UnloadingAddress))
             .ForMember(d => d.LoadingLocalityName,
-                opt => opt.MapFrom(s => s.TransferInfo.LoadingLocalityName))
+                opt => opt.ConvertUsing(new TransportationOrderLocationConverter(),
+                    src => src.TransferInfo.LoadingLocation))
             .ForMember(d => d.UnloadingLocalityName,
-                opt => opt.MapFrom(s => s.TransferInfo.UnloadingLocalityName))
+                opt => opt.ConvertUsing(new TransportationOrderLocationConverter(),
+                    src => src.TransferInfo.UnloadingLocation))
             .ForMember(d => d.LoadDateFrom,
                 opt => opt.MapFrom(s => s.TransferInfo.LoadingDateFrom))
             .ForMember(d => d.LoadDateTo,
-                opt => opt.MapFrom(s => s.TransferInfo.loadingDateTo))
+                opt => opt.MapFrom(s => s.TransferInfo.LoadingDateTo))
             .ForMember(d => d.Cargo, opt => opt.MapFrom(s => s.Cargo))
             .ForMember(d => d.TruckRequirements,
                 opt => opt.MapFrom(s => s.Cargo.TruckRequirements))
             .AfterMap<CreateDefaultPropertiesAtTransportationOrder>()
             .ReverseMap()
             .ForMember(s => s.TransportationStatus,
-                opt => opt.ConvertUsing(new TransportationStatusFormatter(),
-                    src => src.TransferChangeHistoryRecords));
+                opt => opt.ConvertUsing(new TransportationStatusConverter(),
+                    src => src.TransferChangeHistoryRecords))
+            .ForMember(s => s.TransferInfo.LoadingLocation,
+                opt => opt.ConvertUsing(new TransportationOrderLocationReverseConverter(),
+                    d => d.LoadingAddress))
+            .ForMember(s => s.TransferInfo.UnloadingLocation,
+                opt => opt.ConvertUsing(new TransportationOrderLocationReverseConverter(),
+                    d => d.UnloadingAddress));
     }
 }

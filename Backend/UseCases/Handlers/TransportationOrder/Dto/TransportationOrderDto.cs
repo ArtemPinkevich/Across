@@ -3,17 +3,26 @@ using UseCases.Handlers.Truck.Dto;
 
 namespace UseCases.Handlers.Cargo.Dto;
 
+public class LocationDto
+{
+    public string Country { set; get; }
+    
+    public string Region { set; get; }
+    
+    public string City { set; get; }
+}
+
 public class TransferInfoDto
 {
     public string LoadingDateFrom { set; get; }
     
-    public string loadingDateTo { set; get; }
+    public string LoadingDateTo { set; get; }
     
-    public string LoadingLocalityName { set; get; }
+    public LocationDto LoadingLocation { set; get; }
     
     public string LoadingAddress { set; get; }
     
-    public string UnloadingLocalityName { set; get; }
+    public LocationDto UnloadingLocation { set; get; }
     
     public string UnloadingAddress { set; get; }
 }
