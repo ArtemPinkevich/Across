@@ -1,6 +1,8 @@
 using System.Reflection;
 using Across.Extensions;
 using Across.SignalRHubs;
+using Hangfire;
+using Hangfire.MemoryStorage;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -36,6 +38,7 @@ namespace Across
             services.AddInfrastructure(Configuration);
             services.AddCors();
             services.AddValidation(useCasesAssembly);
+            services.AddBackgroundJobs(Configuration);
             services.AddSwaggerGen(options =>
             {
                 options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme()
@@ -85,6 +88,8 @@ namespace Across
             //app.UseHttpsRedirection();
             app.UseStaticFiles();
 
+            app.UseHangfireDashboard();
+
             app.UseRouting();
 
             app.UseCors(builder => builder//.AllowAnyOrigin()
@@ -107,6 +112,7 @@ namespace Across
                     options.TransportMaxBufferSize = 64;
                     options.Transports = HttpTransportType.WebSockets;
                 });
+                endpoints.MapHangfireDashboard();
             });
         }
     }

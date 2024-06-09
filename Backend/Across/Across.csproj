@@ -14,6 +14,8 @@
     <PackageReference Include="AutoMapper" Version="11.0.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.0.2" />
+    <PackageReference Include="Hangfire.AspNetCore" Version="1.8.12" />
+    <PackageReference Include="Hangfire.MemoryStorage" Version="1.8.1.1" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.4">
@@ -38,6 +40,7 @@
   <ItemGroup>
     <ProjectReference Include="..\ApplicationServices.Implementation\ApplicationServices.Implementation.csproj" />
     <ProjectReference Include="..\ApplicationServices\ApplicationServices.Interfaces.csproj" />
+    <ProjectReference Include="..\BackgroundJobs.Implementation\BackgroundJobs.Implementation.csproj" />
     <ProjectReference Include="..\DataAccess.MySql\DataAccess.MySql.csproj" />
     <ProjectReference Include="..\DataAccess.SqlLite\DataAccess.SqlLite.csproj" />
     <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />

@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Hangfire.Core" Version="1.8.12" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\BackgroundJobs.Interfaces\BackgroundJobs.Interfaces.csproj" />
+      <ProjectReference Include="..\DataAccess.BaseImplementation\DataAccess.BaseImplementation.csproj" />
+    </ItemGroup>
+
+</Project>
