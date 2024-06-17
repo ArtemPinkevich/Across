@@ -356,3 +356,4 @@ BackendWashMe/ClientApp/build/
 BackendWashMe/WashMe.db
 */package-lock.json
 /ClientApp/.vscode
+/Backend/AcrossFiles
