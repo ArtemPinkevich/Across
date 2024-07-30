@@ -1,4 +1,6 @@
-﻿namespace UseCases.Handlers.Profiles.Dto
+﻿using System.Collections.Generic;
+
+namespace UseCases.Handlers.Profiles.Dto
 {
     public class ProfileDto
     {
@@ -11,5 +13,7 @@
         public string BirthDate { set; get; }
         
         public string Role { set; get; }
+        
+        public List<DocumentDto> DocumentDtos { set; get; }
     }
 }

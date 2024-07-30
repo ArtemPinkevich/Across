@@ -1,4 +1,6 @@
-﻿namespace DataAccess.BaseImplementation
+﻿using Entities.Document;
+
+namespace DataAccess.BaseImplementation
 {
     using Entities;
     using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -24,6 +26,8 @@
         public DbSet<TransferChangeStatusRecord> TransferChangeHistoryRecords { set; get; }
 
         public DbSet<TransferAssignedDriverRecord> TransferAssignedDriverRecords { set; get; }
+        
+        public DbSet<Document> Documents { set; get; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

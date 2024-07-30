@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using UseCases.Handlers.Authorization;
+using UseCases.Handlers.Profiles.Commands;
 
 namespace Across.Controllers;
 
@@ -51,6 +52,13 @@ public class FileController : ControllerBase
             await formFile.CopyToAsync(stream);
         }
 
+        await _mediator.Send(new AddOrUpdateDocument()
+        {
+            UserId =  HttpContext.User.Claims.FirstOrDefault(x => x.Type == JwtClaimsTypes.Id)?.Value,
+            Comment = "",
+            DocumentStatus = 0,
+            DocumentType = docType
+        });
 
         return StatusCode(200);
     }
