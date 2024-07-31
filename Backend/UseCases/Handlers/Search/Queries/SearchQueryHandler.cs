@@ -36,7 +36,7 @@ public class SearchQueryHandler : IRequestHandler<SearchQuery, SearchResultDto>
         }
 
         var transportationOrders = 
-            await _repository.GetAllAsync(x => x.TransferChangeHistoryRecords.Last().TransportationStatus == TransportationStatus.CarrierFinding);
+            await _repository.GetAllAsync(x => x.TransferChangeHistoryRecords.FirstOrDefault().TransportationStatus == TransportationStatus.CarrierFinding);
 
         var fromAddressLower = request.FromAddress?.ToLower();
         var toAddressLower = request.ToAddress?.ToLower();

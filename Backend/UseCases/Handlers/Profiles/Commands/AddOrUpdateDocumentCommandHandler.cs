@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Entities;
@@ -30,14 +31,22 @@ public class AddOrUpdateDocumentCommandHandler: IRequestHandler<AddOrUpdateDocum
         {
             throw new Exception($"no user found with id {request.UserId}");
         }
-        
-        user.Documents.Add(new Document()
+
+        var doc = user.Documents.FirstOrDefault(x => x.DocumentType == (DocumentType)request.DocumentType);
+        if (doc == null)
         {
-            DocumentType = (DocumentType)request.DocumentType,
-            DocumentStatus = (DocumentStatus) request.DocumentStatus,
-            Comment = request.Comment,
-            UserId = user.Id
-        });
+            user.Documents.Add(new Document()
+            {
+                DocumentType = (DocumentType)request.DocumentType,
+                DocumentStatus = (DocumentStatus) request.DocumentStatus,
+                Comment = request.Comment,
+                UserId = user.Id
+            });
+        }
+        else
+        {
+            doc.DocumentStatus = DocumentStatus.Verification;
+        }
 
         await _userManager.UpdateAsync(user);
 

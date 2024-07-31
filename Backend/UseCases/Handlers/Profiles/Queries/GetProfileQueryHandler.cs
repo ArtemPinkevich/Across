@@ -41,6 +41,7 @@ public class GetProfileQueryHandler : IRequestHandler<GetProfileQuery, ProfileDt
             Surname = user.Surname,
             Patronymic = user.Patronymic,
             BirthDate = user.BirthDate,
+            PhoneNumber = user.PhoneNumber,
             Role = userRole,
             DocumentDtos = user.Documents.Select(x => new DocumentDto()
             {

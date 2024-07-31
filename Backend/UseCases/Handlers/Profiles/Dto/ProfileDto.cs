@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Entities.Document;
+using System.Collections.Generic;
 
 namespace UseCases.Handlers.Profiles.Dto
 {
@@ -13,7 +14,9 @@ namespace UseCases.Handlers.Profiles.Dto
         public string BirthDate { set; get; }
         
         public string Role { set; get; }
-        
+
+        public string PhoneNumber { set; get; }
+
         public List<DocumentDto> DocumentDtos { set; get; }
     }
 }

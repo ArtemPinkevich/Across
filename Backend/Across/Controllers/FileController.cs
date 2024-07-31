@@ -56,7 +56,7 @@ public class FileController : ControllerBase
         {
             UserId =  HttpContext.User.Claims.FirstOrDefault(x => x.Type == JwtClaimsTypes.Id)?.Value,
             Comment = "",
-            DocumentStatus = 0,
+            DocumentStatus = 1,
             DocumentType = docType
         });
 
