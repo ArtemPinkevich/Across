@@ -5,6 +5,7 @@ using MediatR;
 using Microsoft.AspNetCore.Identity;
 using System.Threading.Tasks;
 using System.Threading;
+using Entities.Document;
 using Microsoft.EntityFrameworkCore;
 using UseCases.Exceptions;
 using UseCases.Handlers.Common.Extensions;
@@ -43,12 +44,63 @@ public class GetProfileQueryHandler : IRequestHandler<GetProfileQuery, ProfileDt
             BirthDate = user.BirthDate,
             PhoneNumber = user.PhoneNumber,
             Role = userRole,
-            DocumentDtos = user.Documents.Select(x => new DocumentDto()
-            {
-                DocumentStatus = x.DocumentStatus,
-                DocumentType = x.DocumentType,
-                Comment = x.Comment
-            }).ToList()
+            DocumentDtos = userRole == UserRoles.Driver ? CreateDriverDocumentsList(user) : CreateShipperDocumentsList(user)
         };
+    }
+
+    private static List<DocumentDto> CreateDriverDocumentsList(User user)
+    {
+        List<DocumentDto> documents = new List<DocumentDto>();
+        var driverLicense = user.Documents.FirstOrDefault(x => x.DocumentType == DocumentType.DriverLicence) ?? new Document()
+        {
+            DocumentStatus = DocumentStatus.None, DocumentType = DocumentType.DriverLicence, Comment = ""
+        };
+        documents.Add(new DocumentDto()
+        {
+            DocumentStatus = driverLicense.DocumentStatus,
+            DocumentType = driverLicense.DocumentType,
+            Comment = driverLicense.Comment
+        });
+        
+        var passportMain = user.Documents.FirstOrDefault(x => x.DocumentType == DocumentType.PassportMain) ?? new Document()
+        {
+            DocumentStatus = DocumentStatus.None, DocumentType = DocumentType.PassportMain, Comment = ""
+        };
+        documents.Add(new DocumentDto()
+        {
+            DocumentStatus = passportMain.DocumentStatus,
+            DocumentType = passportMain.DocumentType,
+            Comment = passportMain.Comment
+        });
+        
+        var passportRegistration = user.Documents.FirstOrDefault(x => x.DocumentType == DocumentType.PassportRegistration) ?? new Document()
+        {
+            DocumentStatus = DocumentStatus.None, DocumentType = DocumentType.PassportRegistration, Comment = ""
+        };
+        documents.Add(new DocumentDto()
+        {
+            DocumentStatus = passportRegistration.DocumentStatus,
+            DocumentType = passportRegistration.DocumentType,
+            Comment = passportRegistration.Comment
+        });
+
+        var taxPayerIdentificationNumber = user.Documents.FirstOrDefault(x => x.DocumentType == DocumentType.TaxPayerIdentificationNumber) ?? new Document()
+        {
+            DocumentStatus = DocumentStatus.None, DocumentType = DocumentType.TaxPayerIdentificationNumber, Comment = ""
+        };
+        documents.Add(new DocumentDto()
+        {
+            DocumentStatus = taxPayerIdentificationNumber.DocumentStatus,
+            DocumentType = taxPayerIdentificationNumber.DocumentType,
+            Comment = taxPayerIdentificationNumber.Comment
+        });
+        
+        return documents;
+    }
+
+    private List<DocumentDto> CreateShipperDocumentsList(User user)
+    {
+        List<DocumentDto> documents = new List<DocumentDto>();
+        return documents;
     }
 }

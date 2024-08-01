@@ -38,7 +38,7 @@ public class AddOrUpdateDocumentCommandHandler: IRequestHandler<AddOrUpdateDocum
             user.Documents.Add(new Document()
             {
                 DocumentType = (DocumentType)request.DocumentType,
-                DocumentStatus = (DocumentStatus) request.DocumentStatus,
+                DocumentStatus = DocumentStatus.Verification,
                 Comment = request.Comment,
                 UserId = user.Id
             });

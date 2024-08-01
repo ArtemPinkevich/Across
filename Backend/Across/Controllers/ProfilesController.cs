@@ -60,4 +60,11 @@ public class ProfilesController: ControllerBase
             Role = role
         });
     }
+
+    [Authorize(Roles = $"{UserRoles.Admin},{UserRoles.Lawyer}")]
+    [HttpPost("change_doc_status/{docType}/{docStatus}")]
+    public async Task<ProfileResultDto> ChangeDocumentStatus([FromBody] ChangeDocumentStatusCommand changeDocumentStatusCommand)
+    {
+        return await _mediator.Send(changeDocumentStatusCommand);
+    }
 }
