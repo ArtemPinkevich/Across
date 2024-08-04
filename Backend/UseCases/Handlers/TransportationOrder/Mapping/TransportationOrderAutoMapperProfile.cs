@@ -24,20 +24,6 @@ public class TransportationOrderLocationConverter : IValueConverter<LocationDto,
     }
 }
 
-public class TransportationOrderLocationReverseConverter : IValueConverter<string, LocationDto>
-{
-    public LocationDto Convert(string sourceMember, ResolutionContext context)
-    {
-        var res = sourceMember.Split("-");
-        return new LocationDto()
-        {
-            Country = res[0],
-            Region = res[1],
-            City = res[2],
-        };
-    }
-}
-
 public class TransportationStatusConverter : IValueConverter<List<TransferChangeStatusRecord>, TransportationStatus>
 {
     public TransportationStatus Convert(List<TransferChangeStatusRecord> sourceMember, ResolutionContext context)
@@ -285,11 +271,22 @@ public class CargoAutoMapperProfile : Profile
             .ForMember(s => s.TransportationStatus,
                 opt => opt.ConvertUsing(new TransportationStatusConverter(),
                     src => src.TransferChangeHistoryRecords))
-            .ForMember(s => s.TransferInfo.LoadingLocation,
-                opt => opt.ConvertUsing(new TransportationOrderLocationReverseConverter(),
-                    d => d.LoadingAddress))
-            .ForMember(s => s.TransferInfo.UnloadingLocation,
-                opt => opt.ConvertUsing(new TransportationOrderLocationReverseConverter(),
-                    d => d.UnloadingAddress));
+            .ForPath(s => s.TransferInfo.LoadingLocation,
+                opt => opt.MapFrom(d => ConvertLocationReverse(d.LoadingLocalityName)))
+            .ForPath(s => s.TransferInfo.UnloadingLocation,
+                opt => opt.MapFrom(d => ConvertLocationReverse(d.UnloadingLocalityName)));
+    }
+
+    private static LocationDto ConvertLocationReverse(string location)
+    {
+        var res = location.Split("-");
+        if (res.Length >= 3)
+            return new LocationDto() { Country = res[0], Region = res[1], City = res[2], };
+        return new LocationDto()
+        {
+            Country = "undefined",
+            Region = "undefined",
+            City = "undefined",
+        };
     }
 }
