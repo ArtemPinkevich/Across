@@ -50,8 +50,8 @@ public class ProfilesController: ControllerBase
     }
     
     [Authorize(Roles = $"{UserRoles.Driver},{UserRoles.Shipper}")]
-    [HttpPost("change_role/{role}")]
-    public async Task<ChangeRoleResultDto> ChangeRole(string role)
+    [HttpPost("change_role")]
+    public async Task<ChangeRoleResultDto> ChangeRole([FromBody] string role)
     {
         string userId = HttpContext.User.Claims.FirstOrDefault( x => x.Type == JwtClaimsTypes.Id)?.Value;
         return await _mediator.Send(new ChangeRoleCommand()
