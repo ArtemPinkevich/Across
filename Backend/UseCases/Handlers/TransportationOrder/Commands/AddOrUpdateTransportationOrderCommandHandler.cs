@@ -70,7 +70,7 @@ public class AddOrUpdateTransportationOrderCommandHandler: IRequestHandler<AddOr
             order.LoadDateTo = request.TransportationOrderDto.TransferInfo.LoadingDateTo;
             order.LoadingLocalityName = _mapper.Map<string>(request.TransportationOrderDto.TransferInfo.LoadingAddress);
             order.LoadingAddress = request.TransportationOrderDto.TransferInfo.LoadingAddress;
-            order.UnloadingLocalityName = _mapper.Map<string>(request.TransportationOrderDto.TransferInfo.UnloadingLocation);
+            order.UnloadingLocalityName = _mapper.Map<string>(request.TransportationOrderDto.TransferInfo.UnloadingPlace);
             order.UnloadingAddress = request.TransportationOrderDto.TransferInfo.UnloadingAddress;
 
             //думаю лучше использовать второй вариант, где каждое свойство обновляется отдельно

@@ -10,6 +10,7 @@ using UseCases.Handlers.Search.Dto;
 using System;
 using System.Collections.Generic;
 using Entities;
+using UseCases.Handlers.TransportationOrder.Mapping;
 
 namespace UseCases.Handlers.Search.Queries;
 
@@ -45,14 +46,19 @@ public class SearchQueryHandler : IRequestHandler<SearchQuery, SearchResultDto>
 
         transportationOrders.ForEach(order =>
         {
-            if (order.LoadingAddress.ToLower() != fromAddressLower)
+            var loadingPlace = CargoAutoMapperProfile.ConvertLocationReverse(order.LoadingLocalityName);
+            if (loadingPlace?.City.ToLower() != fromAddressLower)
             {
                 return;
             }
 
             if (!string.IsNullOrEmpty(toAddressLower) && toAddressLower != order.UnloadingAddress.ToLower())
             {
-                return;
+                var unloadingPlace = CargoAutoMapperProfile.ConvertLocationReverse(order.UnloadingLocalityName);
+                if (toAddressLower != unloadingPlace.City.ToLower())
+                {
+                    return;
+                }
             }
 
             // Ожидаем в order.LoadDateFrom дату в ISO формате

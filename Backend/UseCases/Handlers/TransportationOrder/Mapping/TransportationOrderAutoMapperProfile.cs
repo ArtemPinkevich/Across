@@ -255,10 +255,10 @@ public class CargoAutoMapperProfile : Profile
                 opt => opt.MapFrom(s => s.TransferInfo.UnloadingAddress))
             .ForMember(d => d.LoadingLocalityName,
                 opt => opt.ConvertUsing(new TransportationOrderLocationConverter(),
-                    src => src.TransferInfo.LoadingLocation))
+                    src => src.TransferInfo.LoadingPlace))
             .ForMember(d => d.UnloadingLocalityName,
                 opt => opt.ConvertUsing(new TransportationOrderLocationConverter(),
-                    src => src.TransferInfo.UnloadingLocation))
+                    src => src.TransferInfo.UnloadingPlace))
             .ForMember(d => d.LoadDateFrom,
                 opt => opt.MapFrom(s => s.TransferInfo.LoadingDateFrom))
             .ForMember(d => d.LoadDateTo,
@@ -271,13 +271,13 @@ public class CargoAutoMapperProfile : Profile
             .ForMember(s => s.TransportationStatus,
                 opt => opt.ConvertUsing(new TransportationStatusConverter(),
                     src => src.TransferChangeHistoryRecords))
-            .ForPath(s => s.TransferInfo.LoadingLocation,
+            .ForPath(s => s.TransferInfo.LoadingPlace,
                 opt => opt.MapFrom(d => ConvertLocationReverse(d.LoadingLocalityName)))
-            .ForPath(s => s.TransferInfo.UnloadingLocation,
+            .ForPath(s => s.TransferInfo.UnloadingPlace,
                 opt => opt.MapFrom(d => ConvertLocationReverse(d.UnloadingLocalityName)));
     }
 
-    private static LocationDto ConvertLocationReverse(string location)
+    public static LocationDto ConvertLocationReverse(string location)
     {
         var res = location.Split("-");
         if (res.Length >= 3)

@@ -18,11 +18,11 @@ public class TransferInfoDto
     
     public string LoadingDateTo { set; get; }
     
-    public LocationDto LoadingLocation { set; get; }
+    public LocationDto LoadingPlace { set; get; }
     
     public string LoadingAddress { set; get; }
     
-    public LocationDto UnloadingLocation { set; get; }
+    public LocationDto UnloadingPlace { set; get; }
     
     public string UnloadingAddress { set; get; }
 }
