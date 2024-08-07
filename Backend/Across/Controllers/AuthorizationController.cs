@@ -17,32 +17,17 @@ namespace Across.Controllers
         {
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
-        
-        [Obsolete("use for custom driver authorization")]
-        [HttpGet("auth/{phone}")]
-        public async Task<AuthorizationDto> Authorize(string phone)
-        {
-            return await _mediator.Send(new AuthorizationQuery(){ Phone = phone });
-        }
 
-        [Obsolete("use for custom driver authorization")]
-        [HttpGet("driver/{phone}")]
-        public async Task<AuthorizationDto> DriverAuthorize(string phone)
-        {
-            return await _mediator.Send(new DriverAuthorizationQuery(){ Phone = phone });
-        }
-
-        [Obsolete("use for custom shipper authorization")]
-        [HttpGet("shipper/{phone}")]
-        public async Task<AuthorizationDto> ShipperAuthorize(string phone)
-        {
-            return await _mediator.Send(new ShipperAuthorizationQuery() { Phone = phone });
-        }
-        
         [HttpGet("refresh_tokens")]
         public async Task<AuthorizationDto> RefreshTokens()
         {
             return await _mediator.Send(new UpdateAccessTokenQuery());
+        }
+
+        [HttpPost("auth")]
+        public async Task<AuthorizationDto> Authorize([FromBody]AuthorizationQuery authorizationQuery)
+        {
+            return await _mediator.Send(authorizationQuery);
         }
     }
 }

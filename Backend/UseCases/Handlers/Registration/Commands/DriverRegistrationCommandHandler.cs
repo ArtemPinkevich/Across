@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using UseCases.Handlers.Registration.Dto;
 using Entities;
+using UseCases.Handlers.Common.Dto;
 
 namespace UseCases.Handlers.Registration.Commands
 {
@@ -31,7 +32,7 @@ namespace UseCases.Handlers.Registration.Commands
             
             return new RegistrationDto()
             {
-                Result = RegistrationResult.Success
+                Result = ApiResult.Success
             };
         }
 
@@ -51,7 +52,7 @@ namespace UseCases.Handlers.Registration.Commands
         {
             return new RegistrationDto()
             {
-                Result = RegistrationResult.Error,
+                Result = ApiResult.Failed,
                 Reasons = result.Errors.Select(x => x.Description).ToArray()
             };
         }

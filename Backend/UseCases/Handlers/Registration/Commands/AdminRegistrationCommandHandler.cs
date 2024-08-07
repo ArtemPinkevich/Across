@@ -1,35 +1,29 @@
-﻿namespace UseCases.Handlers.Registration.Commands
+﻿using UseCases.Handlers.Common.Dto;
+
+namespace UseCases.Handlers.Registration.Commands
 {
     using MediatR;
     using Microsoft.AspNetCore.Identity;
     using System.Threading;
     using System.Threading.Tasks;
-    using UseCases.Handlers.Registration.Dto;
+    using Dto;
     using Entities;
     using DataAccess.Interfaces;
     using System.Linq;
-    using UseCases.Handlers.Helpers;
 
     public class AdminRegistrationCommandHandler : IRequestHandler<AdminRegistrationCommand, RegistrationDto>
     {
         private readonly UserManager<User> _userManager;
-        private readonly IRepository<CarWash> _carWashRepository;
 
-        public AdminRegistrationCommandHandler(UserManager<User> userManager,
-                                               IRepository<CarWash> carWashRepository)
+        public AdminRegistrationCommandHandler(UserManager<User> userManager)
         {
             _userManager = userManager;
-            _carWashRepository = carWashRepository;
         }
 
         public async Task<RegistrationDto> Handle(AdminRegistrationCommand request, CancellationToken cancellationToken)
         {
-            if (await _userManager.FindByNameAsync(AdminLoginPrefixHelper.AddPrefix(request.Login)) != null)
-                return CreateErrorResult(new string[1] { "Пользователь с таким логином уже существует" });
-
-            var carWash = await _carWashRepository.GetAsync(item => item.Id == request.CarWashId);
-            if (carWash == null)
-                return CreateErrorResult(new string[1] { "Нет автомойки для добавления администратора" });
+            if (await _userManager.FindByNameAsync(request.Login) != null)
+                return CreateErrorResult(new string[1] { "User exists" });
 
             var user = CreateUser(request);
 
@@ -39,38 +33,35 @@
 
             await _userManager.AddToRoleAsync(user, UserRoles.Admin);
 
-            carWash.Users.Add(user);
-            await _carWashRepository.UpdateAsync(carWash);
-            await _carWashRepository.SaveAsync();
 
-            return CreateSuccessResult(new string[1] { "Администратор зарегистрирован и добавлен к автомойке" });
+            return CreateSuccessResult(new [] { "Administrator regostered" });
         }
 
-        private RegistrationDto CreateSuccessResult(string [] reasons)
+        private static RegistrationDto CreateSuccessResult(string [] reasons)
         {
             return new RegistrationDto()
             {
-                Result = RegistrationResult.Success,
-                Reasons = new string[1] { "Администратор зарегистрирован и добавлен к автомойке" }
-            };
-        }
-
-        private RegistrationDto CreateErrorResult(string[] reasons)
-        {
-            return new RegistrationDto()
-            {
-                Result = RegistrationResult.Error,
+                Result = ApiResult.Success,
                 Reasons = reasons
             };
         }
 
-        private User CreateUser(AdminRegistrationCommand request)
+        private static RegistrationDto CreateErrorResult(string[] reasons)
+        {
+            return new RegistrationDto()
+            {
+                Result = ApiResult.Failed,
+                Reasons = reasons
+            };
+        }
+
+        private static User CreateUser(AdminRegistrationCommand request)
         {
             return new User()
             {
                 Name = request.Name,
                 PhoneNumber = request.Phone,
-                UserName = AdminLoginPrefixHelper.AddPrefix(request.Login)
+                UserName = request.Login
             };
         }
     }

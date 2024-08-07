@@ -34,7 +34,6 @@ namespace Across.Controllers
             return res;
         }
         
-        [Obsolete("")]
         [HttpPost("admin")]
         public async Task<RegistrationDto> Register([FromBody] AdminRegistrationCommand adminRegistrationCommand)
         {

@@ -30,30 +30,20 @@ public class AuthorizationQueryHandler : IRequestHandler<AuthorizationQuery, Aut
 
     public async Task<AuthorizationDto> Handle(AuthorizationQuery request, CancellationToken cancellationToken)
     {
-        var user = await _userManager.FindByNameAsync(request.Phone);
+        var user = await _userManager.FindByNameAsync(request.Login);
         if (user == null)
-            throw new NotAuthorizedException { ErrorCode = NotAuthorizedErrorCode.NoUserFound, AuthorizationMessage = $"No such user {request.Phone}" };
+            throw new NotAuthorizedException { ErrorCode = NotAuthorizedErrorCode.NoUserFound, AuthorizationMessage = $"No such user {request.Login}" };
 
-        var requestCookiePhoneConfirmed =
-            _httpContextAccessor.HttpContext.Request.Cookies[Constants.PhoneConfirmed];
-        if (requestCookiePhoneConfirmed == null && requestCookiePhoneConfirmed != true.ToString())
-            throw new NotAuthorizedException
-                { ErrorCode = NotAuthorizedErrorCode.PhoneNumberIsNotConfirmed, AuthorizationMessage = $"At cookies phone number is not confirmed {request.Phone}" };
-
-        var isPhoneConfirmed = await _userManager.IsPhoneNumberConfirmedAsync(user);
-        if (!isPhoneConfirmed)
-            throw new NotAuthorizedException { ErrorCode = NotAuthorizedErrorCode.PhoneNumberIsNotConfirmed, AuthorizationMessage = $"Phone number is not confirmed {user.UserName}" };
+        if (!await _userManager.CheckPasswordAsync(user, request.Password))
+            throw new NotAuthorizedException { ErrorCode = NotAuthorizedErrorCode.NoUserFound, AuthorizationMessage = $"Password is not valid for login {request.Login}" };
 
         var userRole = await _userManager.GetUserRole(user);
         if (userRole == null)
             throw new NotAuthorizedException { ErrorCode = NotAuthorizedErrorCode.InternalServerError, AuthorizationMessage = $"Error user role identification {user.UserName}" };
 
-        _httpContextAccessor.HttpContext.Response.Cookies.Append(Constants.RefreshTokenKey,
-            _jwtGenerator.CreateRefreshToken(user));
-
         return new AuthorizationDto
         {
-            AccessToken = _jwtGenerator.CreateAccessToken(user, userRole),
+            AccessToken = _jwtGenerator.CreateAccessToken(user, userRole)
         };
     }
 }

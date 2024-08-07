@@ -12,7 +12,8 @@ namespace UseCases.Handlers.Authorization.Validators
     {
         public AuthorizationQueryValidator()
         {
-            RuleFor(x => x.Phone).NotNull().NotEmpty();
+            RuleFor(x => x.Login).NotNull().NotEmpty();
+            RuleFor(x => x.Password).NotNull().NotEmpty();
         }
     }
 }

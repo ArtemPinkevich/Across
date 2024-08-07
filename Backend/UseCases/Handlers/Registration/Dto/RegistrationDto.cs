@@ -1,8 +1,10 @@
-﻿namespace UseCases.Handlers.Registration.Dto
+﻿using UseCases.Handlers.Common.Dto;
+
+namespace UseCases.Handlers.Registration.Dto
 {
     public class RegistrationDto
     {
-        public RegistrationResult Result { set; get; }
+        public ApiResult Result { set; get; }
 
         public string[] Reasons { set; get; }
     }

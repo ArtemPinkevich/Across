@@ -5,10 +5,6 @@
 
     public class AdminRegistrationCommand : IRequest<RegistrationDto>
     {
-        public string SecretPassword { set; get; }
-
-        public int CarWashId { set; get; }
-
         public string Name { set; get; }
 
         public string Phone { set; get; }
