@@ -3,6 +3,7 @@ using System.Linq;
 using AutoMapper;
 using Entities;
 using UseCases.Handlers.Cargo.Dto;
+using UseCases.Handlers.Common;
 
 namespace UseCases.Handlers.TransportationOrder.Mapping;
 
@@ -20,7 +21,7 @@ public class TransportationOrderLocationConverter : IValueConverter<LocationDto,
 {
     public string Convert(LocationDto sourceMember, ResolutionContext context)
     {
-        return $"{sourceMember.Country}-{sourceMember.Region}-{sourceMember.City}";
+        return $"{sourceMember.Country}{Constants.LocationDelimiter}{sourceMember.Region}{Constants.LocationDelimiter}{sourceMember.City}";
     }
 }
 
@@ -279,7 +280,7 @@ public class CargoAutoMapperProfile : Profile
 
     public static LocationDto ConvertLocationReverse(string location)
     {
-        var res = location.Split("-");
+        var res = location.Split(Constants.LocationDelimiter);
         if (res.Length >= 3)
             return new LocationDto() { Country = res[0], Region = res[1], City = res[2], };
         return new LocationDto()
