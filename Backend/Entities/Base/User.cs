@@ -18,8 +18,20 @@
         
         public List<Document.Document> Documents { set; get; }
         
+        /// <summary>
+        /// List of Trucks of Driver
+        /// </summary>
         public List<Truck> Trucks { set; get; }
         
+        /// <summary>
+        /// List of TransportationOrders of Shipper
+        /// </summary>
         public List<TransportationOrder> TransportationOrders { set; get; }
+        
+        /// <summary>
+        /// List of Orders which driver wants to take
+        /// </summary>
+        /// <returns></returns>
+        public List<TransportationOrder> OrdersOfferedByDriver { set; get; }
     }
 }

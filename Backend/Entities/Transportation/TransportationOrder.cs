@@ -26,4 +26,9 @@ public class TransportationOrder : EntityBase
     public string UnloadingLocalityName { set; get; }
     
     public string UnloadingAddress { set; get; }
+    
+    /// <summary>
+    /// List of drivers who want tp take this order
+    /// </summary>
+    public List<User> PossibleDrivers { set; get; }
 }

@@ -41,6 +41,17 @@ namespace DataAccess.BaseImplementation
             //    .WithMany(c => c.Users)
             //    .UsingEntity(c => c.ToTable("CarWasheUser"));
 
+            modelBuilder.Entity<User>()
+                .HasMany(user => user.TransportationOrders)
+                .WithOne(transportationOrder => transportationOrder.User)
+                .HasForeignKey(transportationOrder => transportationOrder.UserId)
+                .IsRequired();
+            
+            modelBuilder.Entity<User>()
+                .HasMany(user => user.OrdersOfferedByDriver)
+                .WithMany(transportationOrder => transportationOrder.PossibleDrivers)
+                .UsingEntity(x => x.ToTable("DriverAndOrderWishes"));
+            
             base.OnModelCreating(modelBuilder);
         }
     }
