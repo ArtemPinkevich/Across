@@ -31,6 +31,11 @@ public class TransferAssignedDriverRepository: IRepository<TransferAssignedDrive
             .Include(item => item.TransportationOrder)
             .ToListAsync();
     }
+    
+    public Task<List<TransferAssignedDriverRecord>> GetAllAsync(List<Expression<Func<TransferAssignedDriverRecord, bool>>> conditions)
+    {
+        return null;
+    }
 
     public async Task<List<TransferAssignedDriverRecord>> GetAllAsync(Expression<Func<TransferAssignedDriverRecord, bool>> condition)
     {

@@ -41,6 +41,11 @@ public class CargosRepository:IRepository<Cargo>
             .ToListAsync();
     }
 
+    public Task<List<Cargo>> GetAllAsync(List<Expression<Func<Cargo, bool>>> conditions)
+    {
+        return null;
+    }
+    
     public async Task<List<Cargo>> GetLastAsync(Expression<Func<Cargo, bool>> condition, int limit)
     {
         return await _context.Cargos

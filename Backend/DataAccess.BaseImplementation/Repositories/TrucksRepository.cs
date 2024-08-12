@@ -40,6 +40,18 @@ public class TrucksRepository:IRepository<Truck>
             .AsQueryable()
             .ToListAsync();
     }
+    
+    public async Task<List<Truck>> GetAllAsync(List<Expression<Func<Truck, bool>>> conditions)
+    {
+        IQueryable<Truck> trucks = _context.Trucks.Include(item => item.User);
+        
+        foreach (var condition in conditions)
+        {
+            trucks = trucks.Where(condition);
+        }
+
+        return await trucks.AsQueryable().ToListAsync();
+    }
 
     public async Task<List<Truck>> GetLastAsync(Expression<Func<Truck, bool>> condition, int limit)
     {

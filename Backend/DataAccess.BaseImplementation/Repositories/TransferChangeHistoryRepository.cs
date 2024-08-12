@@ -41,6 +41,11 @@ public class TransferChangeHistoryRepository: IRepository<TransferChangeStatusRe
             .AsQueryable()
             .ToListAsync();
     }
+    
+    public Task<List<TransferChangeStatusRecord>> GetAllAsync(List<Expression<Func<TransferChangeStatusRecord, bool>>> conditions)
+    {
+        return null;
+    }
 
     public async Task<List<TransferChangeStatusRecord>> GetLastAsync(Expression<Func<TransferChangeStatusRecord, bool>> condition, int limit)
     {

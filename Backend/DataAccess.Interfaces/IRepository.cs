@@ -13,6 +13,8 @@
 
         Task<List<T>> GetAllAsync(Expression<Func<T, bool>> condition);
 
+        Task<List<T>> GetAllAsync(List<Expression<Func<T, bool>>> conditions);
+
         Task<List<T>> GetLastAsync(Expression<Func<T, bool>> condition, int limit);
 
         Task<List<T>> GetFirstAsync(Expression<Func<T, bool>> condition, int limit);

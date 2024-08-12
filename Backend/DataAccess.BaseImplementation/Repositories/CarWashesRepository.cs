@@ -45,6 +45,11 @@
                 .Include(item => item.SelectedByUsers)
                 .ToListAsync();
         }
+        
+        public Task<List<CarWash>> GetAllAsync(List<Expression<Func<CarWash, bool>>> conditions)
+        {
+            return null;
+        }
 
         public async Task<List<CarWash>> GetAllAsync(Expression<Func<CarWash, bool>> condition)
         {

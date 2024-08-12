@@ -56,6 +56,11 @@ public class TransportationOrderRepository: IRepository<TransportationOrder>
             .ToListAsync();
     }
 
+    public Task<List<TransportationOrder>> GetAllAsync(List<Expression<Func<TransportationOrder, bool>>> conditions)
+    {
+        return null;
+    }
+    
     public async Task<List<TransportationOrder>> GetLastAsync(Expression<Func<TransportationOrder, bool>> condition, int limit)
     {
         return await _context.TransportationOrders
