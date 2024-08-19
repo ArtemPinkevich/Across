@@ -6,6 +6,8 @@ public class TruckDto
 {
     public int? TruckId { set; get; }
     
+    public string TruckLocation { set; get; }
+    
     public string CreatedId { set; get; }
     
     public string RegNumber { set; get; }

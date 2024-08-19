@@ -60,4 +60,13 @@ public class TruckController: ControllerBase
 
         return await _mediator.Send(deleteTruckCommand);
     }
+
+    [Authorize(Roles = UserRoles.Driver)]
+    [HttpPost("set_truck_location/{id}")]
+    public async Task<TruckResultDto> SetTruckLocation(int id)
+    {
+        var setTruckLocationCommand = new SetTruckLocationCommand() { TruckId = id, };
+        return await _mediator.Send(setTruckLocationCommand);
+    }
+
 }
