@@ -2,6 +2,9 @@
 
 public class Truck: EntityBase
 {
+    #warning move from here
+    public string TruckLocation { set; get; }
+    
     public string CreatedId { set; get; }
     
     public string RegNumber { set; get; }

@@ -37,7 +37,21 @@ public class SearchController: ControllerBase
     {
         return await _mediator.Send(searchDto);
     }
+    
+    [Authorize(Roles = UserRoles.Admin)]
+    [HttpGet("search_shipper_by_id/{id}")]
+    public async Task<SearchDriversResultDto> SearchShipperById(string id)
+    {
+        return null;
+    }
 
+    [Authorize(Roles = UserRoles.Admin)]
+    [HttpGet("search_order_by_id/{id}")]
+    public async Task<SearchDriversResultDto> SearchTransportationOrderById(int id)
+    {
+        return null;
+    }
+    
     [Authorize(Roles = UserRoles.Admin)]
     [HttpGet("get_bids")]
     public async Task<SearchResultDto> GetBids()
