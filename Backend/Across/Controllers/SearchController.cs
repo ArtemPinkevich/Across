@@ -5,6 +5,8 @@ using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using UseCases.Handlers.Cargo.Dto;
+using UseCases.Handlers.Profiles.Dto;
 using UseCases.Handlers.Search.Dto;
 using UseCases.Handlers.Search.Queries;
 
@@ -39,17 +41,24 @@ public class SearchController: ControllerBase
     }
     
     [Authorize(Roles = UserRoles.Admin)]
-    [HttpGet("search_shipper_by_id/{id}")]
-    public async Task<SearchDriversResultDto> SearchShipperById(string id)
+    [HttpGet("search_driver_by_truck_id/{truck_id}")]
+    public async Task<ProfileDto> SearchDriverByTruckId(int truck_id)
     {
-        return null;
+        return await _mediator.Send(new SearchDriverByTruckIdQuery(){ TruckId = truck_id });
+    }
+    
+    [Authorize(Roles = UserRoles.Admin)]
+    [HttpGet("search_shipper_by_order_id/{order_id}")]
+    public async Task<ProfileDto> SearchShipperByOrderId(int order_id)
+    {
+        return await _mediator.Send(new SearchShipperByOrderIdQuery(){ OrderId = order_id });
     }
 
     [Authorize(Roles = UserRoles.Admin)]
     [HttpGet("search_order_by_id/{id}")]
-    public async Task<SearchDriversResultDto> SearchTransportationOrderById(int id)
+    public async Task<TransportationOrdersListDto> SearchTransportationOrderById(int id)
     {
-        return null;
+        return await _mediator.Send(new SearchOrderByIdQuery(){ OrderId = id });
     }
     
     [Authorize(Roles = UserRoles.Admin)]
