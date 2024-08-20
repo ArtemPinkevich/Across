@@ -49,8 +49,13 @@ namespace DataAccess.BaseImplementation
             
             modelBuilder.Entity<User>()
                 .HasMany(user => user.OrdersOfferedByDriver)
-                .WithMany(transportationOrder => transportationOrder.PossibleDrivers)
-                .UsingEntity(x => x.ToTable("DriverAndOrderWishes"));
+                .WithMany(transportationOrder => transportationOrder.Drivers)
+                .UsingEntity("DriverAndOrderWishes",
+                    x =>
+                {
+                    x.Property("OrdersOfferedByDriverId").HasColumnName("OrderId");
+                    x.Property("DriversId").HasColumnName("DriverId");
+                });
             
             base.OnModelCreating(modelBuilder);
         }

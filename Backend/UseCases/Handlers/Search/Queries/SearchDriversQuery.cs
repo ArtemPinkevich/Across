@@ -6,6 +6,8 @@ namespace UseCases.Handlers.Search.Queries;
 
 public class SearchDriversQuery: IRequest<SearchDriversResultDto>
 {
+    public string DriverLocation { set; get; }
+    
     public TrailerType? TrailerType { set; get; }
     
     public CarBodyType? CarBodyType { set; get; }

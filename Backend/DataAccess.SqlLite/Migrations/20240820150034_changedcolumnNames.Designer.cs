@@ -3,6 +3,7 @@ using System;
 using DataAccess.SqlLite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.SqlLite.Migrations
 {
     [DbContext(typeof(SqlLiteDbContext))]
-    partial class SqlLiteDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240820150034_changedcolumnNames")]
+    partial class changedcolumnNames
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.4");
@@ -20,12 +22,10 @@ namespace DataAccess.SqlLite.Migrations
             modelBuilder.Entity("DriverAndOrderWishes", b =>
                 {
                     b.Property<string>("DriversId")
-                        .HasColumnType("TEXT")
-                        .HasColumnName("DriverId");
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("OrdersOfferedByDriverId")
-                        .HasColumnType("INTEGER")
-                        .HasColumnName("OrderId");
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("DriversId", "OrdersOfferedByDriverId");
 

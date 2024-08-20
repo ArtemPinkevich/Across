@@ -6,7 +6,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using DataAccess.Interfaces;
+using Entities;
 using MediatR;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using UseCases.Handlers.Common.Dto;
 using UseCases.Handlers.Search.Dto;
 using UseCases.Handlers.Truck.Dto;
@@ -16,12 +19,18 @@ namespace UseCases.Handlers.Search.Queries;
 public class SearchDriversQueryHandler : IRequestHandler<SearchDriversQuery, SearchDriversResultDto>
 {
     private readonly IRepository<Entities.Truck> _truckRepository;
+    private readonly IRepository<Entities.TransportationOrder> _transportationOrdersRepository;
+    private readonly UserManager<User> _userManager;
     private readonly IMapper _mapper;
     
     public SearchDriversQueryHandler(IRepository<Entities.Truck> truckRepository,
+        IRepository<Entities.TransportationOrder> transportationOrdersRepository,
+        UserManager<User> userManager,
         IMapper mapper)
     {
         _truckRepository = truckRepository;
+        _transportationOrdersRepository = transportationOrdersRepository;
+        _userManager = userManager;
         _mapper = mapper;
     }
     
@@ -44,9 +53,13 @@ public class SearchDriversQueryHandler : IRequestHandler<SearchDriversQuery, Sea
         if(request.InnerBodyLength.HasValue)
             whereExpressions.Add(x => x.InnerBodyLength == request.InnerBodyLength);    
         if(request.InnerBodyWidth.HasValue)
-            whereExpressions.Add(x => x.InnerBodyWidth == request.InnerBodyWidth);    
+            whereExpressions.Add(x => x.InnerBodyWidth == request.InnerBodyWidth);   
+        if(!string.IsNullOrEmpty(request.DriverLocation))
+            whereExpressions.Add(x => x.TruckLocation == request.DriverLocation);
 
         var trucks = await _truckRepository.GetAllAsync(whereExpressions);
+        
+        trucks.AddRange(await GetTrucksFromAssignedOrders(request, cancellationToken));
 
         return new SearchDriversResultDto() 
             {
@@ -59,6 +72,27 @@ public class SearchDriversQueryHandler : IRequestHandler<SearchDriversQuery, Sea
                     Truck = _mapper.Map<TruckDto>(x)
                 }).ToList() 
             };
+    }
 
+    private async Task<List<Entities.Truck>> GetTrucksFromAssignedOrders(SearchDriversQuery request, CancellationToken cancellationToken)
+    {
+        List<Entities.Truck> trucks = new List<Entities.Truck>();
+        
+        var orders = await _transportationOrdersRepository.GetAllAsync(x => x.UnloadingLocalityName == request.DriverLocation);
+        var transportingOrders = orders.FindAll(x =>
+            x.TransferChangeHistoryRecords.Last().TransportationStatus == TransportationStatus.Transporting);
+
+        var driversGoingToDestination = transportingOrders.Select(x => x.TransferAssignedDriverRecords.Last());
+        foreach (var transferAssignedDriverRecord in driversGoingToDestination)
+        {
+            var driver = await _userManager.Users
+                .Include(x => x.Trucks)
+                .FirstOrDefaultAsync(x => x.Id == transferAssignedDriverRecord.UserId, cancellationToken);
+            
+            if (driver != null) 
+                trucks.AddRange(driver.Trucks);
+        }
+
+        return trucks;
     }
 }

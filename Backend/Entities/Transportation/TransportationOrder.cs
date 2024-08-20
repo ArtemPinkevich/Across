@@ -28,7 +28,7 @@ public class TransportationOrder : EntityBase
     public string UnloadingAddress { set; get; }
     
     /// <summary>
-    /// List of drivers who want tp take this order
+    /// List of drivers who want to take this order
     /// </summary>
-    public List<User> PossibleDrivers { set; get; }
+    public List<User> Drivers { set; get; }
 }
