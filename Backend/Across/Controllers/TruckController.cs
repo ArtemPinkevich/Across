@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Entities;
@@ -35,6 +34,13 @@ public class TruckController: ControllerBase
         {
             UserId = userId,
         });
+    }
+
+    [Authorize(Roles = $"{UserRoles.Driver},{UserRoles.Admin}")]
+    [HttpGet("get_truck_by_id/{id}")]
+    public async Task<TruckDto> GetTruckById(int id)
+    {
+        return await _mediator.Send(new GetTruckByIdQuery() { TruckId = id });
     }
 
     [Authorize(Roles = UserRoles.Driver)]

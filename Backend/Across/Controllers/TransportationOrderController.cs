@@ -36,6 +36,13 @@ public class TransportationOrderController:ControllerBase
         });
     }
 
+    [Authorize(Roles = UserRoles.Admin)]
+    [HttpGet("get_order_by_id/{id}")]
+    public async Task<TransportationOrdersListDto> GetTransportationOrderById(int id)
+    {
+        return await _mediator.Send(new GetOrderByIdQuery() { OrderId = id });
+    }
+
     [Authorize(Roles = UserRoles.Shipper)]
     [HttpPost("add_or_update_order")]
     public async Task<TransportationOrderResult> AddOrUpdateLoad([FromBody] TransportationOrderDto transportationOrder)

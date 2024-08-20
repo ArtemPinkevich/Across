@@ -5,7 +5,6 @@ using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using UseCases.Handlers.Cargo.Dto;
 using UseCases.Handlers.Profiles.Dto;
 using UseCases.Handlers.Search.Dto;
 using UseCases.Handlers.Search.Queries;
@@ -54,13 +53,6 @@ public class SearchController: ControllerBase
         return await _mediator.Send(new SearchShipperByOrderIdQuery(){ OrderId = order_id });
     }
 
-    [Authorize(Roles = UserRoles.Admin)]
-    [HttpGet("search_order_by_id/{id}")]
-    public async Task<TransportationOrdersListDto> SearchTransportationOrderById(int id)
-    {
-        return await _mediator.Send(new SearchOrderByIdQuery(){ OrderId = id });
-    }
-    
     [Authorize(Roles = UserRoles.Admin)]
     [HttpGet("get_bids")]
     public async Task<SearchResultDto> GetBids()
