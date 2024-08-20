@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Entities;
 using Entities.Document;
+using Entities.Enums;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -31,7 +32,15 @@ public class ChangeDocumentStatusCommandHandler: IRequestHandler<ChangeDocumentS
         if (document == null)
             return CreateErrorResult($"no document found with type {request.DocumentType}");
 
+        var newDocumentStatus = (DocumentStatus)request.DocumentStatus;
+
         document.DocumentStatus = (DocumentStatus)request.DocumentStatus;
+        document.Comment = request.Comment;
+
+        if (newDocumentStatus == DocumentStatus.Rejected)
+        {
+            user.UserStatus = UserStatus.Unconfirmed;
+        }
 
         await _userManager.UpdateAsync(user);
 

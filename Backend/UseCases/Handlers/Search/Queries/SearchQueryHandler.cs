@@ -81,6 +81,10 @@ public class SearchQueryHandler : IRequestHandler<SearchQuery, SearchResultDto>
                 }
                 return;
             }
+            else
+            {
+                filtredOrders.Add(order);
+            }
         });
 
         return new SearchResultDto()

@@ -10,4 +10,6 @@ public class ChangeDocumentStatusCommand: IRequest<ProfileResultDto>
     public int DocumentType { set; get; }
     
     public int DocumentStatus { set; get; }
+
+    public string Comment { set; get; }
 }

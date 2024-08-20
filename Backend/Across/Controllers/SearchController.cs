@@ -34,7 +34,7 @@ public class SearchController: ControllerBase
     }
 
     [Authorize(Roles = UserRoles.Admin)]
-    [HttpGet("search_drivers")]
+    [HttpGet("search_trucks")]
     public async Task<SearchDriversResultDto> SearchDrivers([FromQuery] SearchDriversQuery searchDto)
     {
         return await _mediator.Send(searchDto);

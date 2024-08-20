@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Entities;
@@ -61,10 +62,25 @@ public class ProfilesController: ControllerBase
         });
     }
 
-    [Authorize(Roles = $"{UserRoles.Admin},{UserRoles.Lawyer}")]
-    [HttpPost("change_doc_status/{docType}/{docStatus}")]
+    [Authorize(Roles = $"{UserRoles.Lawyer}")]
+    [HttpPost("change_doc_status")]
     public async Task<ProfileResultDto> ChangeDocumentStatus([FromBody] ChangeDocumentStatusCommand changeDocumentStatusCommand)
     {
         return await _mediator.Send(changeDocumentStatusCommand);
+    }
+
+    [Authorize(Roles = $"{UserRoles.Lawyer}")]
+    [HttpPost("change_person_status")]
+    public async Task<ProfileResultDto> ChangePersonStatus([FromBody] ChangePersonStatusCommand changePersonStatusCommand)
+    {
+        return await _mediator.Send(changePersonStatusCommand);
+    }
+
+    [Authorize(Roles = $"{UserRoles.Lawyer}")]
+    [HttpGet("get_shippers_and_drivers")]
+    public async Task<List<ProfileDto>> GetShippersAndDrivers()
+    {
+        string userId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == JwtClaimsTypes.Id)?.Value;
+        return await _mediator.Send(new GetShippersAndDriversQuery()); ;
     }
 }
