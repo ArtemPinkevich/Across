@@ -9,77 +9,82 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DataAccess.BaseImplementation.Repositories;
 
-public class TransferAssignedDriverRepository: IRepository<TransferAssignedDriverRecord>
+public class TransferAssignedTruckRepository: IRepository<TransferAssignedTruckRecord>
 {
     private readonly DatabaseContext _context;
     
-    public TransferAssignedDriverRepository(DatabaseContext context)
+    public TransferAssignedTruckRepository(DatabaseContext context)
     {
         _context = context;
     }
     
-    public async Task<TransferAssignedDriverRecord> GetAsync(Expression<Func<TransferAssignedDriverRecord, bool>> condition)
+    public async Task<TransferAssignedTruckRecord> GetAsync(Expression<Func<TransferAssignedTruckRecord, bool>> condition)
     {
         return await _context.TransferAssignedDriverRecords
             .Include(item => item.TransportationOrder)
+            .Include(item => item.Truck)
             .FirstOrDefaultAsync(condition);
     }
 
-    public async Task<List<TransferAssignedDriverRecord>> GetAllAsync()
+    public async Task<List<TransferAssignedTruckRecord>> GetAllAsync()
     {
         return await _context.TransferAssignedDriverRecords
             .Include(item => item.TransportationOrder)
+            .Include(item => item.Truck)
             .ToListAsync();
     }
     
-    public Task<List<TransferAssignedDriverRecord>> GetAllAsync(List<Expression<Func<TransferAssignedDriverRecord, bool>>> conditions)
+    public Task<List<TransferAssignedTruckRecord>> GetAllAsync(List<Expression<Func<TransferAssignedTruckRecord, bool>>> conditions)
     {
         return null;
     }
 
-    public async Task<List<TransferAssignedDriverRecord>> GetAllAsync(Expression<Func<TransferAssignedDriverRecord, bool>> condition)
+    public async Task<List<TransferAssignedTruckRecord>> GetAllAsync(Expression<Func<TransferAssignedTruckRecord, bool>> condition)
     {
         return await _context.TransferAssignedDriverRecords
             .Include(item => item.TransportationOrder)
+            .Include(item => item.Truck)
             .Where(condition)
             .AsQueryable()
             .ToListAsync();
     }
 
-    public async Task<List<TransferAssignedDriverRecord>> GetLastAsync(Expression<Func<TransferAssignedDriverRecord, bool>> condition, int limit)
+    public async Task<List<TransferAssignedTruckRecord>> GetLastAsync(Expression<Func<TransferAssignedTruckRecord, bool>> condition, int limit)
     {
         return await _context.TransferAssignedDriverRecords
             .Include(item => item.TransportationOrder)
+            .Include(item => item.Truck)
             .Where(condition)
             .TakeLast(limit)
             .AsQueryable()
             .ToListAsync();
     }
 
-    public async Task<List<TransferAssignedDriverRecord>> GetFirstAsync(Expression<Func<TransferAssignedDriverRecord, bool>> condition, int limit)
+    public async Task<List<TransferAssignedTruckRecord>> GetFirstAsync(Expression<Func<TransferAssignedTruckRecord, bool>> condition, int limit)
     {
         return await _context.TransferAssignedDriverRecords
             .Include(item => item.TransportationOrder)
+            .Include(item => item.Truck)
             .Where(condition)
             .Take(limit)
             .AsQueryable()
             .ToListAsync();
     }
 
-    public async Task AddAsync(List<TransferAssignedDriverRecord> items)
+    public async Task AddAsync(List<TransferAssignedTruckRecord> items)
     {
         await _context.TransferAssignedDriverRecords.AddRangeAsync(items);
     }
 
-    public Task UpdateAsync(TransferAssignedDriverRecord item)
+    public Task UpdateAsync(TransferAssignedTruckRecord item)
     {
         _context.TransferAssignedDriverRecords.Update(item);
         return Task.CompletedTask;
     }
 
-    public Task DeleteAsync(Expression<Func<TransferAssignedDriverRecord, bool>> condition)
+    public Task DeleteAsync(Expression<Func<TransferAssignedTruckRecord, bool>> condition)
     {
-        IEnumerable<TransferAssignedDriverRecord> removeItems = _context.TransferAssignedDriverRecords.Where(condition);
+        IEnumerable<TransferAssignedTruckRecord> removeItems = _context.TransferAssignedDriverRecords.Where(condition);
         _context.RemoveRange(removeItems);
         return Task.CompletedTask;
     }

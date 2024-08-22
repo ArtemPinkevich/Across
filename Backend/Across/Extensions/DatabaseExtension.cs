@@ -32,7 +32,7 @@ namespace Across.Extensions
             services.AddScoped<IRepository<Cargo>, CargosRepository>();
             services.AddScoped<IRepository<TransportationOrder>, TransportationOrderRepository>();
             services.AddScoped<IRepository<TransferChangeStatusRecord>, TransferChangeHistoryRepository>();
-            services.AddScoped<IRepository<TransferAssignedDriverRecord>, TransferAssignedDriverRepository>();
+            services.AddScoped<IRepository<TransferAssignedTruckRecord>, TransferAssignedTruckRepository>();
         }
     }
 }

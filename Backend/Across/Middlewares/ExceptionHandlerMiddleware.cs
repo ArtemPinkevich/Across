@@ -59,7 +59,6 @@ namespace Across.Middlewares
                     }, Formatting.Indented);
                     await httpContext.Response.WriteAsync(tokenExpiredDto);
                     break;
-                    break;
                 case SendSmsErrorException exc:
                     httpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
                     await httpContext.Response.WriteAsync($"Sms Gateway Status Code: {exc.StatusCode}, Message: {exception.Message}");

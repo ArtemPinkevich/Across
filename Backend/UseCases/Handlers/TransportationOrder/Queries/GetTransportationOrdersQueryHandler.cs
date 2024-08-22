@@ -7,6 +7,7 @@ using DataAccess.Interfaces;
 using Entities;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using UseCases.Handlers.Cargo.Dto;
 using UseCases.Handlers.Common.Dto;
 using UseCases.Handlers.Common.Extensions;
@@ -17,17 +18,20 @@ public class GetTransportationOrdersQueryHandler: IRequestHandler<GetTransportat
 {
     private readonly IMapper _mapper;
     private readonly IRepository<Entities.TransportationOrder> _ordersRepository;
-    private readonly IRepository<TransferAssignedDriverRecord> _ordersAssignedDriversRepository;
+    private readonly IRepository<TransferAssignedTruckRecord> _ordersAssignedTruckRepository;
+    private readonly IRepository<Entities.Truck> _truckRepository;
     private readonly UserManager<User> _userManager;
 
     public GetTransportationOrdersQueryHandler(UserManager<User> userManager,
         IRepository<Entities.TransportationOrder> ordersRepository,
-        IRepository<TransferAssignedDriverRecord> ordersAssignedDriversRepository,
+        IRepository<TransferAssignedTruckRecord> ordersAssignedTruckRepository,
+        IRepository<Entities.Truck> truckRepository,
         IMapper mapper)
     {
         _userManager = userManager;
         _ordersRepository = ordersRepository;
-        _ordersAssignedDriversRepository = ordersAssignedDriversRepository;
+        _ordersAssignedTruckRepository = ordersAssignedTruckRepository;
+        _truckRepository = truckRepository;
         _mapper = mapper;
     }
     
@@ -50,21 +54,26 @@ public class GetTransportationOrdersQueryHandler: IRequestHandler<GetTransportat
 
     private async Task<TransportationOrdersListDto> GetDriverOrders(User user)
     {
-        var historyRecords = await _ordersAssignedDriversRepository.GetAllAsync(x => x.UserId == user.Id);
-#warning эту логику нужно перенести в sql запрос, чтобы это выполнялоась в БД, но пока нет такого репозитория с такой функцией.
-        var transportationOrderIds = historyRecords.Select(x => x.TransportationOrderId).Distinct();
-        List<TransportationOrderDto> transportationOrderDtos = new List<TransportationOrderDto>();
-        foreach (var orderId in transportationOrderIds)
+        var userWithTrucks = await _userManager.Users.Include(x => x.Trucks).FirstOrDefaultAsync(x => x.Id == user.Id);
+        if (userWithTrucks == null)
         {
-            var order =  await _ordersRepository.GetAsync(x => x.Id == orderId);
-            if(order == null)
-                continue;
-            
-            transportationOrderDtos.Add(_mapper.Map<TransportationOrderDto>(order));
+            return new TransportationOrdersListDto()
+            {
+                Result = new TransportationOrderResult()
+                {
+                    Result = ApiResult.Failed
+                }
+            };  
         }
 
-
-
+        List<TransportationOrderDto> transportationOrderDtos = new List<TransportationOrderDto>();
+        //find all records where truck of driver was assigned
+        foreach (var truck in userWithTrucks.Trucks)
+        {
+            var assignedTruckRecords = await _ordersAssignedTruckRepository.GetAllAsync(x => x.TruckId == truck.Id);
+            transportationOrderDtos.AddRange(assignedTruckRecords.Select(record => _mapper.Map<TransportationOrderDto>(record.TransportationOrder)));
+        }
+        
         return new TransportationOrdersListDto()
         {
             Result = new TransportationOrderResult()

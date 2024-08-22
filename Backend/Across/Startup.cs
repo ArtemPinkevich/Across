@@ -27,7 +27,7 @@ namespace Across
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            var useCasesAssembly = typeof(AuthorizationQueryHandler).GetTypeInfo().Assembly;
+            var useCasesAssembly = typeof(UpdateAccessTokenQueryHandler).GetTypeInfo().Assembly;
             services.AddAutoMapper(useCasesAssembly);
             services.AddDatabase(Configuration);
             services.AddIdentity(Configuration);

@@ -45,7 +45,7 @@ public class TransportationOrderController:ControllerBase
 
     [Authorize(Roles = UserRoles.Shipper)]
     [HttpPost("add_or_update_order")]
-    public async Task<TransportationOrderResult> AddOrUpdateLoad([FromBody] TransportationOrderDto transportationOrder)
+    public async Task<TransportationOrderResult> AddOrUpdateOrder([FromBody] TransportationOrderDto transportationOrder)
     {
         string userId = HttpContext.User.Claims.FirstOrDefault( x => x.Type == JwtClaimsTypes.Id)?.Value;
         return await _mediator.Send(new AddOrUpdateTransportationOrderCommand()
@@ -65,5 +65,12 @@ public class TransportationOrderController:ControllerBase
         };
 
         return await _mediator.Send(command);
+    }
+    
+    [Authorize(Roles = UserRoles.Driver)]
+    [HttpPost("try_take_order")]
+    public async Task<TransportationOrderResult> TryTakeOrder([FromBody] TryTakeOrderCommand tryTakeOrderCommand)
+    {
+        return await _mediator.Send(tryTakeOrderCommand);
     }
 }

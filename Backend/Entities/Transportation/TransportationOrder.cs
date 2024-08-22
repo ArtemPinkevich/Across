@@ -11,7 +11,7 @@ public class TransportationOrder : EntityBase
     
     public TruckRequirements TruckRequirements { set; get; }
     
-    public List<TransferAssignedDriverRecord> TransferAssignedDriverRecords { set; get; }
+    public List<TransferAssignedTruckRecord> AssignedTruckRecords { set; get; }
     
     public List<TransferChangeStatusRecord> TransferChangeHistoryRecords { set; get; }
     
@@ -28,7 +28,7 @@ public class TransportationOrder : EntityBase
     public string UnloadingAddress { set; get; }
     
     /// <summary>
-    /// List of drivers who want to take this order
+    /// List of trucks who want to take this order
     /// </summary>
-    public List<User> Drivers { set; get; }
+    public List<Truck> Trucks { set; get; }
 }

@@ -3,6 +3,7 @@ using System;
 using DataAccess.SqlLite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,26 +11,27 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.SqlLite.Migrations
 {
     [DbContext(typeof(SqlLiteDbContext))]
-    partial class SqlLiteDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240821073211_addedTruckOrderLink")]
+    partial class addedTruckOrderLink
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.4");
 
             modelBuilder.Entity("DriverAndOrderWishes", b =>
                 {
-                    b.Property<int>("OrdersOfferedForTruckId")
+                    b.Property<string>("DriversId")
+                        .HasColumnType("TEXT")
+                        .HasColumnName("DriverId");
+
+                    b.Property<int>("OrdersOfferedByDriverId")
                         .HasColumnType("INTEGER")
                         .HasColumnName("OrderId");
 
-                    b.Property<int>("TrucksId")
-                        .HasColumnType("INTEGER")
-                        .HasColumnName("TruckId");
+                    b.HasKey("DriversId", "OrdersOfferedByDriverId");
 
-                    b.HasKey("OrdersOfferedForTruckId", "TrucksId");
-
-                    b.HasIndex("TrucksId");
+                    b.HasIndex("OrdersOfferedByDriverId");
 
                     b.ToTable("DriverAndOrderWishes");
                 });
@@ -415,14 +417,9 @@ namespace DataAccess.SqlLite.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("UserId1")
-                        .HasColumnType("TEXT");
-
                     b.HasKey("Id");
 
                     b.HasIndex("UserId");
-
-                    b.HasIndex("UserId1");
 
                     b.ToTable("TransportationOrders");
                 });
@@ -808,15 +805,15 @@ namespace DataAccess.SqlLite.Migrations
 
             modelBuilder.Entity("DriverAndOrderWishes", b =>
                 {
-                    b.HasOne("Entities.TransportationOrder", null)
+                    b.HasOne("Entities.User", null)
                         .WithMany()
-                        .HasForeignKey("OrdersOfferedForTruckId")
+                        .HasForeignKey("DriversId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Entities.Truck", null)
+                    b.HasOne("Entities.TransportationOrder", null)
                         .WithMany()
-                        .HasForeignKey("TrucksId")
+                        .HasForeignKey("OrdersOfferedByDriverId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -855,7 +852,7 @@ namespace DataAccess.SqlLite.Migrations
             modelBuilder.Entity("Entities.TransferAssignedTruckRecord", b =>
                 {
                     b.HasOne("Entities.TransportationOrder", "TransportationOrder")
-                        .WithMany("AssignedTruckRecords")
+                        .WithMany("TransferAssignedDriverRecords")
                         .HasForeignKey("TransportationOrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -889,10 +886,6 @@ namespace DataAccess.SqlLite.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("Entities.User", null)
-                        .WithMany("OrdersOfferedByDriver")
-                        .HasForeignKey("UserId1");
 
                     b.Navigation("User");
                 });
@@ -988,9 +981,9 @@ namespace DataAccess.SqlLite.Migrations
 
             modelBuilder.Entity("Entities.TransportationOrder", b =>
                 {
-                    b.Navigation("AssignedTruckRecords");
-
                     b.Navigation("Cargo");
+
+                    b.Navigation("TransferAssignedDriverRecords");
 
                     b.Navigation("TransferChangeHistoryRecords");
 
@@ -1005,8 +998,6 @@ namespace DataAccess.SqlLite.Migrations
             modelBuilder.Entity("Entities.User", b =>
                 {
                     b.Navigation("Documents");
-
-                    b.Navigation("OrdersOfferedByDriver");
 
                     b.Navigation("TransportationOrders");
 

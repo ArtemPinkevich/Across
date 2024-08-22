@@ -25,7 +25,7 @@ namespace DataAccess.BaseImplementation
         
         public DbSet<TransferChangeStatusRecord> TransferChangeHistoryRecords { set; get; }
 
-        public DbSet<TransferAssignedDriverRecord> TransferAssignedDriverRecords { set; get; }
+        public DbSet<TransferAssignedTruckRecord> TransferAssignedDriverRecords { set; get; }
         
         public DbSet<Document> Documents { set; get; }
 
@@ -47,14 +47,14 @@ namespace DataAccess.BaseImplementation
                 .HasForeignKey(transportationOrder => transportationOrder.UserId)
                 .IsRequired();
             
-            modelBuilder.Entity<User>()
-                .HasMany(user => user.OrdersOfferedByDriver)
-                .WithMany(transportationOrder => transportationOrder.Drivers)
+            modelBuilder.Entity<Truck>()
+                .HasMany(user => user.OrdersOfferedForTruck)
+                .WithMany(transportationOrder => transportationOrder.Trucks)
                 .UsingEntity("DriverAndOrderWishes",
                     x =>
                 {
-                    x.Property("OrdersOfferedByDriverId").HasColumnName("OrderId");
-                    x.Property("DriversId").HasColumnName("DriverId");
+                    x.Property("OrdersOfferedForTruckId").HasColumnName("OrderId");
+                    x.Property("TrucksId").HasColumnName("TruckId");
                 });
             
             base.OnModelCreating(modelBuilder);

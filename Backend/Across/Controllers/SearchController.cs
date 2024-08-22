@@ -55,14 +55,21 @@ public class SearchController: ControllerBase
 
     [Authorize(Roles = UserRoles.Admin)]
     [HttpGet("get_bids")]
-    public async Task<SearchResultDto> GetBids()
+    public async Task<BidsResultDto> GetBids()
     {
-        return null;
+        return await _mediator.Send(new GetBidsQuery());
     }
     
     [Authorize(Roles = UserRoles.Admin)]
     [HttpGet("get_recommendations")]
     public async Task<SearchResultDto> GetRecommendations()
+    {
+        return null;
+    }
+    
+    [Authorize(Roles = UserRoles.Admin)]
+    [HttpGet("get_orders_in_progress")]
+    public async Task<SearchResultDto> GetOrdersInProgress()
     {
         return null;
     }

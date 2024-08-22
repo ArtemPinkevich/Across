@@ -82,17 +82,12 @@ public class SearchDriversQueryHandler : IRequestHandler<SearchDriversQuery, Sea
         var transportingOrders = orders.FindAll(x =>
             x.TransferChangeHistoryRecords.Last().TransportationStatus == TransportationStatus.Transporting);
 
-        var driversGoingToDestination = transportingOrders.Select(x => x.TransferAssignedDriverRecords.Last());
-        foreach (var transferAssignedDriverRecord in driversGoingToDestination)
+        foreach (var order in transportingOrders)
         {
-            var driver = await _userManager.Users
-                .Include(x => x.Trucks)
-                .FirstOrDefaultAsync(x => x.Id == transferAssignedDriverRecord.UserId, cancellationToken);
-            
-            if (driver != null) 
-                trucks.AddRange(driver.Trucks);
+            trucks.Add(order.AssignedTruckRecords.Last().Truck);
         }
 
         return trucks;
+
     }
 }
