@@ -123,6 +123,10 @@ public class CargoAutoMapperProfile : Profile
         CreateMap<CarBodyRequirement, CarBodyType[]>().ConvertUsing((value, dest) =>
         {
             var carBodyTypes = new List<CarBodyType>();
+            if (value == null)
+            {
+                return carBodyTypes.ToArray();
+            }
             if(value.TentTruck)
                 carBodyTypes.Add(CarBodyType.TentTruck);
             if(value.Container)
