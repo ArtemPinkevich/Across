@@ -25,7 +25,7 @@ public class TransportationOrderController:ControllerBase
         _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
     }
 
-    [Authorize(Roles = $"{UserRoles.Driver},{UserRoles.Shipper}")]
+    [Authorize(Roles = $"{UserRoles.Driver},{UserRoles.Shipper},{UserRoles.Owner}")]
     [HttpGet("get_orders")]
     public async Task<TransportationOrdersListDto> GetShipperTransportationOrders()
     {
@@ -36,14 +36,14 @@ public class TransportationOrderController:ControllerBase
         });
     }
 
-    [Authorize(Roles = UserRoles.Admin)]
+    [Authorize(Roles = $"{UserRoles.Admin},{UserRoles.Owner}")]
     [HttpGet("get_order_by_id/{id}")]
     public async Task<TransportationOrdersListDto> GetTransportationOrderById(int id)
     {
         return await _mediator.Send(new GetOrderByIdQuery() { OrderId = id });
     }
 
-    [Authorize(Roles = UserRoles.Shipper)]
+    [Authorize(Roles = $"{UserRoles.Shipper},{UserRoles.Owner}")]
     [HttpPost("add_or_update_order")]
     public async Task<TransportationOrderResult> AddOrUpdateOrder([FromBody] TransportationOrderDto transportationOrder)
     {
@@ -54,8 +54,8 @@ public class TransportationOrderController:ControllerBase
             TransportationOrderDto = transportationOrder
         });
     }
-    
-    [Authorize(Roles = UserRoles.Shipper)]
+
+    [Authorize(Roles = $"{UserRoles.Shipper},{UserRoles.Owner}")]
     [HttpDelete("delete_load/{id}")]
     public async Task<TransportationOrderResult> DeleteLoad(int id)
     {
@@ -72,5 +72,12 @@ public class TransportationOrderController:ControllerBase
     public async Task<TransportationOrderResult> TryTakeOrder([FromBody] TryTakeOrderCommand tryTakeOrderCommand)
     {
         return await _mediator.Send(tryTakeOrderCommand);
+    }
+
+    [Authorize(Roles = UserRoles.Admin)]
+    [HttpPost("assign_truck")]
+    public async Task<TransportationOrderResult> AssignTruck([FromBody] AssignTruckCommand assignTruckCommand)
+    {
+        return await _mediator.Send(assignTruckCommand);
     }
 }
