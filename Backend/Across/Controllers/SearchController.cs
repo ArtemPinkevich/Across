@@ -5,6 +5,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using UseCases.Handlers.Cargo.Dto;
 using UseCases.Handlers.Profiles.Dto;
 using UseCases.Handlers.Search.Dto;
 using UseCases.Handlers.Search.Queries;
@@ -61,16 +62,16 @@ public class SearchController: ControllerBase
     }
     
     [Authorize(Roles = UserRoles.Admin)]
-    [HttpGet("get_recommendations")]
-    public async Task<SearchResultDto> GetRecommendations()
+    [HttpGet("search_recommendations")]
+    public async Task<SearchResultDto> SearchRecommendations()
     {
         return null;
     }
     
     [Authorize(Roles = UserRoles.Admin)]
-    [HttpGet("get_orders_in_progress")]
-    public async Task<SearchResultDto> GetOrdersInProgress()
+    [HttpGet("search_orders_in_progress")]
+    public async Task<TransportationOrdersListDto> SearchOrdersInProgress()
     {
-        return null;
+        return await _mediator.Send(new GetOrdersInProgressQuery());
     }
 }
