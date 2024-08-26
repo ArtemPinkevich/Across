@@ -3,6 +3,7 @@ using System;
 using DataAccess.SqlLite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.SqlLite.Migrations
 {
     [DbContext(typeof(SqlLiteDbContext))]
-    partial class SqlLiteDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240826074232_currentOrderStatusAndTruckAdded")]
+    partial class currentOrderStatusAndTruckAdded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.4");
@@ -278,6 +280,44 @@ namespace DataAccess.SqlLite.Migrations
                     b.ToTable("Cargos");
                 });
 
+            modelBuilder.Entity("Entities.CarWash", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("BoxesQuantity")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("EndWorkTime")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Latitude")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Location")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Longitude")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Phone")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("ReservedMinutesBetweenRecords")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("StartWorkTime")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("CarWashes");
+                });
+
             modelBuilder.Entity("Entities.Document.Document", b =>
                 {
                     b.Property<int>("Id")
@@ -383,12 +423,17 @@ namespace DataAccess.SqlLite.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("UserId1")
+                        .HasColumnType("TEXT");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CurrentAssignedTruckId")
                         .IsUnique();
 
                     b.HasIndex("UserId");
+
+                    b.HasIndex("UserId1");
 
                     b.ToTable("TransportationOrders");
                 });
@@ -475,7 +520,6 @@ namespace DataAccess.SqlLite.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("UserId")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -576,6 +620,12 @@ namespace DataAccess.SqlLite.Migrations
                     b.Property<string>("BirthDate")
                         .HasColumnType("TEXT");
 
+                    b.Property<int?>("CarWashId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("CarWashId1")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("TEXT");
@@ -636,6 +686,10 @@ namespace DataAccess.SqlLite.Migrations
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CarWashId");
+
+                    b.HasIndex("CarWashId1");
 
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
@@ -863,6 +917,10 @@ namespace DataAccess.SqlLite.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Entities.User", null)
+                        .WithMany("OrdersOfferedByDriver")
+                        .HasForeignKey("UserId1");
+
                     b.Navigation("CurrentAssignedTruck");
 
                     b.Navigation("User");
@@ -872,9 +930,7 @@ namespace DataAccess.SqlLite.Migrations
                 {
                     b.HasOne("Entities.User", "User")
                         .WithMany("Trucks")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UserId");
 
                     b.Navigation("User");
                 });
@@ -888,6 +944,17 @@ namespace DataAccess.SqlLite.Migrations
                         .IsRequired();
 
                     b.Navigation("TransportationOrder");
+                });
+
+            modelBuilder.Entity("Entities.User", b =>
+                {
+                    b.HasOne("Entities.CarWash", null)
+                        .WithMany("SelectedByUsers")
+                        .HasForeignKey("CarWashId");
+
+                    b.HasOne("Entities.CarWash", null)
+                        .WithMany("Users")
+                        .HasForeignKey("CarWashId1");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -941,6 +1008,13 @@ namespace DataAccess.SqlLite.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Entities.CarWash", b =>
+                {
+                    b.Navigation("SelectedByUsers");
+
+                    b.Navigation("Users");
+                });
+
             modelBuilder.Entity("Entities.TransportationOrder", b =>
                 {
                     b.Navigation("AssignedTruckRecords");
@@ -960,6 +1034,8 @@ namespace DataAccess.SqlLite.Migrations
             modelBuilder.Entity("Entities.User", b =>
                 {
                     b.Navigation("Documents");
+
+                    b.Navigation("OrdersOfferedByDriver");
 
                     b.Navigation("TransportationOrders");
 

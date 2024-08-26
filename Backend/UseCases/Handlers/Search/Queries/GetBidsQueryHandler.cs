@@ -33,7 +33,7 @@ public class GetBidsQueryHandler : IRequestHandler<GetBidsQuery, BidsResultDto>
     
     public async Task<BidsResultDto> Handle(GetBidsQuery request, CancellationToken cancellationToken)
     {
-        var bidsResultDto = new BidsResultDto { Correlations = new List<Correlation>() };
+        var bidsResultDto = new BidsResultDto { Correlations = new List<CorrelationDto>() };
 
         var orders = await _transportationOrderRepository.GetFirstAsync(x => x.Trucks.Count > 0, 50);
 
@@ -49,13 +49,13 @@ public class GetBidsQueryHandler : IRequestHandler<GetBidsQuery, BidsResultDto>
         
     }
 
-    private async Task<Correlation> CreateCorrelation(Entities.TransportationOrder order, Entities.Truck truck)
+    private async Task<CorrelationDto> CreateCorrelation(Entities.TransportationOrder order, Entities.Truck truck)
     {
         var shipper = order.User;
         var shipperRole = await _userManager.GetUserRole(shipper);
         var driver = _userManager.Users.FirstOrDefault(o => o.Id == truck.UserId);
         var driverRole = await _userManager.GetUserRole(driver);
-        var correlation = new Correlation {
+        var correlation = new CorrelationDto {
             Shipper = new ProfileDto()
             {
                 Name = shipper.Name,

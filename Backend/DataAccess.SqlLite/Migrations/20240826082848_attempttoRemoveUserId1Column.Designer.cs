@@ -3,6 +3,7 @@ using System;
 using DataAccess.SqlLite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.SqlLite.Migrations
 {
     [DbContext(typeof(SqlLiteDbContext))]
-    partial class SqlLiteDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240826082848_attempttoRemoveUserId1Column")]
+    partial class attempttoRemoveUserId1Column
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.4");
@@ -383,12 +385,17 @@ namespace DataAccess.SqlLite.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("UserId1")
+                        .HasColumnType("TEXT");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CurrentAssignedTruckId")
                         .IsUnique();
 
                     b.HasIndex("UserId");
+
+                    b.HasIndex("UserId1");
 
                     b.ToTable("TransportationOrders");
                 });
@@ -863,6 +870,10 @@ namespace DataAccess.SqlLite.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Entities.User", null)
+                        .WithMany("OrdersOfferedByDriver")
+                        .HasForeignKey("UserId1");
+
                     b.Navigation("CurrentAssignedTruck");
 
                     b.Navigation("User");
@@ -960,6 +971,8 @@ namespace DataAccess.SqlLite.Migrations
             modelBuilder.Entity("Entities.User", b =>
                 {
                     b.Navigation("Documents");
+
+                    b.Navigation("OrdersOfferedByDriver");
 
                     b.Navigation("TransportationOrders");
 

@@ -25,7 +25,7 @@ public class Truck: EntityBase
     
     public bool HasLtl { set; get; }
     
-    public bool HasLiftgate { set; get; }
+    public bool HasLiftGate { set; get; }
     
     public bool HasStanchionTrailer { set; get; }
     

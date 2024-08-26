@@ -63,9 +63,9 @@ public class SearchController: ControllerBase
     
     [Authorize(Roles = UserRoles.Admin)]
     [HttpGet("search_recommendations")]
-    public async Task<SearchResultDto> SearchRecommendations()
+    public async Task<RecommendationsResultDto> SearchRecommendations()
     {
-        return null;
+        return await _mediator.Send(new SearchRecommendationsQuery());
     }
     
     [Authorize(Roles = UserRoles.Admin)]

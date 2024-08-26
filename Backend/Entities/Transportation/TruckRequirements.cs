@@ -19,6 +19,14 @@ public class TruckRequirements: EntityBase
     
     public int CarryingCapacity { set; get; }
     
+    public int BodyVolume { set; get; }
+    
+    public int InnerBodyLength { set; get; }
+    
+    public int InnerBodyWidth { set; get; }
+    
+    public int InnerBodyHeight { set; get; }
+    
     public bool Adr1 { set; get; }
     
     public bool Adr2 { set; get; }

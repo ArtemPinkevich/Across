@@ -54,7 +54,7 @@ public class AddOrUpdateTruckToUserCommandHandler : IRequestHandler<AddOrUpdateT
             truck.CarBodyType = request.TruckDto.CarBodyType;
             truck.LoadingType = _mapper.Map<LoadingType>(request.TruckDto.LoadingType);
             truck.HasLtl = request.TruckDto.HasLtl;
-            truck.HasLiftgate = request.TruckDto.HasLiftgate;
+            truck.HasLiftGate = request.TruckDto.HasLiftgate;
             truck.HasStanchionTrailer = request.TruckDto.HasStanchionTrailer;
             truck.CarryingCapacity = request.TruckDto.CarryingCapacity;
             truck.BodyVolume = request.TruckDto.BodyVolume;

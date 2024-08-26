@@ -23,9 +23,8 @@ namespace Across
                 await dbContext.Database.MigrateAsync();
                 var rolesManager = services.GetRequiredService<RoleManager<IdentityRole>>();
                 var userManager = services.GetRequiredService<UserManager<User>>();
-                var carWashesRepository = services.GetRequiredService<IRepository<CarWash>>();
                 await DbRolesInitializer.InitDbRoles(rolesManager);
-                await DbDefaultUserInitializer.InitDbUser(userManager, carWashesRepository);
+                await DbDefaultUserInitializer.InitDbUser(userManager);
             }
 
             host.Run();

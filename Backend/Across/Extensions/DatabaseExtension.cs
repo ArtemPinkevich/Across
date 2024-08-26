@@ -27,7 +27,6 @@ namespace Across.Extensions
             else
                 services.AddDbContext<DatabaseContext, MySqlDbContext>(opt => opt.UseMySql(mysqlConnection, ServerVersion.AutoDetect(mysqlConnection)));
 
-            services.AddScoped<IRepository<CarWash>, CarWashesRepository>();
             services.AddScoped<IRepository<Truck>, TrucksRepository>();
             services.AddScoped<IRepository<Cargo>, CargosRepository>();
             services.AddScoped<IRepository<TransportationOrder>, TransportationOrderRepository>();

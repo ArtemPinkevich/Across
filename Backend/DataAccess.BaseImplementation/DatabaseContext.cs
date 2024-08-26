@@ -12,8 +12,6 @@ namespace DataAccess.BaseImplementation
         {
 
         }
-
-        public DbSet<CarWash> CarWashes { set; get; }
         
         public DbSet<Truck> Trucks { set; get; }
         
@@ -46,6 +44,12 @@ namespace DataAccess.BaseImplementation
                 .WithOne(transportationOrder => transportationOrder.User)
                 .HasForeignKey(transportationOrder => transportationOrder.UserId)
                 .IsRequired();
+
+            modelBuilder.Entity<User>()
+                .HasMany(user => user.Trucks)
+                .WithOne(truck => truck.User)
+                .HasForeignKey(truck => truck.UserId)
+                .IsRequired();
             
             modelBuilder.Entity<Truck>()
                 .HasMany(user => user.OrdersOfferedForTruck)
@@ -56,6 +60,12 @@ namespace DataAccess.BaseImplementation
                     x.Property("OrdersOfferedForTruckId").HasColumnName("OrderId");
                     x.Property("TrucksId").HasColumnName("TruckId");
                 });
+
+            modelBuilder.Entity<TransportationOrder>()
+                .HasOne(x => x.CurrentAssignedTruck)
+                .WithOne()
+                .HasForeignKey<TransportationOrder>(x => x.CurrentAssignedTruckId)
+                .IsRequired(false);
             
             base.OnModelCreating(modelBuilder);
         }

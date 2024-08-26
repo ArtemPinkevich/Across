@@ -4,10 +4,9 @@ using UseCases.Handlers.Truck.Dto;
 
 namespace UseCases.Handlers.Search.Dto;
 
-public class Correlation
+public class RecommendationDto
 {
-    public ProfileDto Shipper { set; get; }
+    public TransportationOrderDto Order { set; get; }
     public ProfileDto Driver { set; get; }
     public TruckDto Truck { set; get; }
-    public TransportationOrderDto TransportationOrder { set; get; }
 }

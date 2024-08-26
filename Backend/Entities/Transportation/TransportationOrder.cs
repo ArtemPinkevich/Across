@@ -27,6 +27,11 @@ public class TransportationOrder : EntityBase
     
     public string UnloadingAddress { set; get; }
     
+    public TransportationStatus CurrentTransportationStatus { set; get; }
+    
+    public int? CurrentAssignedTruckId { set; get; }
+    public Truck CurrentAssignedTruck { set; get; }
+    
     /// <summary>
     /// List of trucks who want to take this order
     /// </summary>

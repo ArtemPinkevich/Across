@@ -29,11 +29,5 @@
         /// List of TransportationOrders of Shipper
         /// </summary>
         public List<TransportationOrder> TransportationOrders { set; get; }
-        
-        /// <summary>
-        /// List of Orders which driver wants to take
-        /// </summary>
-        /// <returns></returns>
-        public List<TransportationOrder> OrdersOfferedByDriver { set; get; }
     }
 }

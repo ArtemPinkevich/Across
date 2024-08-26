@@ -1,4 +1,5 @@
-﻿namespace DataAccess.BaseImplementation.Repositories
+﻿/*
+namespace DataAccess.BaseImplementation.Repositories
 {
     using DataAccess.Interfaces;
     using Entities;
@@ -95,3 +96,4 @@
         }
     }
 }
+*/
