@@ -8,9 +8,9 @@
 
     public static class DbDefaultUserInitializer
     {
-        public static async Task InitDbUser(UserManager<User> userManager)
+        public static Task InitDbUser(UserManager<User> userManager)
         {
-
+            return Task.CompletedTask;
         }
     }
 }

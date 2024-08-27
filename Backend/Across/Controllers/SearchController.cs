@@ -70,7 +70,7 @@ public class SearchController: ControllerBase
     
     [Authorize(Roles = UserRoles.Admin)]
     [HttpGet("search_orders_in_progress")]
-    public async Task<TransportationOrdersListDto> SearchOrdersInProgress()
+    public async Task<OrdersInProgressResultDto> SearchOrdersInProgress()
     {
         return await _mediator.Send(new GetOrdersInProgressQuery());
     }

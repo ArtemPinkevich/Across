@@ -1,9 +1,9 @@
 ﻿using MediatR;
-using UseCases.Handlers.Cargo.Dto;
+using UseCases.Handlers.Search.Dto;
 
 namespace UseCases.Handlers.Search.Queries;
 
-public class GetOrdersInProgressQuery: IRequest<TransportationOrdersListDto>
+public class GetOrdersInProgressQuery: IRequest<OrdersInProgressResultDto>
 {
     
 }
