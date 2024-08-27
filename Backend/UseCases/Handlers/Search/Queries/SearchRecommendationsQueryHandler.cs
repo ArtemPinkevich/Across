@@ -61,6 +61,7 @@ public class SearchRecommendationsQueryHandler : IRequestHandler<SearchRecommend
                 var driverRole = await _userManager.GetUserRole(driver);
                 recommendationsResultDto.Recommendations.Add(new CorrelationDto()
                 {
+                    #warning Create mapper for ProfileDto
                     Driver = new ProfileDto()
                     {
                         Name = driver.Name,

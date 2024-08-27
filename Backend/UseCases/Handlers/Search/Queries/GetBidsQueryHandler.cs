@@ -56,6 +56,7 @@ public class GetBidsQueryHandler : IRequestHandler<GetBidsQuery, BidsResultDto>
         var driver = _userManager.Users.FirstOrDefault(o => o.Id == truck.UserId);
         var driverRole = await _userManager.GetUserRole(driver);
         var correlation = new CorrelationDto {
+            #warning create ProfileDto mapper
             Shipper = new ProfileDto()
             {
                 Name = shipper.Name,

@@ -39,6 +39,7 @@ public class GetOrdersInProgressQueryHandler : IRequestHandler<GetOrdersInProgre
                 OrdersInProgress = new List<CorrelationDto>()
             };
 
+        #warning TODO change TransferChangeHistoryRecords to CurrentAssignedDriver
         var transportingOrders = await _ordersRepository.GetAllAsync(x =>
             x.TransferChangeHistoryRecords.OrderBy(x => x.ChangeDatetime).LastOrDefault().TransportationStatus ==
             TransportationStatus.Transporting);
