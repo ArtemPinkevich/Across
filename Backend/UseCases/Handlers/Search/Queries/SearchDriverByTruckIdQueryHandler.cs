@@ -43,6 +43,7 @@ public class SearchDriverByTruckIdQueryHandler : IRequestHandler<SearchDriverByT
             Patronymic = user.Patronymic,
             BirthDate = user.BirthDate,
             PhoneNumber = user.PhoneNumber,
+            Status = user.UserStatus,
             Role = role,
             DocumentDtos = null
         };

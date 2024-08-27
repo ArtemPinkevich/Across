@@ -26,7 +26,7 @@ public class ProfilesController: ControllerBase
         _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
     }
 
-    [Authorize(Roles = $"{UserRoles.Driver},{UserRoles.Shipper}")]
+    [Authorize(Roles = $"{UserRoles.All}")]
     [HttpGet("get_profile")]
     public async Task<ProfileDto> GetProfile()
     {

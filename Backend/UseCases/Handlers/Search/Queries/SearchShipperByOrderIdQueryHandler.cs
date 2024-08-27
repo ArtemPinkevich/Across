@@ -46,6 +46,7 @@ public class SearchShipperByOrderIdQueryHandler : IRequestHandler<SearchShipperB
             Patronymic = user.Patronymic,
             BirthDate = user.BirthDate,
             PhoneNumber = user.PhoneNumber,
+            Status = user.UserStatus,
             Role = role,
             DocumentDtos = null
         };

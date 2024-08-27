@@ -63,11 +63,12 @@ public class FileController : ControllerBase
         return StatusCode(200);
     }
 
-    [Authorize(Roles = $"{UserRoles.Driver},{UserRoles.Shipper}")]
-    [HttpGet("get-image/{docType}")]
-    public IActionResult GetImage(int docType)
+    [Authorize(Roles = $"{UserRoles.Driver},{UserRoles.Shipper},{UserRoles.Lawyer}")]
+    [HttpGet("get-image/{docType}/{userId}")]
+    public IActionResult GetImage(int docType, string userId)
     {
-        var userFolderPath = GetUserFolderPath();
+        var userFolderPath = string.IsNullOrEmpty(userId) ? GetUserFolderPath() : Path.Combine(Directory.GetCurrentDirectory() + "Files", userId); 
+
         if (string.IsNullOrEmpty(userFolderPath))
         {
             return StatusCode(500);
