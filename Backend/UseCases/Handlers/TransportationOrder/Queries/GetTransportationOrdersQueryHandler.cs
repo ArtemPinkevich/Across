@@ -77,8 +77,11 @@ public class GetTransportationOrdersQueryHandler: IRequestHandler<GetTransportat
                 var orderDto = _mapper.Map<TransportationOrderDto>(order);
                 transportationOrderDtos.Add(orderDto);
             }
+
+            var orders = await _ordersRepository.GetAllAsync(x => x.Trucks.Any(o => o.Id == truck.Id));
+            transportationOrderDtos.AddRange(orders.Select(o => _mapper.Map<TransportationOrderDto>(o)));
         }
-        
+
         return new TransportationOrdersListDto()
         {
             Result = new TransportationOrderResult()
