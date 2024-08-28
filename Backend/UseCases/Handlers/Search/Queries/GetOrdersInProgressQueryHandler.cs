@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -69,6 +70,12 @@ public class GetOrdersInProgressQueryHandler : IRequestHandler<GetOrdersInProgre
     {
         foreach (var order in transportationOrders)
         {
+            if (hasAssignedTruck &&
+                (order.Trucks == null || order.Trucks.Count == 0))
+            {
+                throw new Exception($"At least 1 truck must be assigned for order {order.Id}");
+            }
+            
             var dto = new CorrelationDto()
             {
                 Driver = await GetDriverProfileDto(order, hasAssignedTruck),
