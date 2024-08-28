@@ -23,12 +23,15 @@ public class GetOrdersInProgressQueryHandler : IRequestHandler<GetOrdersInProgre
     private readonly IMapper _mapper;
     private readonly UserManager<User> _userManager;
     private readonly IRepository<Entities.TransportationOrder> _ordersRepository;
+    private readonly IRepository<Entities.Truck> _trucksRepository;
 
     public GetOrdersInProgressQueryHandler(IRepository<Entities.TransportationOrder> ordersRepository,
+        IRepository<Entities.Truck> trucksRepository,
         UserManager<User> userManager,
         IMapper mapper)
     {
         _ordersRepository = ordersRepository;
+        _trucksRepository = trucksRepository;
         _userManager = userManager;
         _mapper = mapper;
     }
@@ -71,20 +74,30 @@ public class GetOrdersInProgressQueryHandler : IRequestHandler<GetOrdersInProgre
         foreach (var order in transportationOrders)
         {
             if (hasAssignedTruck &&
-                (order.Trucks == null || order.Trucks.Count == 0))
+                (order.AssignedTruckRecords == null || order.AssignedTruckRecords.Count == 0))
             {
                 throw new Exception($"At least 1 truck must be assigned for order {order.Id}");
             }
-            
+
             var dto = new CorrelationDto()
             {
                 Driver = await GetDriverProfileDto(order, hasAssignedTruck),
                 Shipper = await GetShipperProfileDto(order),
-                Truck = hasAssignedTruck ? _mapper.Map<TruckDto>(order.Trucks.Last()) : null,
+                Truck = await GetTruckDto(order, hasAssignedTruck),
                 TransportationOrder = _mapper.Map<TransportationOrderDto>(order)
             };
             yield return dto;
         }
+    }
+
+    private async Task<TruckDto> GetTruckDto(Entities.TransportationOrder order, bool hasAssignedTruck)
+    {
+        if (!hasAssignedTruck)
+            return null;
+        
+        var assignedTruckRecord = order.AssignedTruckRecords.OrderBy(x => x.ChangeDatetime).Last();
+        var truck = await _trucksRepository.GetAsync(x => x.Id == assignedTruckRecord.TruckId);
+        return _mapper.Map<TruckDto>(truck);
     }
 
     private async Task<ProfileDto> GetDriverProfileDto(Entities.TransportationOrder order, bool hasAssignedTruck)
