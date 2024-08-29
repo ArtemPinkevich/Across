@@ -48,10 +48,10 @@ public class SearchRecommendationsQueryHandler : IRequestHandler<SearchRecommend
         {
             var trucks = await _trucksRepository.GetAllAsync(x => x.TruckLocation == order.LoadingLocalityName
                                                                   && x.LoadingType == order.TruckRequirements.LoadingType
-                                                                  && x.InnerBodyHeight == order.TruckRequirements.InnerBodyHeight
-                                                                  && x.CarryingCapacity == order.TruckRequirements.CarryingCapacity
-                                                                  && x.InnerBodyLength == order.TruckRequirements.InnerBodyLength
-                                                                  && x.InnerBodyWidth == order.TruckRequirements.InnerBodyWidth);
+                                                                  && x.InnerBodyHeight >= order.TruckRequirements.InnerBodyHeight
+                                                                  && x.CarryingCapacity >= order.TruckRequirements.CarryingCapacity
+                                                                  && x.InnerBodyLength >= order.TruckRequirements.InnerBodyLength
+                                                                  && x.InnerBodyWidth >= order.TruckRequirements.InnerBodyWidth);
             
             var shipper = await _userManager.FindByIdAsync(order.UserId);
             var shipperRole = await _userManager.GetUserRole(shipper);
