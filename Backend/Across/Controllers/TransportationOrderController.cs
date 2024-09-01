@@ -74,10 +74,17 @@ public class TransportationOrderController:ControllerBase
         return await _mediator.Send(tryTakeOrderCommand);
     }
 
-    [Authorize(Roles = UserRoles.Admin)]
+    [Authorize(Roles = $"{UserRoles.Shipper},{UserRoles.Admin}")]
     [HttpPost("assign_truck")]
     public async Task<TransportationOrderResult> AssignTruck([FromBody] AssignTruckCommand assignTruckCommand)
     {
         return await _mediator.Send(assignTruckCommand);
+    }
+
+    [Authorize(Roles = UserRoles.Admin)]
+    [HttpPost("start_shipper_approving")]
+    public async Task<TransportationOrderResult> StartShipperApproving([FromBody] StartShipperApprovingCommand command)
+    {
+        return await _mediator.Send(command);
     }
 }

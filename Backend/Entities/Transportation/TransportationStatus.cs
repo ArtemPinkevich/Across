@@ -4,7 +4,9 @@ public enum TransportationStatus
 {
     NotPublished,
     CarrierFinding,
-    WaitingForLoading,
+    ManagerApproving,
+    ShipperApproving,
     Transporting,
-    Delivered
+    Delivered,
+    Done
 }

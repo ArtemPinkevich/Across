@@ -38,7 +38,7 @@ public class AssignTruckCommandHandler : IRequestHandler<AssignTruckCommand, Tra
         {
             ChangeDatetime = DateTime.Now,
             TransportationOrderId = request.TransportationOrderId,
-            TransportationStatus = TransportationStatus.WaitingForLoading
+            TransportationStatus = TransportationStatus.Transporting
         } });
 
         var order = await _ordersRepository.GetAsync(o => o.Id == request.TransportationOrderId);

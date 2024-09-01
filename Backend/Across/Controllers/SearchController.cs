@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Entities;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using UseCases.Handlers.Authorization;
 using UseCases.Handlers.Profiles.Dto;
 using UseCases.Handlers.Search.Dto;
 using UseCases.Handlers.Search.Queries;
@@ -79,5 +81,14 @@ public class SearchController: ControllerBase
     public async Task<OrdersInProgressResultDto> SearchOrdersInProgress()
     {
         return await _mediator.Send(new GetOrdersInProgressQuery());
+    }
+
+    [Authorize(Roles = UserRoles.Shipper)]
+    [HttpGet("search_orders_in_shipper_approving")]
+    public async Task<OrdersInProgressResultDto> SearchOrdersInShipperApproving()
+    {
+        string userId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == JwtClaimsTypes.Id)?.Value;
+
+        return await _mediator.Send(new SearchOrdersInShipperApprovingQuery() { UserId = userId });
     }
 }

@@ -51,8 +51,13 @@ public class GetOrdersInProgressQueryHandler : IRequestHandler<GetOrdersInProgre
         
         var waitingForLoadingOrders = await _ordersRepository.GetAllAsync(x =>
             x.TransferChangeHistoryRecords.OrderBy(x => x.ChangeDatetime).LastOrDefault().TransportationStatus ==
-            TransportationStatus.WaitingForLoading);
+            TransportationStatus.ManagerApproving);
         ordersInProgress.OrdersInProgress.AddRange(await ConvertCorrelationDto(waitingForLoadingOrders, true).ToListAsync(cancellationToken: cancellationToken));
+
+        var shipperApprovingOrders = await _ordersRepository.GetAllAsync(x =>
+            x.TransferChangeHistoryRecords.OrderBy(x => x.ChangeDatetime).LastOrDefault().TransportationStatus ==
+            TransportationStatus.ShipperApproving);
+        ordersInProgress.OrdersInProgress.AddRange(await ConvertCorrelationDto(shipperApprovingOrders, true).ToListAsync(cancellationToken: cancellationToken));
 
         ordersInProgress.Result =  ApiResult.Success;
         
