@@ -31,6 +31,7 @@ internal class UpdateProfileCommandHandler : IRequestHandler<UpdateProfileComman
                 user.Surname = request.ProfileDto.Surname;
                 user.Patronymic = request.ProfileDto.Patronymic;
                 user.BirthDate = request.ProfileDto.BirthDate;
+                user.ReservePhoneNumber = request.ProfileDto.ReservePhoneNumber;
 
                 await _userManager.UpdateAsync(user);
             }

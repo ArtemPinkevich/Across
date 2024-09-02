@@ -45,6 +45,7 @@ public class GetShippersAndDriversQueryHandler : IRequestHandler<GetShippersAndD
                 Patronymic = user.Patronymic,
                 BirthDate = user.BirthDate,
                 PhoneNumber = user.PhoneNumber,
+                ReservePhoneNumber = user.ReservePhoneNumber,
                 Role = userRole,
                 Status = user.UserStatus,
                 DocumentDtos = userRole == UserRoles.Driver ? UserDocumentsHelper.CreateDriverDocumentsList(user) : UserDocumentsHelper.CreateShipperDocumentsList(user)

@@ -15,6 +15,8 @@ public class TransportationOrder : EntityBase
     
     public List<TransferChangeStatusRecord> TransferChangeHistoryRecords { set; get; }
     
+    public int Price { set; get; }
+    
     public string LoadDateFrom { set; get; }
     
     public string LoadDateTo { set; get; }

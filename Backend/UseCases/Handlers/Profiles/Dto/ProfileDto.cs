@@ -20,6 +20,8 @@ namespace UseCases.Handlers.Profiles.Dto
         public UserStatus Status { set; get; }
 
         public string PhoneNumber { set; get; }
+        
+        public string ReservePhoneNumber { set; get; }
 
         public List<DocumentDto> DocumentDtos { set; get; }
     }

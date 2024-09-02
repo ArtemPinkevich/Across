@@ -16,6 +16,8 @@
 
         public Gender Gender { set; get; }
         
+        public string ReservePhoneNumber { set; get; }
+        
         public UserStatus UserStatus { set; get; }
         
         public List<Document.Document> Documents { set; get; }
