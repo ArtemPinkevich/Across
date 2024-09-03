@@ -11,6 +11,11 @@ public class Transportation : EntityBase
     public string DriverId { set; get; }
     public Driver Driver { set; get; }
     
+    public int TruckId { set; get; }
+    public Truck Truck { set; get; }
+    
+    public List<TransportationStatusRecord> TransportationOrderStatusRecords { set; get; }
+    
     public TransportationStatus TransportationStatus { set; get; }
     
     public string Comment { set; get; }

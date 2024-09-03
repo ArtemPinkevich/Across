@@ -29,9 +29,7 @@
         
         public DbSet<RoutePoint> RoutePoints { set; get; }
 
-        public DbSet<TransportationOrderStatusRecord> TransferChangeHistoryRecords { set; get; }
-
-        public DbSet<AssignedTruckRecord> TransferAssignedDriverRecords { set; get; }
+        public DbSet<TransportationStatusRecord> TransportationStatusRecords { set; get; }
         
         public DbSet<Document> Documents { set; get; }
 
@@ -54,12 +52,6 @@
                 .WithOne(x => x.Driver)
                 .HasForeignKey(x => x.DriverId)
                 .IsRequired();
-
-            modelBuilder.Entity<TransportationOrder>()
-                .HasOne(x => x.CurrentAssignedTruck)
-                .WithOne()
-                .HasForeignKey<TransportationOrder>(x => x.CurrentAssignedTruckId)
-                .IsRequired(false);
 
             modelBuilder.Entity<TransportationOrder>()
                 .HasMany(x => x.DriverRequests)

@@ -22,16 +22,16 @@ public class SearchOrdersInShipperApprovingQueryHandler : IRequestHandler<Search
     private readonly IMapper _mapper;
     private readonly UserManager<User> _userManager;
     private readonly IRepository<Entities.TransportationOrder> _ordersRepository;
-    private readonly IRepository<Entities.Truck> _trucksRepository;
+    private readonly IRepository<Transportation> _transportationRepository;
 
     public SearchOrdersInShipperApprovingQueryHandler(IRepository<Entities.TransportationOrder> ordersRepository,
-        IRepository<Entities.Truck> trucksRepository,
         UserManager<User> userManager,
+        IRepository<Transportation> transportationRepository,
         IMapper mapper)
     {
         _ordersRepository = ordersRepository;
-        _trucksRepository = trucksRepository;
         _userManager = userManager;
+        _transportationRepository = transportationRepository;
         _mapper = mapper;
     }
     
@@ -42,50 +42,37 @@ public class SearchOrdersInShipperApprovingQueryHandler : IRequestHandler<Search
                 OrdersInProgress = new List<CorrelationDto>()
             };
 
-        var transportingOrders = await _ordersRepository.GetAllAsync(o => o.Shipper.Id == request.UserId && o.TransportationOrderStatusRecords.OrderBy(x => x.ChangeDatetime).LastOrDefault().TransportationOrderStatus ==
-            TransportationOrderStatus.ShipperApproving);
+        var transportingOrders = await _ordersRepository.GetAllAsync(o => o.Shipper.Id == request.UserId
+                                                                          && o.TransportationOrderStatus == TransportationOrderStatus.ShipperApproving);
 
-        ordersInProgress.OrdersInProgress.AddRange(await ConvertCorrelationDto(transportingOrders, true).ToListAsync(cancellationToken: cancellationToken));
+        ordersInProgress.OrdersInProgress.AddRange(await ConvertCorrelationDto(transportingOrders).ToListAsync(cancellationToken: cancellationToken));
         
         return ordersInProgress;
     }
 
-    private async IAsyncEnumerable<CorrelationDto> ConvertCorrelationDto(List<Entities.TransportationOrder> transportationOrders, bool hasAssignedTruck)
+    private async IAsyncEnumerable<CorrelationDto> ConvertCorrelationDto(List<Entities.TransportationOrder> transportationOrders)
     {
         foreach (var order in transportationOrders)
         {
-            if (hasAssignedTruck &&
-                (order.AssignedTruckRecords == null || order.AssignedTruckRecords.Count == 0))
-            {
-                throw new Exception($"At least 1 truck must be assigned for order {order.Id}");
-            }
-
             var dto = new CorrelationDto()
             {
-                Driver = await GetDriverProfileDto(order, hasAssignedTruck),
+                Driver = await GetDriverProfileDto(order),
                 Shipper = await GetShipperProfileDto(order),
-                Truck = await GetTruckDto(order, hasAssignedTruck),
+                Truck = await GetTruckDto(order),
                 TransportationOrder = _mapper.Map<TransportationOrderDto>(order)
             };
             yield return dto;
         }
     }
 
-    private async Task<TruckDto> GetTruckDto(Entities.TransportationOrder order, bool hasAssignedTruck)
+    private async Task<TruckDto> GetTruckDto(Entities.TransportationOrder order)
     {
-        if (!hasAssignedTruck)
-            return null;
-        
-        var assignedTruckRecord = order.AssignedTruckRecords.OrderBy(x => x.ChangeDatetime).Last();
-        var truck = await _trucksRepository.GetAsync(x => x.Id == assignedTruckRecord.TruckId);
-        return _mapper.Map<TruckDto>(truck);
+        var transportation = await _transportationRepository.GetAsync(x => x.TransportationOrderId == order.Id);
+        return _mapper.Map<TruckDto>(transportation.Truck);
     }
 
-    private async Task<ProfileDto> GetDriverProfileDto(Entities.TransportationOrder order, bool hasAssignedTruck)
+    private async Task<ProfileDto> GetDriverProfileDto(Entities.TransportationOrder order)
     {
-        if (!hasAssignedTruck)
-            return null;
-        
         var driver = await _userManager.FindByIdAsync(order.ShipperId);
         var driverRole = await _userManager.GetUserRole(driver);
 

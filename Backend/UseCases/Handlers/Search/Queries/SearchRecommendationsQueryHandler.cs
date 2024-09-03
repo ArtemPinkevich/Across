@@ -42,7 +42,7 @@ public class SearchRecommendationsQueryHandler : IRequestHandler<SearchRecommend
         {
             Recommendations = new List<CorrelationDto>()
         };
-        Expression <Func<Entities.TransportationOrder, bool>> searchByStatusExpression = x => x.TransportationOrderStatusRecords.OrderBy(record => record.ChangeDatetime).Last().TransportationOrderStatus == TransportationOrderStatus.CarrierFinding;
+        Expression <Func<Entities.TransportationOrder, bool>> searchByStatusExpression = x => x.TransportationOrderStatus == TransportationOrderStatus.CarrierFinding;
         var orders = await _ordersRepository.GetAllAsync(searchByStatusExpression);
         foreach (var order in orders)
         {

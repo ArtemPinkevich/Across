@@ -3,6 +3,7 @@ using System;
 using DataAccess.SqlLite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,12 +11,37 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.SqlLite.Migrations
 {
     [DbContext(typeof(SqlLiteDbContext))]
-    partial class SqlLiteDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240903160627_changedTables")]
+    partial class changedTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.4");
+
+            modelBuilder.Entity("Entities.AssignedTruckRecord", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("ChangeDatetime")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("TransportationOrderId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("TruckId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TransportationOrderId");
+
+                    b.HasIndex("TruckId");
+
+                    b.ToTable("TransferAssignedDriverRecords");
+                });
 
             modelBuilder.Entity("Entities.CarBodyRequirement", b =>
                 {
@@ -439,7 +465,7 @@ namespace DataAccess.SqlLite.Migrations
 
                     b.HasIndex("TransportationId");
 
-                    b.ToTable("TransportationStatusRecords");
+                    b.ToTable("TransferChangeHistoryRecords");
                 });
 
             modelBuilder.Entity("Entities.Truck", b =>
@@ -847,6 +873,25 @@ namespace DataAccess.SqlLite.Migrations
                     b.HasDiscriminator().HasValue("Shipper");
                 });
 
+            modelBuilder.Entity("Entities.AssignedTruckRecord", b =>
+                {
+                    b.HasOne("Entities.TransportationOrder", "TransportationOrder")
+                        .WithMany("AssignedTruckRecords")
+                        .HasForeignKey("TransportationOrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Entities.Truck", "Truck")
+                        .WithMany()
+                        .HasForeignKey("TruckId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("TransportationOrder");
+
+                    b.Navigation("Truck");
+                });
+
             modelBuilder.Entity("Entities.CarBodyRequirement", b =>
                 {
                     b.HasOne("Entities.TruckRequirements", "TruckRequirements")
@@ -1047,6 +1092,8 @@ namespace DataAccess.SqlLite.Migrations
 
             modelBuilder.Entity("Entities.TransportationOrder", b =>
                 {
+                    b.Navigation("AssignedTruckRecords");
+
                     b.Navigation("Cargo");
 
                     b.Navigation("DriverRequests");

@@ -43,16 +43,7 @@ public class AddOrUpdateTransportationOrderCommandHandler: IRequestHandler<AddOr
         {
             order = _mapper.Map<Entities.TransportationOrder>(request.TransportationOrderDto);
             order.ShipperId = user.Id;
-            order.TransportationOrderStatusRecords = new List<TransportationOrderStatusRecord>()
-            {
-                new ()
-                {
-                    ChangeDatetime = DateTime.Now,
-                    TransportationOrderId = order.Id,
-                    TransportationOrderStatus = TransportationOrderStatus.CarrierFinding
-                }
-            };
-            order.CurrentTransportationOrderStatus = TransportationOrderStatus.CarrierFinding;
+            order.TransportationOrderStatus = TransportationOrderStatus.CarrierFinding;
             await _repository.AddAsync(new List<Entities.TransportationOrder>() {order});
         }
         else

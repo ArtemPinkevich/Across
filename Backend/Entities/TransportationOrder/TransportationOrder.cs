@@ -11,10 +11,6 @@ public class TransportationOrder : EntityBase
     
     public TruckRequirements TruckRequirements { set; get; }
     
-    public List<AssignedTruckRecord> AssignedTruckRecords { set; get; }
-    
-    public List<TransportationOrderStatusRecord> TransportationOrderStatusRecords { set; get; }
-    
     public int Price { set; get; }
     
     public string LoadDateFrom { set; get; }
@@ -29,10 +25,7 @@ public class TransportationOrder : EntityBase
     
     public string UnloadingAddress { set; get; }
     
-    public TransportationOrderStatus CurrentTransportationOrderStatus { set; get; }
-    
-    public int? CurrentAssignedTruckId { set; get; }
-    public Truck CurrentAssignedTruck { set; get; }
+    public TransportationOrderStatus TransportationOrderStatus { set; get; }
     
     /// <summary>
     /// List of drivers who want to take this order

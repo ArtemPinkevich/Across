@@ -23,8 +23,6 @@ public class TransportationOrderRepository: IRepository<TransportationOrder>
         return await _context.TransportationOrders
             .Include(item => item.Shipper)
             .Include(item => item.Cargo)
-            .Include(item => item.TransportationOrderStatusRecords)
-            .Include(item => item.AssignedTruckRecords)
             .Include(item => item.DriverRequests)
             .Include(item => item.TruckRequirements)
             .ThenInclude(item => item.CarBodyRequirement)
@@ -36,8 +34,6 @@ public class TransportationOrderRepository: IRepository<TransportationOrder>
         return await _context.TransportationOrders
             .Include(item => item.Shipper)
             .Include(item => item.Cargo)
-            .Include(item => item.TransportationOrderStatusRecords)
-            .Include(item => item.AssignedTruckRecords)
             .Include(item => item.DriverRequests)
             .Include(item => item.TruckRequirements)
             .ThenInclude(item => item.CarBodyRequirement)
@@ -49,8 +45,6 @@ public class TransportationOrderRepository: IRepository<TransportationOrder>
         return await _context.TransportationOrders
             .Include(item => item.Shipper)
             .Include(item => item.Cargo)
-            .Include(item => item.TransportationOrderStatusRecords)
-            .Include(item => item.AssignedTruckRecords)
             .Include(item => item.DriverRequests)
             .Include(item => item.TruckRequirements)
             .ThenInclude(item => item.CarBodyRequirement)
@@ -69,8 +63,6 @@ public class TransportationOrderRepository: IRepository<TransportationOrder>
         return await _context.TransportationOrders
             .Include(item => item.Shipper)
             .Include(item => item.Cargo)
-            .Include(item => item.TransportationOrderStatusRecords)
-            .Include(item => item.AssignedTruckRecords)
             .Include(item => item.DriverRequests)
             .Include(item => item.TruckRequirements)
             .ThenInclude(item => item.CarBodyRequirement)
@@ -85,8 +77,6 @@ public class TransportationOrderRepository: IRepository<TransportationOrder>
         return await _context.TransportationOrders
             .Include(item => item.Shipper)
             .Include(item => item.Cargo)
-            .Include(item => item.TransportationOrderStatusRecords)
-            .Include(item => item.AssignedTruckRecords)
             .Include(item => item.DriverRequests)
             .Include(item => item.TruckRequirements)
             .Where(condition)

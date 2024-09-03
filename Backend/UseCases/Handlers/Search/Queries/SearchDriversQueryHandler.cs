@@ -9,7 +9,6 @@ using DataAccess.Interfaces;
 using Entities;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using UseCases.Handlers.Common.Dto;
 using UseCases.Handlers.Search.Dto;
 using UseCases.Handlers.Truck.Dto;
@@ -20,16 +19,19 @@ public class SearchDriversQueryHandler : IRequestHandler<SearchDriversQuery, Sea
 {
     private readonly IRepository<Entities.Truck> _truckRepository;
     private readonly IRepository<Entities.TransportationOrder> _transportationOrdersRepository;
+    private readonly IRepository<Transportation> _transportationRepository;
     private readonly UserManager<User> _userManager;
     private readonly IMapper _mapper;
     
     public SearchDriversQueryHandler(IRepository<Entities.Truck> truckRepository,
         IRepository<Entities.TransportationOrder> transportationOrdersRepository,
+        IRepository<Transportation> transportationRepository,
         UserManager<User> userManager,
         IMapper mapper)
     {
         _truckRepository = truckRepository;
         _transportationOrdersRepository = transportationOrdersRepository;
+        _transportationRepository = transportationRepository;
         _userManager = userManager;
         _mapper = mapper;
     }
@@ -79,13 +81,13 @@ public class SearchDriversQueryHandler : IRequestHandler<SearchDriversQuery, Sea
         List<Entities.Truck> trucks = new List<Entities.Truck>();
         
         #warning TODO change TransferChangeHistoryRecords to current status and change to AsyncEnumerable
-        var orders = await _transportationOrdersRepository.GetAllAsync(x => x.UnloadingLocalityName == request.DriverLocation);
-        var transportingOrders = orders.FindAll(x =>
-            x.TransportationOrderStatusRecords.Last().TransportationOrderStatus == TransportationOrderStatus.Transporting);
+        var orders = await _transportationOrdersRepository.GetAllAsync(x => x.UnloadingLocalityName == request.DriverLocation
+                                                                            && x.TransportationOrderStatus == TransportationOrderStatus.Transporting);
 
-        foreach (var order in transportingOrders)
+        foreach (var order in orders)
         {
-            trucks.Add(order.AssignedTruckRecords.Last().Truck);
+            var transportation = await _transportationRepository.GetAsync(x => x.TransportationOrderId == order.Id);
+            trucks.Add(transportation.Truck);
         }
 
         return trucks;

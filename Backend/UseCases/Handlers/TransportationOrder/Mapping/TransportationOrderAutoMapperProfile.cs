@@ -31,13 +31,13 @@ public class SetOrderAddressDependingOnStatus : IMappingAction<Entities.Transpor
             || destination.TransportationOrderStatus == TransportationOrderStatus.ManagerApproving
             || destination.TransportationOrderStatus == TransportationOrderStatus.ShipperApproving)
         {
-            destination.TransferInfo.LoadingAddress = String.Empty;
-            destination.TransferInfo.UnloadingAddress = String.Empty;
+            destination.TransferInfo.LoadingAddress = source.LoadingAddress;
+            destination.TransferInfo.UnloadingAddress = source.UnloadingAddress;
         }
         else
         {
-            destination.TransferInfo.LoadingAddress = source.LoadingAddress;
-            destination.TransferInfo.UnloadingAddress = source.UnloadingAddress;
+            destination.TransferInfo.LoadingAddress = String.Empty;
+            destination.TransferInfo.UnloadingAddress = String.Empty;
         }
     }
 }
@@ -46,19 +46,6 @@ public class TransportationOrderLocationConverter : IValueConverter<LocationDto,
     public string Convert(LocationDto sourceMember, ResolutionContext context)
     {
         return $"{sourceMember.Country}{Constants.LocationDelimiter}{sourceMember.Region}{Constants.LocationDelimiter}{sourceMember.City}";
-    }
-}
-
-public class TransportationStatusConverter : IValueConverter<List<TransportationOrderStatusRecord>, TransportationOrderStatus>
-{
-    public TransportationOrderStatus Convert(List<TransportationOrderStatusRecord> sourceMember, ResolutionContext context)
-    {
-        if (sourceMember == null || !sourceMember.Any())
-        {
-            return TransportationOrderStatus.NotPublished;
-        }
-
-        return sourceMember.Last().TransportationOrderStatus;
     }
 }
 
@@ -298,7 +285,7 @@ public class CargoAutoMapperProfile : Profile
             .AfterMap<CreateDefaultPropertiesAtTransportationOrder>()
             .ReverseMap()
             .ForMember(s => s.TransportationOrderStatus,
-                opt => opt.MapFrom(d => d.CurrentTransportationOrderStatus))
+                opt => opt.MapFrom(d => d.TransportationOrderStatus))
             .ForPath(s => s.TransferInfo.LoadingPlace,
                 opt => opt.MapFrom(d => ConvertLocationReverse(d.LoadingLocalityName)))
             .ForPath(s => s.TransferInfo.UnloadingPlace,

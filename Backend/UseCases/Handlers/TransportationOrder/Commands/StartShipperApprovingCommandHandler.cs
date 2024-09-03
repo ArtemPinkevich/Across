@@ -12,13 +12,10 @@ namespace UseCases.Handlers.TransportationOrder.Commands;
 
 public class StartShipperApprovingCommandHandler : IRequestHandler<StartShipperApprovingCommand, TransportationOrderResult>
 {
-    private readonly IRepository<TransportationOrderStatusRecord> _transferStatusRepository;
     private readonly IRepository<Entities.TransportationOrder> _ordersRepository;
 
-    public StartShipperApprovingCommandHandler(IRepository<TransportationOrderStatusRecord> transferStatusRepository,
-        IRepository<Entities.TransportationOrder> ordersRepository)
+    public StartShipperApprovingCommandHandler(IRepository<Entities.TransportationOrder> ordersRepository)
     {
-        _transferStatusRepository = transferStatusRepository;
         _ordersRepository = ordersRepository;
     }
     
@@ -34,17 +31,9 @@ public class StartShipperApprovingCommandHandler : IRequestHandler<StartShipperA
             };
             
         }
-        
-        await _transferStatusRepository.AddAsync(new List<TransportationOrderStatusRecord>() { new TransportationOrderStatusRecord()
-        {
-            ChangeDatetime = DateTime.Now,
-            TransportationOrderId = request.TransportationOrderId,
-            TransportationOrderStatus = TransportationOrderStatus.ShipperApproving
-        } });
 
-        order.CurrentTransportationOrderStatus = TransportationOrderStatus.ShipperApproving;
-        
-        await _transferStatusRepository.SaveAsync();
+        order.TransportationOrderStatus = TransportationOrderStatus.ShipperApproving;
+        await _ordersRepository.SaveAsync();
 
         return new TransportationOrderResult() { Result = ApiResult.Success };
     }
