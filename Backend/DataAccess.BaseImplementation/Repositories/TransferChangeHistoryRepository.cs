@@ -10,7 +10,7 @@ using Entities;
 using Microsoft.EntityFrameworkCore;
 
 
-public class TransferChangeHistoryRepository: IRepository<TransferChangeStatusRecord>
+public class TransferChangeHistoryRepository: IRepository<TransportationOrderStatusRecord>
 {
     private readonly DatabaseContext _context;
     
@@ -19,21 +19,21 @@ public class TransferChangeHistoryRepository: IRepository<TransferChangeStatusRe
         _context = context;
     }
     
-    public async Task<TransferChangeStatusRecord> GetAsync(Expression<Func<TransferChangeStatusRecord, bool>> condition)
+    public async Task<TransportationOrderStatusRecord> GetAsync(Expression<Func<TransportationOrderStatusRecord, bool>> condition)
     {
         return await _context.TransferChangeHistoryRecords
             .Include(item => item.TransportationOrder)
             .FirstOrDefaultAsync(condition);
     }
 
-    public async Task<List<TransferChangeStatusRecord>> GetAllAsync()
+    public async Task<List<TransportationOrderStatusRecord>> GetAllAsync()
     {
         return await _context.TransferChangeHistoryRecords
             .Include(item => item.TransportationOrder)
             .ToListAsync();
     }
 
-    public async Task<List<TransferChangeStatusRecord>> GetAllAsync(Expression<Func<TransferChangeStatusRecord, bool>> condition)
+    public async Task<List<TransportationOrderStatusRecord>> GetAllAsync(Expression<Func<TransportationOrderStatusRecord, bool>> condition)
     {
         return await _context.TransferChangeHistoryRecords
             .Include(item => item.TransportationOrder)
@@ -42,12 +42,12 @@ public class TransferChangeHistoryRepository: IRepository<TransferChangeStatusRe
             .ToListAsync();
     }
     
-    public Task<List<TransferChangeStatusRecord>> GetAllAsync(List<Expression<Func<TransferChangeStatusRecord, bool>>> conditions)
+    public Task<List<TransportationOrderStatusRecord>> GetAllAsync(List<Expression<Func<TransportationOrderStatusRecord, bool>>> conditions)
     {
         return null;
     }
 
-    public async Task<List<TransferChangeStatusRecord>> GetLastAsync(Expression<Func<TransferChangeStatusRecord, bool>> condition, int limit)
+    public async Task<List<TransportationOrderStatusRecord>> GetLastAsync(Expression<Func<TransportationOrderStatusRecord, bool>> condition, int limit)
     {
         return await _context.TransferChangeHistoryRecords
             .Include(item => item.TransportationOrder)
@@ -57,7 +57,7 @@ public class TransferChangeHistoryRepository: IRepository<TransferChangeStatusRe
             .ToListAsync();
     }
 
-    public async Task<List<TransferChangeStatusRecord>> GetFirstAsync(Expression<Func<TransferChangeStatusRecord, bool>> condition, int limit)
+    public async Task<List<TransportationOrderStatusRecord>> GetFirstAsync(Expression<Func<TransportationOrderStatusRecord, bool>> condition, int limit)
     {
         return await _context.TransferChangeHistoryRecords
             .Include(item => item.TransportationOrder)
@@ -67,20 +67,20 @@ public class TransferChangeHistoryRepository: IRepository<TransferChangeStatusRe
             .ToListAsync();
     }
 
-    public async Task AddAsync(List<TransferChangeStatusRecord> items)
+    public async Task AddAsync(List<TransportationOrderStatusRecord> items)
     {
         await _context.TransferChangeHistoryRecords.AddRangeAsync(items);
     }
 
-    public Task UpdateAsync(TransferChangeStatusRecord item)
+    public Task UpdateAsync(TransportationOrderStatusRecord item)
     {
         _context.TransferChangeHistoryRecords.Update(item);
         return Task.CompletedTask;
     }
 
-    public Task DeleteAsync(Expression<Func<TransferChangeStatusRecord, bool>> condition)
+    public Task DeleteAsync(Expression<Func<TransportationOrderStatusRecord, bool>> condition)
     {
-        IEnumerable<TransferChangeStatusRecord> removeItems = _context.TransferChangeHistoryRecords.Where(condition);
+        IEnumerable<TransportationOrderStatusRecord> removeItems = _context.TransferChangeHistoryRecords.Where(condition);
         _context.RemoveRange(removeItems);
         return Task.CompletedTask;
     }

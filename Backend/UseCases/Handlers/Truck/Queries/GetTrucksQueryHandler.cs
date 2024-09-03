@@ -39,7 +39,7 @@ public class GetQueriesCommandHandler:IRequestHandler<GetTrucksQuery, TrucksList
             };
         }
 
-        var trucks = await _repository.GetAllAsync(x => x.UserId == request.UserId);
+        var trucks = await _repository.GetAllAsync(x => x.DriverId == request.UserId);
         return new TrucksListResultDto()
         {
             Result = new TruckResultDto()

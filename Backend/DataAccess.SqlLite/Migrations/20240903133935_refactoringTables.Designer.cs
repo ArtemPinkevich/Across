@@ -3,6 +3,7 @@ using System;
 using DataAccess.SqlLite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.SqlLite.Migrations
 {
     [DbContext(typeof(SqlLiteDbContext))]
-    partial class SqlLiteDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240903133935_refactoringTables")]
+    partial class refactoringTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.4");
@@ -343,39 +345,11 @@ namespace DataAccess.SqlLite.Migrations
                     b.ToTable("DriverRequests");
                 });
 
-            modelBuilder.Entity("Entities.RoutePoint", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Latitude")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("LocationName")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Longtitude")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("TransportationId")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TransportationId");
-
-                    b.ToTable("RoutePoints");
-                });
-
             modelBuilder.Entity("Entities.Transportation", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
-
-                    b.Property<string>("Comment")
-                        .HasColumnType("TEXT");
 
                     b.Property<string>("DriverId")
                         .IsRequired()
@@ -949,17 +923,6 @@ namespace DataAccess.SqlLite.Migrations
                     b.Navigation("Truck");
                 });
 
-            modelBuilder.Entity("Entities.RoutePoint", b =>
-                {
-                    b.HasOne("Entities.Transportation", "Transportation")
-                        .WithMany("RoutePoints")
-                        .HasForeignKey("TransportationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Transportation");
-                });
-
             modelBuilder.Entity("Entities.Transportation", b =>
                 {
                     b.HasOne("Entities.Driver", "Driver")
@@ -1078,11 +1041,6 @@ namespace DataAccess.SqlLite.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Entities.Transportation", b =>
-                {
-                    b.Navigation("RoutePoints");
                 });
 
             modelBuilder.Entity("Entities.TransportationOrder", b =>

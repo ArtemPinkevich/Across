@@ -1,4 +1,4 @@
-﻿using Entities.Document;
+﻿using Entities;
 
 namespace UseCases.Handlers.Profiles.Dto;
 

@@ -42,7 +42,7 @@ public class SearchRecommendationsQueryHandler : IRequestHandler<SearchRecommend
         {
             Recommendations = new List<CorrelationDto>()
         };
-        Expression <Func<Entities.TransportationOrder, bool>> searchByStatusExpression = x => x.TransferChangeHistoryRecords.OrderBy(record => record.ChangeDatetime).Last().TransportationStatus == TransportationStatus.CarrierFinding;
+        Expression <Func<Entities.TransportationOrder, bool>> searchByStatusExpression = x => x.TransportationOrderStatusRecords.OrderBy(record => record.ChangeDatetime).Last().TransportationOrderStatus == TransportationOrderStatus.CarrierFinding;
         var orders = await _ordersRepository.GetAllAsync(searchByStatusExpression);
         foreach (var order in orders)
         {
@@ -53,11 +53,11 @@ public class SearchRecommendationsQueryHandler : IRequestHandler<SearchRecommend
                                                                   && x.InnerBodyLength >= order.TruckRequirements.InnerBodyLength
                                                                   && x.InnerBodyWidth >= order.TruckRequirements.InnerBodyWidth);
             
-            var shipper = await _userManager.FindByIdAsync(order.UserId);
+            var shipper = await _userManager.FindByIdAsync(order.ShipperId);
             var shipperRole = await _userManager.GetUserRole(shipper);
             foreach (var truck in trucks)
             {
-                var driver = await _userManager.FindByIdAsync(truck.UserId);
+                var driver = await _userManager.FindByIdAsync(truck.DriverId);
                 var driverRole = await _userManager.GetUserRole(driver);
                 recommendationsResultDto.Recommendations.Add(new CorrelationDto()
                 {

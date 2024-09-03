@@ -1,5 +1,4 @@
-﻿using Entities.Document;
-using Entities;
+﻿using Entities;
 using System.Collections.Generic;
 using UseCases.Handlers.Profiles.Dto;
 using System.Linq;

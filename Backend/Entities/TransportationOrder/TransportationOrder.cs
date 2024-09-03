@@ -4,16 +4,16 @@ namespace Entities;
 
 public class TransportationOrder : EntityBase
 {
-    public string UserId { set; get; }
-    public User User { set; get; }
+    public string ShipperId { set; get; }
+    public Shipper Shipper { set; get; }
     
     public Cargo Cargo { set; get; }
     
     public TruckRequirements TruckRequirements { set; get; }
     
-    public List<TransferAssignedTruckRecord> AssignedTruckRecords { set; get; }
+    public List<AssignedTruckRecord> AssignedTruckRecords { set; get; }
     
-    public List<TransferChangeStatusRecord> TransferChangeHistoryRecords { set; get; }
+    public List<TransportationOrderStatusRecord> TransportationOrderStatusRecords { set; get; }
     
     public int Price { set; get; }
     
@@ -29,13 +29,13 @@ public class TransportationOrder : EntityBase
     
     public string UnloadingAddress { set; get; }
     
-    public TransportationStatus CurrentTransportationStatus { set; get; }
+    public TransportationOrderStatus CurrentTransportationOrderStatus { set; get; }
     
     public int? CurrentAssignedTruckId { set; get; }
     public Truck CurrentAssignedTruck { set; get; }
     
     /// <summary>
-    /// List of trucks who want to take this order
+    /// List of drivers who want to take this order
     /// </summary>
-    public List<Truck> Trucks { set; get; }
+    public List<DriverRequest> DriverRequests { set; get; }
 }

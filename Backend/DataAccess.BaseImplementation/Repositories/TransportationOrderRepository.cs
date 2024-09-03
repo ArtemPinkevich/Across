@@ -21,11 +21,11 @@ public class TransportationOrderRepository: IRepository<TransportationOrder>
     public async Task<TransportationOrder> GetAsync(Expression<Func<TransportationOrder, bool>> condition)
     {
         return await _context.TransportationOrders
-            .Include(item => item.User)
+            .Include(item => item.Shipper)
             .Include(item => item.Cargo)
-            .Include(item => item.TransferChangeHistoryRecords)
+            .Include(item => item.TransportationOrderStatusRecords)
             .Include(item => item.AssignedTruckRecords)
-            .Include(item => item.Trucks)
+            .Include(item => item.DriverRequests)
             .Include(item => item.TruckRequirements)
             .ThenInclude(item => item.CarBodyRequirement)
             .FirstOrDefaultAsync(condition);
@@ -34,11 +34,11 @@ public class TransportationOrderRepository: IRepository<TransportationOrder>
     public async Task<List<TransportationOrder>> GetAllAsync()
     {
         return await _context.TransportationOrders
-            .Include(item => item.User)
+            .Include(item => item.Shipper)
             .Include(item => item.Cargo)
-            .Include(item => item.TransferChangeHistoryRecords)
+            .Include(item => item.TransportationOrderStatusRecords)
             .Include(item => item.AssignedTruckRecords)
-            .Include(item => item.Trucks)
+            .Include(item => item.DriverRequests)
             .Include(item => item.TruckRequirements)
             .ThenInclude(item => item.CarBodyRequirement)
             .ToListAsync();
@@ -47,11 +47,11 @@ public class TransportationOrderRepository: IRepository<TransportationOrder>
     public async Task<List<TransportationOrder>> GetAllAsync(Expression<Func<TransportationOrder, bool>> condition)
     {
         return await _context.TransportationOrders
-            .Include(item => item.User)
+            .Include(item => item.Shipper)
             .Include(item => item.Cargo)
-            .Include(item => item.TransferChangeHistoryRecords)
+            .Include(item => item.TransportationOrderStatusRecords)
             .Include(item => item.AssignedTruckRecords)
-            .Include(item => item.Trucks)
+            .Include(item => item.DriverRequests)
             .Include(item => item.TruckRequirements)
             .ThenInclude(item => item.CarBodyRequirement)
             .Where(condition)
@@ -67,11 +67,11 @@ public class TransportationOrderRepository: IRepository<TransportationOrder>
     public async Task<List<TransportationOrder>> GetLastAsync(Expression<Func<TransportationOrder, bool>> condition, int limit)
     {
         return await _context.TransportationOrders
-            .Include(item => item.User)
+            .Include(item => item.Shipper)
             .Include(item => item.Cargo)
-            .Include(item => item.TransferChangeHistoryRecords)
+            .Include(item => item.TransportationOrderStatusRecords)
             .Include(item => item.AssignedTruckRecords)
-            .Include(item => item.Trucks)
+            .Include(item => item.DriverRequests)
             .Include(item => item.TruckRequirements)
             .ThenInclude(item => item.CarBodyRequirement)
             .Where(condition)
@@ -83,11 +83,11 @@ public class TransportationOrderRepository: IRepository<TransportationOrder>
     public async Task<List<TransportationOrder>> GetFirstAsync(Expression<Func<TransportationOrder, bool>> condition, int limit)
     {
         return await _context.TransportationOrders
-            .Include(item => item.User)
+            .Include(item => item.Shipper)
             .Include(item => item.Cargo)
-            .Include(item => item.TransferChangeHistoryRecords)
+            .Include(item => item.TransportationOrderStatusRecords)
             .Include(item => item.AssignedTruckRecords)
-            .Include(item => item.Trucks)
+            .Include(item => item.DriverRequests)
             .Include(item => item.TruckRequirements)
             .Where(condition)
             .Take(limit)

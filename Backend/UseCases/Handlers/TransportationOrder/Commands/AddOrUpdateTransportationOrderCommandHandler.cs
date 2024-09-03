@@ -42,16 +42,17 @@ public class AddOrUpdateTransportationOrderCommandHandler: IRequestHandler<AddOr
         if (request.TransportationOrderDto.TransportationOrderId == null)
         {
             order = _mapper.Map<Entities.TransportationOrder>(request.TransportationOrderDto);
-            order.UserId = user.Id;
-            order.TransferChangeHistoryRecords = new List<TransferChangeStatusRecord>()
+            order.ShipperId = user.Id;
+            order.TransportationOrderStatusRecords = new List<TransportationOrderStatusRecord>()
             {
                 new ()
                 {
                     ChangeDatetime = DateTime.Now,
                     TransportationOrderId = order.Id,
-                    TransportationStatus = TransportationStatus.CarrierFinding
+                    TransportationOrderStatus = TransportationOrderStatus.CarrierFinding
                 }
             };
+            order.CurrentTransportationOrderStatus = TransportationOrderStatus.CarrierFinding;
             await _repository.AddAsync(new List<Entities.TransportationOrder>() {order});
         }
         else

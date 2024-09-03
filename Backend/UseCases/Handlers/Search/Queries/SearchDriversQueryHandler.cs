@@ -66,9 +66,9 @@ public class SearchDriversQueryHandler : IRequestHandler<SearchDriversQuery, Sea
                 Result = ApiResult.Success, 
                 Drivers = trucks.Select(x => new DriverDto()
                 {
-                    Name = x.User.Name,
-                    Surname = x.User.Surname,
-                    UserId = x.UserId,
+                    Name = x.Driver.Name,
+                    Surname = x.Driver.Surname,
+                    UserId = x.DriverId,
                     Truck = _mapper.Map<TruckDto>(x)
                 }).ToList() 
             };
@@ -81,7 +81,7 @@ public class SearchDriversQueryHandler : IRequestHandler<SearchDriversQuery, Sea
         #warning TODO change TransferChangeHistoryRecords to current status and change to AsyncEnumerable
         var orders = await _transportationOrdersRepository.GetAllAsync(x => x.UnloadingLocalityName == request.DriverLocation);
         var transportingOrders = orders.FindAll(x =>
-            x.TransferChangeHistoryRecords.Last().TransportationStatus == TransportationStatus.Transporting);
+            x.TransportationOrderStatusRecords.Last().TransportationOrderStatus == TransportationOrderStatus.Transporting);
 
         foreach (var order in transportingOrders)
         {

@@ -21,6 +21,7 @@ public class GetBidsQueryHandler : IRequestHandler<GetBidsQuery, BidsResultDto>
     private readonly IMapper _mapper;
     private readonly UserManager<User> _userManager;
     private readonly IRepository<Entities.TransportationOrder> _transportationOrderRepository;
+    private readonly IRepository<Entities.Truck> _trucksRepository;
 
     public GetBidsQueryHandler(IMapper mapper,
         UserManager<User> userManager,
@@ -35,26 +36,26 @@ public class GetBidsQueryHandler : IRequestHandler<GetBidsQuery, BidsResultDto>
     {
         var bidsResultDto = new BidsResultDto { Correlations = new List<CorrelationDto>() };
 
-        var orders = await _transportationOrderRepository.GetFirstAsync(x => x.Trucks.Count > 0, 50);
+        var orders = await _transportationOrderRepository.GetFirstAsync(x => x.DriverRequests.Count > 0, 50);
 
         foreach (var order in orders)
         {
-            foreach (var truck in order.Trucks)
+            foreach (var driverRequest in order.DriverRequests)
             {
-                bidsResultDto.Correlations.Add(await CreateCorrelation(order, truck));
+                bidsResultDto.Correlations.Add(await CreateCorrelation(order, driverRequest));
             }
         }
 
         return bidsResultDto;
-        
     }
 
-    private async Task<CorrelationDto> CreateCorrelation(Entities.TransportationOrder order, Entities.Truck truck)
+    private async Task<CorrelationDto> CreateCorrelation(Entities.TransportationOrder order, Entities.DriverRequest driverRequest)
     {
-        var shipper = order.User;
+        var shipper = order.Shipper;
         var shipperRole = await _userManager.GetUserRole(shipper);
-        var driver = _userManager.Users.FirstOrDefault(o => o.Id == truck.UserId);
+        var driver = _userManager.Users.FirstOrDefault(o => o.Id == driverRequest.DriverId);
         var driverRole = await _userManager.GetUserRole(driver);
+        var truck = await _trucksRepository.GetAsync(x => x.Id == driverRequest.TruckId);
         var correlation = new CorrelationDto {
             #warning create ProfileDto mapper
             Shipper = new ProfileDto()

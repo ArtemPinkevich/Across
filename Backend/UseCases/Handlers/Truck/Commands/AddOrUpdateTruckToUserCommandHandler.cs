@@ -37,7 +37,7 @@ public class AddOrUpdateTruckToUserCommandHandler : IRequestHandler<AddOrUpdateT
         if (request.TruckDto.TruckId == null)
         {
             Entities.Truck truck = _mapper.Map<Entities.Truck>(request.TruckDto);
-            truck.UserId = user.Id;
+            truck.DriverId = user.Id;
             await _repository.AddAsync(new List<Entities.Truck>() { truck });
         }
         else
@@ -72,7 +72,7 @@ public class AddOrUpdateTruckToUserCommandHandler : IRequestHandler<AddOrUpdateT
             truck.Adr9 = request.TruckDto.Adr9;
             truck.Tir = request.TruckDto.Tir;
             truck.Ekmt = request.TruckDto.Ekmt;
-            truck.UserId = user.Id;
+            truck.DriverId = user.Id;
             
             await _repository.UpdateAsync(truck);
         }

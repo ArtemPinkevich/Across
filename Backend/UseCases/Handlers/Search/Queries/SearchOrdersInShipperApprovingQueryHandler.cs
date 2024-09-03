@@ -42,8 +42,8 @@ public class SearchOrdersInShipperApprovingQueryHandler : IRequestHandler<Search
                 OrdersInProgress = new List<CorrelationDto>()
             };
 
-        var transportingOrders = await _ordersRepository.GetAllAsync(o => o.User.Id == request.UserId && o.TransferChangeHistoryRecords.OrderBy(x => x.ChangeDatetime).LastOrDefault().TransportationStatus ==
-            TransportationStatus.ShipperApproving);
+        var transportingOrders = await _ordersRepository.GetAllAsync(o => o.Shipper.Id == request.UserId && o.TransportationOrderStatusRecords.OrderBy(x => x.ChangeDatetime).LastOrDefault().TransportationOrderStatus ==
+            TransportationOrderStatus.ShipperApproving);
 
         ordersInProgress.OrdersInProgress.AddRange(await ConvertCorrelationDto(transportingOrders, true).ToListAsync(cancellationToken: cancellationToken));
         
@@ -86,7 +86,7 @@ public class SearchOrdersInShipperApprovingQueryHandler : IRequestHandler<Search
         if (!hasAssignedTruck)
             return null;
         
-        var driver = await _userManager.FindByIdAsync(order.UserId);
+        var driver = await _userManager.FindByIdAsync(order.ShipperId);
         var driverRole = await _userManager.GetUserRole(driver);
 
         return new ProfileDto()
@@ -106,7 +106,7 @@ public class SearchOrdersInShipperApprovingQueryHandler : IRequestHandler<Search
     
     private async Task<ProfileDto> GetShipperProfileDto(Entities.TransportationOrder order)
     {
-        var shipper = await _userManager.FindByIdAsync(order.UserId);
+        var shipper = await _userManager.FindByIdAsync(order.ShipperId);
         var shipperRole = await _userManager.GetUserRole(shipper);
 
         return new ProfileDto()

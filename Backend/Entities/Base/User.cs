@@ -1,6 +1,6 @@
 ﻿namespace Entities
 {
-    using Entities.Enums;
+    using Enums;
     using Microsoft.AspNetCore.Identity;
     using System.Collections.Generic;
 
@@ -20,7 +20,9 @@
         
         public UserStatus UserStatus { set; get; }
         
-        public List<Document.Document> Documents { set; get; }
+        public List<Document> Documents { set; get; }
+        
+        /*
         
         /// <summary>
         /// List of Trucks of Driver
@@ -31,5 +33,7 @@
         /// List of TransportationOrders of Shipper
         /// </summary>
         public List<TransportationOrder> TransportationOrders { set; get; }
+        
+        */
     }
 }

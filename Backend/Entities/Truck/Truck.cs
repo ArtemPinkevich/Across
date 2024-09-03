@@ -7,11 +7,6 @@ public class Truck: EntityBase
 #warning move from here
     public string TruckLocation { set; get; }
 #warning move from here
-    /// <summary>
-    /// List of Orders which truck wants to take
-    /// </summary>
-    /// <returns></returns>
-    public List<TransportationOrder> OrdersOfferedForTruck { set; get; }
     
     public string CreatedId { set; get; }
     
@@ -61,6 +56,6 @@ public class Truck: EntityBase
     
     public bool Ekmt { set; get; }
     
-    public string UserId { set; get; }
-    public User User { set; get; }
+    public string DriverId { set; get; }
+    public Driver Driver { set; get; }
 }

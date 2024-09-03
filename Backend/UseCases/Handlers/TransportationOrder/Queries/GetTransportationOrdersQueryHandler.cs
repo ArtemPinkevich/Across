@@ -7,7 +7,6 @@ using DataAccess.Interfaces;
 using Entities;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using UseCases.Handlers.Cargo.Dto;
 using UseCases.Handlers.Common.Dto;
 using UseCases.Handlers.Common.Extensions;
@@ -18,20 +17,23 @@ public class GetTransportationOrdersQueryHandler: IRequestHandler<GetTransportat
 {
     private readonly IMapper _mapper;
     private readonly IRepository<Entities.TransportationOrder> _ordersRepository;
-    private readonly IRepository<TransferAssignedTruckRecord> _ordersAssignedTruckRepository;
+    private readonly IRepository<AssignedTruckRecord> _ordersAssignedTruckRepository;
     private readonly IRepository<Entities.Truck> _truckRepository;
+    private readonly IRepository<DriverRequest> _driverRequestRepository;
     private readonly UserManager<User> _userManager;
 
     public GetTransportationOrdersQueryHandler(UserManager<User> userManager,
         IRepository<Entities.TransportationOrder> ordersRepository,
-        IRepository<TransferAssignedTruckRecord> ordersAssignedTruckRepository,
+        IRepository<AssignedTruckRecord> ordersAssignedTruckRepository,
         IRepository<Entities.Truck> truckRepository,
+        IRepository<DriverRequest> driverRequestRepository,
         IMapper mapper)
     {
         _userManager = userManager;
         _ordersRepository = ordersRepository;
         _ordersAssignedTruckRepository = ordersAssignedTruckRepository;
         _truckRepository = truckRepository;
+        _driverRequestRepository = driverRequestRepository;
         _mapper = mapper;
     }
     
@@ -54,34 +56,19 @@ public class GetTransportationOrdersQueryHandler: IRequestHandler<GetTransportat
 
     private async Task<TransportationOrdersListDto> GetDriverOrders(User user)
     {
-        var userWithTrucks = await _userManager.Users.Include(x => x.Trucks).FirstOrDefaultAsync(x => x.Id == user.Id);
-        if (userWithTrucks == null)
-        {
-            return new TransportationOrdersListDto()
-            {
-                Result = new TransportationOrderResult()
-                {
-                    Result = ApiResult.Failed
-                }
-            };  
-        }
-
         List<TransportationOrderDto> transportationOrderDtos = new List<TransportationOrderDto>();
-        //find all records where truck of driver was assigned
-        foreach (var truck in userWithTrucks.Trucks)
-        {
-            var assignedTruckRecords = await _ordersAssignedTruckRepository.GetAllAsync(x => x.TruckId == truck.Id);
-            foreach (TransferAssignedTruckRecord record in assignedTruckRecords)
-            {
-                Entities.TransportationOrder order = await _ordersRepository.GetAsync(x => x.Id == record.TransportationOrderId);
-                var orderDto = _mapper.Map<TransportationOrderDto>(order);
-                transportationOrderDtos.Add(orderDto);
-            }
-
-            var orders = await _ordersRepository.GetAllAsync(x => x.Trucks.Any(o => o.Id == truck.Id));
-            transportationOrderDtos.AddRange(orders.Select(o => _mapper.Map<TransportationOrderDto>(o)));
-        }
-
+        
+        //add all TransportationOrders where driver requested
+        var driverRequests = await _driverRequestRepository.GetAllAsync(x => x.DriverId == user.Id && x.Status == DriverRequestStatus.PendingReview);
+        transportationOrderDtos.AddRange(driverRequests.Select(x => _mapper.Map<TransportationOrderDto>(x)));
+        
+        //add all TransportationOrders where driver is assigned and order is in progress
+        var currentDriverOrder = await _ordersRepository.GetAllAsync(x => x.CurrentAssignedTruck.DriverId == user.Id
+                                                                          && (x.CurrentTransportationOrderStatus == TransportationOrderStatus.Transporting
+                                                                           || x.CurrentTransportationOrderStatus == TransportationOrderStatus.ManagerApproving
+                                                                           || x.CurrentTransportationOrderStatus == TransportationOrderStatus.ShipperApproving));
+        transportationOrderDtos.AddRange(currentDriverOrder.Select(x => _mapper.Map<TransportationOrderDto>(x)));
+ 
         return new TransportationOrdersListDto()
         {
             Result = new TransportationOrderResult()
@@ -94,7 +81,7 @@ public class GetTransportationOrdersQueryHandler: IRequestHandler<GetTransportat
 
     private async Task<TransportationOrdersListDto> GetShipperOrders(User user)
     {
-        var transportationOrders = await _ordersRepository.GetAllAsync(x => x.UserId == user.Id);
+        var transportationOrders = await _ordersRepository.GetAllAsync(x => x.ShipperId == user.Id);
 
         return new TransportationOrdersListDto()
         {

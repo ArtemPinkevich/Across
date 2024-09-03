@@ -31,7 +31,7 @@ public class SearchShipperByOrderIdQueryHandler : IRequestHandler<SearchShipperB
             throw new Exception($"no orders found with id {request.OrderId}");
         }
 
-        var user = order.User;
+        var user = order.Shipper;
 
         var role = await _userManager.GetUserRole(user);
         if (role != UserRoles.Shipper)

@@ -1,4 +1,4 @@
-﻿namespace Entities.Document;
+﻿namespace Entities;
 
 public enum DocumentType
 {

@@ -29,7 +29,7 @@ public class SearchDriverByTruckIdQueryHandler : IRequestHandler<SearchDriverByT
             throw new Exception($"no truck found with id {request.TruckId}");
         }
 
-        var user = truck.User;
+        var user = truck.Driver;
         var role = await _userManager.GetUserRole(user);
         if (role != UserRoles.Driver)
         {

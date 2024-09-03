@@ -75,5 +75,5 @@ public class TransportationOrderDto
     
     public CargoDto Cargo { set; get; }
     
-    public TransportationStatus TransportationStatus { set; get; }
+    public TransportationOrderStatus TransportationOrderStatus { set; get; }
 }

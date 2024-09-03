@@ -1,6 +1,4 @@
-﻿using Entities.Document;
-
-namespace DataAccess.BaseImplementation
+﻿namespace DataAccess.BaseImplementation
 {
     using Entities;
     using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -13,6 +11,10 @@ namespace DataAccess.BaseImplementation
 
         }
         
+        public DbSet<Driver> Drivers { set; get; }
+        
+        public DbSet<Shipper> Shippers { set; get; }
+
         public DbSet<Truck> Trucks { set; get; }
         
         public DbSet<Cargo> Cargos { set; get; }
@@ -21,52 +23,62 @@ namespace DataAccess.BaseImplementation
         
         public DbSet<TruckRequirements> TruckRequirements { set; get; }
         
-        public DbSet<TransferChangeStatusRecord> TransferChangeHistoryRecords { set; get; }
+        public DbSet<DriverRequest> DriverRequests { set; get; }
+        
+        public DbSet<Transportation> Transportations { set; get; }
+        
+        public DbSet<RoutePoint> RoutePoints { set; get; }
 
-        public DbSet<TransferAssignedTruckRecord> TransferAssignedDriverRecords { set; get; }
+        public DbSet<TransportationOrderStatusRecord> TransferChangeHistoryRecords { set; get; }
+
+        public DbSet<AssignedTruckRecord> TransferAssignedDriverRecords { set; get; }
         
         public DbSet<Document> Documents { set; get; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //modelBuilder.Entity<User>()
-            //    .HasMany(c => c.FavouriteCarWashes)
-            //    .WithMany(c => c.SelectedByUsers)
-            //    .UsingEntity(c => c.ToTable("FavouriteCarWashesSelectedByUsers"));
-
-            //modelBuilder.Entity<User>()
-            //    .HasMany(c => c.CarWashes)
-            //    .WithMany(c => c.Users)
-            //    .UsingEntity(c => c.ToTable("CarWasheUser"));
-
-            modelBuilder.Entity<User>()
+            modelBuilder.Entity<Shipper>()
                 .HasMany(user => user.TransportationOrders)
-                .WithOne(transportationOrder => transportationOrder.User)
-                .HasForeignKey(transportationOrder => transportationOrder.UserId)
+                .WithOne(transportationOrder => transportationOrder.Shipper)
+                .HasForeignKey(transportationOrder => transportationOrder.ShipperId)
                 .IsRequired();
 
-            modelBuilder.Entity<User>()
+            modelBuilder.Entity<Driver>()
                 .HasMany(user => user.Trucks)
-                .WithOne(truck => truck.User)
-                .HasForeignKey(truck => truck.UserId)
+                .WithOne(truck => truck.Driver)
+                .HasForeignKey(truck => truck.DriverId)
                 .IsRequired();
             
-            modelBuilder.Entity<Truck>()
-                .HasMany(user => user.OrdersOfferedForTruck)
-                .WithMany(transportationOrder => transportationOrder.Trucks)
-                .UsingEntity("DriverAndOrderWishes",
-                    x =>
-                {
-                    x.Property("OrdersOfferedForTruckId").HasColumnName("OrderId");
-                    x.Property("TrucksId").HasColumnName("TruckId");
-                });
+            modelBuilder.Entity<Driver>()
+                .HasMany(x => x.DriverRequests)
+                .WithOne(x => x.Driver)
+                .HasForeignKey(x => x.DriverId)
+                .IsRequired();
 
             modelBuilder.Entity<TransportationOrder>()
                 .HasOne(x => x.CurrentAssignedTruck)
                 .WithOne()
                 .HasForeignKey<TransportationOrder>(x => x.CurrentAssignedTruckId)
                 .IsRequired(false);
+
+            modelBuilder.Entity<TransportationOrder>()
+                .HasMany(x => x.DriverRequests)
+                .WithOne(x => x.TransportationOrder)
+                .HasForeignKey(x => x.TransportationOrderId)
+                .IsRequired();
+
+            modelBuilder.Entity<Transportation>()
+                .HasOne(x => x.TransportationOrder)
+                .WithOne()
+                .HasForeignKey<Transportation>(x => x.TransportationOrderId)
+                .IsRequired();
             
+            modelBuilder.Entity<Transportation>()
+                .HasOne(x => x.Driver)
+                .WithOne()
+                .HasForeignKey<Transportation>(x => x.DriverId)
+                .IsRequired();
+
             base.OnModelCreating(modelBuilder);
         }
     }

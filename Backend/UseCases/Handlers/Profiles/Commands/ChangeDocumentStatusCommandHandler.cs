@@ -2,7 +2,6 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Entities;
-using Entities.Document;
 using Entities.Enums;
 using MediatR;
 using Microsoft.AspNetCore.Identity;

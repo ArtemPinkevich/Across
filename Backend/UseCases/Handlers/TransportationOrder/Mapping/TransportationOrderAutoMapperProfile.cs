@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 using Entities;
@@ -17,6 +18,29 @@ public class CreateDefaultPropertiesAtTransportationOrder :IMappingAction<Transp
     }
 }
 
+
+public class SetOrderAddressDependingOnStatus : IMappingAction<Entities.TransportationOrder, TransportationOrderDto>
+{
+    public void Process(Entities.TransportationOrder source, TransportationOrderDto destination, ResolutionContext context)
+    {
+        destination.TransferInfo ??= new TransferInfoDto();
+        destination.TransferInfo.LoadingDateFrom = source.LoadDateFrom;
+        destination.TransferInfo.LoadingDateTo = source.LoadDateTo;
+        
+        if (destination.TransportationOrderStatus == TransportationOrderStatus.Transporting
+            || destination.TransportationOrderStatus == TransportationOrderStatus.ManagerApproving
+            || destination.TransportationOrderStatus == TransportationOrderStatus.ShipperApproving)
+        {
+            destination.TransferInfo.LoadingAddress = String.Empty;
+            destination.TransferInfo.UnloadingAddress = String.Empty;
+        }
+        else
+        {
+            destination.TransferInfo.LoadingAddress = source.LoadingAddress;
+            destination.TransferInfo.UnloadingAddress = source.UnloadingAddress;
+        }
+    }
+}
 public class TransportationOrderLocationConverter : IValueConverter<LocationDto, string>
 {
     public string Convert(LocationDto sourceMember, ResolutionContext context)
@@ -25,16 +49,16 @@ public class TransportationOrderLocationConverter : IValueConverter<LocationDto,
     }
 }
 
-public class TransportationStatusConverter : IValueConverter<List<TransferChangeStatusRecord>, TransportationStatus>
+public class TransportationStatusConverter : IValueConverter<List<TransportationOrderStatusRecord>, TransportationOrderStatus>
 {
-    public TransportationStatus Convert(List<TransferChangeStatusRecord> sourceMember, ResolutionContext context)
+    public TransportationOrderStatus Convert(List<TransportationOrderStatusRecord> sourceMember, ResolutionContext context)
     {
         if (sourceMember == null || !sourceMember.Any())
         {
-            return TransportationStatus.NotPublished;
+            return TransportationOrderStatus.NotPublished;
         }
 
-        return sourceMember.Last().TransportationStatus;
+        return sourceMember.Last().TransportationOrderStatus;
     }
 }
 
@@ -273,13 +297,13 @@ public class CargoAutoMapperProfile : Profile
                 opt => opt.MapFrom(s => s.Cargo.TruckRequirements))
             .AfterMap<CreateDefaultPropertiesAtTransportationOrder>()
             .ReverseMap()
-            .ForMember(s => s.TransportationStatus,
-                opt => opt.ConvertUsing(new TransportationStatusConverter(),
-                    src => src.TransferChangeHistoryRecords))
+            .ForMember(s => s.TransportationOrderStatus,
+                opt => opt.MapFrom(d => d.CurrentTransportationOrderStatus))
             .ForPath(s => s.TransferInfo.LoadingPlace,
                 opt => opt.MapFrom(d => ConvertLocationReverse(d.LoadingLocalityName)))
             .ForPath(s => s.TransferInfo.UnloadingPlace,
-                opt => opt.MapFrom(d => ConvertLocationReverse(d.UnloadingLocalityName)));
+                opt => opt.MapFrom(d => ConvertLocationReverse(d.UnloadingLocalityName)))
+            .AfterMap<SetOrderAddressDependingOnStatus>();
     }
 
     public static LocationDto ConvertLocationReverse(string location)

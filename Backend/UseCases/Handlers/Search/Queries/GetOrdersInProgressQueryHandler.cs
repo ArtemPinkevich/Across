@@ -45,18 +45,18 @@ public class GetOrdersInProgressQueryHandler : IRequestHandler<GetOrdersInProgre
 
         #warning TODO change TransferChangeHistoryRecords to CurrentAssignedDriver
         var transportingOrders = await _ordersRepository.GetAllAsync(x =>
-            x.TransferChangeHistoryRecords.OrderBy(x => x.ChangeDatetime).LastOrDefault().TransportationStatus ==
-            TransportationStatus.Transporting);
+            x.TransportationOrderStatusRecords.OrderBy(x => x.ChangeDatetime).LastOrDefault().TransportationOrderStatus ==
+            TransportationOrderStatus.Transporting);
         ordersInProgress.OrdersInProgress.AddRange(await ConvertCorrelationDto(transportingOrders, true).ToListAsync(cancellationToken: cancellationToken));
         
         var waitingForLoadingOrders = await _ordersRepository.GetAllAsync(x =>
-            x.TransferChangeHistoryRecords.OrderBy(x => x.ChangeDatetime).LastOrDefault().TransportationStatus ==
-            TransportationStatus.ManagerApproving);
+            x.TransportationOrderStatusRecords.OrderBy(x => x.ChangeDatetime).LastOrDefault().TransportationOrderStatus ==
+            TransportationOrderStatus.ManagerApproving);
         ordersInProgress.OrdersInProgress.AddRange(await ConvertCorrelationDto(waitingForLoadingOrders, true).ToListAsync(cancellationToken: cancellationToken));
 
         var shipperApprovingOrders = await _ordersRepository.GetAllAsync(x =>
-            x.TransferChangeHistoryRecords.OrderBy(x => x.ChangeDatetime).LastOrDefault().TransportationStatus ==
-            TransportationStatus.ShipperApproving);
+            x.TransportationOrderStatusRecords.OrderBy(x => x.ChangeDatetime).LastOrDefault().TransportationOrderStatus ==
+            TransportationOrderStatus.ShipperApproving);
         ordersInProgress.OrdersInProgress.AddRange(await ConvertCorrelationDto(shipperApprovingOrders, true).ToListAsync(cancellationToken: cancellationToken));
 
         ordersInProgress.Result =  ApiResult.Success;
@@ -100,7 +100,7 @@ public class GetOrdersInProgressQueryHandler : IRequestHandler<GetOrdersInProgre
         if (!hasAssignedTruck)
             return null;
         
-        var driver = await _userManager.FindByIdAsync(order.UserId);
+        var driver = await _userManager.FindByIdAsync(order.ShipperId);
         var driverRole = await _userManager.GetUserRole(driver);
 
         return new ProfileDto()
@@ -120,7 +120,7 @@ public class GetOrdersInProgressQueryHandler : IRequestHandler<GetOrdersInProgre
     
     private async Task<ProfileDto> GetShipperProfileDto(Entities.TransportationOrder order)
     {
-        var shipper = await _userManager.FindByIdAsync(order.UserId);
+        var shipper = await _userManager.FindByIdAsync(order.ShipperId);
         var shipperRole = await _userManager.GetUserRole(shipper);
 
         return new ProfileDto()
