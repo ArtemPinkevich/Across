@@ -15,18 +15,25 @@ public class AssignTruckCommandHandler : IRequestHandler<AssignTruckCommand, Tra
 {
     private readonly IRepository<Entities.TransportationOrder> _ordersRepository;
     private readonly IRepository<DriverRequest> _driverRequestRepository;
+    private readonly IRepository<Transportation> _transportationRepository;
+    private readonly IRepository<Entities.Truck> _truckRepository;
 
     public AssignTruckCommandHandler(IRepository<Entities.TransportationOrder> ordersRepository,
-        IRepository<DriverRequest> driverRequestRepository)
+        IRepository<DriverRequest> driverRequestRepository,
+        IRepository<Transportation> transportationRepository,
+        IRepository<Entities.Truck> truckRepository)
     {
         _ordersRepository = ordersRepository;
         _driverRequestRepository = driverRequestRepository;
+        _transportationRepository = transportationRepository;
+        _truckRepository = truckRepository;
     }
     
     public async Task<TransportationOrderResult> Handle(AssignTruckCommand request, CancellationToken cancellationToken)
     {
         await UpdateDriverRequests(request);
         await UpdateCurrentStatusAndTruck(request);
+        await AddTransportationForOrder(request);
         
         await _ordersRepository.SaveAsync();
 
@@ -40,16 +47,32 @@ public class AssignTruckCommandHandler : IRequestHandler<AssignTruckCommand, Tra
         foreach (var declineRequest in toDeclineRequests)
         {
             declineRequest.Status = DriverRequestStatus.TakenByOtherDriver;
+            await _driverRequestRepository.UpdateAsync(declineRequest);
         }
 
         var toAcceptRequest = driverRequests.FirstOrDefault(x => x.TruckId == request.TruckId);
         if (toAcceptRequest != null) 
             toAcceptRequest.Status = DriverRequestStatus.Approved;
+        
+        await _driverRequestRepository.UpdateAsync(toAcceptRequest);
     }
 
     private async Task UpdateCurrentStatusAndTruck(AssignTruckCommand request)
     {
         var order = await _ordersRepository.GetAsync(x => x.Id == request.TransportationOrderId);
         order.TransportationOrderStatus = TransportationOrderStatus.Transporting;
+        await _ordersRepository.UpdateAsync(order);
+    }
+
+    private async Task AddTransportationForOrder(AssignTruckCommand request)
+    {
+        var truck = await _truckRepository.GetAsync(x => x.Id == request.TruckId);
+        await _transportationRepository.AddAsync(new List<Transportation>(){new ()
+        {
+            DriverId = truck.DriverId,
+            TransportationOrderId = request.TransportationOrderId,
+            TruckId = request.TruckId,
+            TransportationStatus = TransportationStatus.OnTheWay,
+        }});
     }
 }
