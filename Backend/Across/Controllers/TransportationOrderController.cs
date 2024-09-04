@@ -25,12 +25,34 @@ public class TransportationOrderController:ControllerBase
         _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
     }
 
-    [Authorize(Roles = $"{UserRoles.Driver},{UserRoles.Shipper},{UserRoles.Owner}")]
+    [Authorize(Roles = $"{UserRoles.Shipper},{UserRoles.Owner}")]
     [HttpGet("get_orders")]
     public async Task<TransportationOrdersListDto> GetShipperTransportationOrders()
     {
         string userId = HttpContext.User.Claims.FirstOrDefault( x => x.Type == JwtClaimsTypes.Id)?.Value;
-        return await _mediator.Send(new GetTransportationOrdersQuery()
+        return await _mediator.Send(new GetShipperOrdersQuery()
+        {
+            UserId = userId
+        });
+    }
+    
+    [Authorize(Roles = $"{UserRoles.Driver},{UserRoles.Owner}")]
+    [HttpGet("get_requested_orders")]
+    public async Task<TransportationOrdersListDto> GetDriverRequestedTransportationOrders()
+    {
+        string userId = HttpContext.User.Claims.FirstOrDefault( x => x.Type == JwtClaimsTypes.Id)?.Value;
+        return await _mediator.Send(new GetDriverRequestedOrdersQuery()
+        {
+            UserId = userId
+        });
+    } 
+    
+    [Authorize(Roles = $"{UserRoles.Driver},{UserRoles.Owner}")]
+    [HttpGet("get_assigned_orders")]
+    public async Task<TransportationOrdersListDto> GetDriverTransportationOrders()
+    {
+        string userId = HttpContext.User.Claims.FirstOrDefault( x => x.Type == JwtClaimsTypes.Id)?.Value;
+        return await _mediator.Send(new GetShipperOrdersQuery()
         {
             UserId = userId
         });

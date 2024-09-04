@@ -3,7 +3,7 @@ using UseCases.Handlers.Cargo.Dto;
 
 namespace UseCases.Handlers.TransportationOrder.Queries;
 
-public class GetOrderByIdQuery : IRequest<TransportationOrdersListDto>
+public class GetShipperOrdersQuery : IRequest<TransportationOrdersListDto>
 {
-    public int OrderId { set; get; }
+    public string UserId { set; get; }
 }

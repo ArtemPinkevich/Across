@@ -49,9 +49,9 @@ public class TransportationOrderLocationConverter : IValueConverter<LocationDto,
     }
 }
 
-public class CargoAutoMapperProfile : Profile
+public class TransportationOrderMapperProfile : Profile
 {
-    public CargoAutoMapperProfile()
+    public TransportationOrderMapperProfile()
     {
         CreateMap<CargoDto, Entities.Cargo>()
             .ReverseMap();
@@ -60,7 +60,10 @@ public class CargoAutoMapperProfile : Profile
             .ForMember(d => d.CarBodyRequirement, opt => opt.MapFrom(s => s.CarBodies))
             .ForMember(d => d.LoadingType, opt => opt.MapFrom(s => s.LoadingTypeDtos))
             .ForMember(d => d.UnloadingType, opt => opt.MapFrom(s => s.UnloadingTypeDtos))
-            .ReverseMap();
+            .ReverseMap()
+            .ForMember(d => d.CarBodies, opt => opt.MapFrom(s => s.CarBodyRequirement))
+            .ForMember(d => d.LoadingTypeDtos, opt => opt.MapFrom(s => s.LoadingType))
+            .ForMember(d => d.UnloadingTypeDtos, opt => opt.MapFrom(s => s.UnloadingType));
         
         CreateMap<CarBodyType[], CarBodyRequirement>().ConvertUsing((value, dest) =>
         {
@@ -284,6 +287,10 @@ public class CargoAutoMapperProfile : Profile
                 opt => opt.MapFrom(s => s.Cargo.TruckRequirements))
             .AfterMap<CreateDefaultPropertiesAtTransportationOrder>()
             .ReverseMap()
+            .ForMember(d => d.Cargo, 
+                opt => opt.MapFrom(s => s.Cargo))
+            .ForMember(d => d.Cargo.TruckRequirements,
+                opt => opt.MapFrom(s => s.TruckRequirements))
             .ForMember(s => s.TransportationOrderStatus,
                 opt => opt.MapFrom(d => d.TransportationOrderStatus))
             .ForPath(s => s.TransferInfo.LoadingPlace,

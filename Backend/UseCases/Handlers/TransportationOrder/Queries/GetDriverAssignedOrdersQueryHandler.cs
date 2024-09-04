@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -13,7 +12,7 @@ using UseCases.Handlers.Common.Extensions;
 
 namespace UseCases.Handlers.TransportationOrder.Queries;
 
-public class GetTransportationOrdersQueryHandler: IRequestHandler<GetTransportationOrdersQuery, TransportationOrdersListDto>
+public class GetDriverAssignedOrdersQueryHandler: IRequestHandler<GetDriverAssignedOrdersQuery, TransportationOrdersListDto>
 {
     private readonly IMapper _mapper;
     private readonly IRepository<Entities.TransportationOrder> _ordersRepository;
@@ -21,8 +20,8 @@ public class GetTransportationOrdersQueryHandler: IRequestHandler<GetTransportat
     private readonly IRepository<Entities.Truck> _truckRepository;
     private readonly IRepository<DriverRequest> _driverRequestRepository;
     private readonly UserManager<User> _userManager;
-
-    public GetTransportationOrdersQueryHandler(UserManager<User> userManager,
+    
+    public GetDriverAssignedOrdersQueryHandler(UserManager<User> userManager,
         IRepository<Entities.TransportationOrder> ordersRepository,
         IRepository<Transportation> transportationRepository,
         IRepository<Entities.Truck> truckRepository,
@@ -37,32 +36,17 @@ public class GetTransportationOrdersQueryHandler: IRequestHandler<GetTransportat
         _mapper = mapper;
     }
     
-    public async Task<TransportationOrdersListDto> Handle(GetTransportationOrdersQuery request, CancellationToken cancellationToken)
+    public async Task<TransportationOrdersListDto> Handle(GetDriverAssignedOrdersQuery request, CancellationToken cancellationToken)
     {
         var user = await _userManager.FindByIdAsync(request.UserId);
         if (user == null)
             return CreateNoUserFoundError(request);
-
+        
         var role = await _userManager.GetUserRole(user);
-
-        if (role == UserRoles.Driver)
-            return await GetDriverOrders(user);
+        if (role != UserRoles.Driver)
+            return CreateUndefinedRoleError(request, role);
         
-        if (role == UserRoles.Shipper)
-            return await GetShipperOrders(user);
-
-        return CreateUndefinedRoleError(request, role);
-    }
-
-    private async Task<TransportationOrdersListDto> GetDriverOrders(User user)
-    {
         List<TransportationOrderDto> transportationOrderDtos = new List<TransportationOrderDto>();
-        
-        //add all TransportationOrders where driver requested
-        var driverRequests = await _driverRequestRepository.GetAllAsync(x => x.DriverId == user.Id && x.Status == DriverRequestStatus.PendingReview);
-        transportationOrderDtos.AddRange(driverRequests.Select(x => _mapper.Map<TransportationOrderDto>(x)));
-        
-        //add all TransportationOrders where driver is assigned and order is in progress
         var transportations = await _transportationRepository.GetAllAsync(x => x.DriverId == user.Id);
         foreach (var transportation in transportations)
         {
@@ -76,7 +60,6 @@ public class GetTransportationOrdersQueryHandler: IRequestHandler<GetTransportat
             transportationOrderDtos.Add(_mapper.Map<TransportationOrderDto>(order));
         }
         
- 
         return new TransportationOrdersListDto()
         {
             Result = new TransportationOrderResult()
@@ -86,22 +69,8 @@ public class GetTransportationOrdersQueryHandler: IRequestHandler<GetTransportat
             TransportationOrderDtos = transportationOrderDtos
         };
     }
-
-    private async Task<TransportationOrdersListDto> GetShipperOrders(User user)
-    {
-        var transportationOrders = await _ordersRepository.GetAllAsync(x => x.ShipperId == user.Id);
-
-        return new TransportationOrdersListDto()
-        {
-            Result = new TransportationOrderResult()
-            {
-                Result = ApiResult.Success,
-            },
-            TransportationOrderDtos = transportationOrders.Select(x => _mapper.Map<TransportationOrderDto>(x)).ToList()
-        };
-    }
-
-    private TransportationOrdersListDto CreateNoUserFoundError(GetTransportationOrdersQuery request)
+    
+    private TransportationOrdersListDto CreateNoUserFoundError(GetDriverAssignedOrdersQuery request)
     {
         return new TransportationOrdersListDto()
         {
@@ -113,7 +82,7 @@ public class GetTransportationOrdersQueryHandler: IRequestHandler<GetTransportat
         };
     }
     
-    private TransportationOrdersListDto CreateUndefinedRoleError(GetTransportationOrdersQuery request, string role)
+    private TransportationOrdersListDto CreateUndefinedRoleError(GetDriverAssignedOrdersQuery request, string role)
     {
         return new TransportationOrdersListDto()
         {
