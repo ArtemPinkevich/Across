@@ -14,24 +14,14 @@ namespace UseCases.Handlers.Mapping.Tests
         [Test]
         public void AutoMapper_UserProfileConfiguration_IsValid()
         {
-            var configuration = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile<ProfileAutoMapperProfile>();
-                cfg.AddGlobalIgnore(nameof(ProfileDto.Role));
-                cfg.AddGlobalIgnore(nameof(ProfileDto.DocumentDtos));
-            });
+            var configuration = new MapperConfiguration(cfg => cfg.AddProfile<ProfileAutoMapperProfile>());
             configuration.AssertConfigurationIsValid();
         }
 
         [Test]
         public void AutoMapper_TruckConfiguration_IsValid()
         {
-            var configuration = new MapperConfiguration(cfg =>
-                {
-                    cfg.AddProfile<TruckAutoMapperProfile>();
-                    cfg.AddGlobalIgnore(nameof(Entities.Truck.DriverId));
-                    cfg.AddGlobalIgnore(nameof(Entities.Truck.Driver));
-                });
+            var configuration = new MapperConfiguration(cfg => cfg.AddProfile<TruckAutoMapperProfile>());
             configuration.AssertConfigurationIsValid();
         }
 

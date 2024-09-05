@@ -100,6 +100,9 @@ public class TruckAutoMapperProfile : Profile
         
         CreateMap<TruckDto, Entities.Truck>()
             .ForMember(d => d.Id, opt => opt.MapFrom(s => s.TruckId))
-            .ReverseMap();
+            .ForMember(d => d.DriverId, opt => opt.Ignore())
+            .ForMember(d => d.Driver, opt => opt.Ignore())
+            .ReverseMap()
+            .ForMember(d => d.TruckId, opt => opt.MapFrom(s => s.Id));
     }
 }

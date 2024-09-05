@@ -49,6 +49,11 @@ public class TruckRequirementsDto
     public bool HasLiftgate { set; get; }
     public bool HasStanchionTrailer { set; get; }
     public int CarryingCapacity { set; get; }
+    
+    public int BodyVolume { set; get; }
+    public int InnerBodyLength { set; get; }
+    public int InnerBodyWidth { set; get; }
+    public int InnerBodyHeight { set; get; }
 }
 
 public class CargoDto
@@ -76,4 +81,6 @@ public class TransportationOrderDto
     public CargoDto Cargo { set; get; }
     
     public TransportationOrderStatus TransportationOrderStatus { set; get; }
+    
+    public int Price { set; get; }
 }
