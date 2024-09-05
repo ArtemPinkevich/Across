@@ -6,6 +6,8 @@
 
     public class User: IdentityUser
     {
+        #region User fields
+
         public string Name { set; get; }
 
         public string Surname { set; get; }
@@ -21,19 +23,30 @@
         public UserStatus UserStatus { set; get; }
         
         public List<Document> Documents { set; get; }
+
+        #endregion
+
+        #region Shipper fields
+
+        /// <summary>
+        /// List of TransportationOrders of Shipper
+        /// </summary>
+        public List<TransportationOrder> TransportationOrders { set; get; }      
+
+        #endregion
         
-        /*
-        
+        #region Driver fields
+
         /// <summary>
         /// List of Trucks of Driver
         /// </summary>
         public List<Truck> Trucks { set; get; }
-        
+    
         /// <summary>
-        /// List of TransportationOrders of Shipper
+        /// List of requests made by driver
         /// </summary>
-        public List<TransportationOrder> TransportationOrders { set; get; }
-        
-        */
+        public List<DriverRequest> DriverRequests { set; get; }      
+
+        #endregion
     }
 }

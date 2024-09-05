@@ -1,12 +1,9 @@
-﻿using System.Collections.Generic;
-
-namespace Entities;
+﻿namespace Entities;
 
 public class Truck: EntityBase
 {
 #warning move from here
     public string TruckLocation { set; get; }
-#warning move from here
     
     public string CreatedId { set; get; }
     
@@ -57,5 +54,5 @@ public class Truck: EntityBase
     public bool Ekmt { set; get; }
     
     public string DriverId { set; get; }
-    public Driver Driver { set; get; }
+    public User Driver { set; get; }
 }

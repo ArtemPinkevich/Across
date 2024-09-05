@@ -5,7 +5,7 @@ namespace Entities;
 public class TransportationOrder : EntityBase
 {
     public string ShipperId { set; get; }
-    public Shipper Shipper { set; get; }
+    public User Shipper { set; get; }
     
     public Cargo Cargo { set; get; }
     

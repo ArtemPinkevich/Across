@@ -11,9 +11,9 @@
 
         }
         
-        public DbSet<Driver> Drivers { set; get; }
+        //public DbSet<Driver> Drivers { set; get; }
         
-        public DbSet<Shipper> Shippers { set; get; }
+        //public DbSet<Shipper> Shippers { set; get; }
 
         public DbSet<Truck> Trucks { set; get; }
         
@@ -35,19 +35,19 @@
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Shipper>()
+            modelBuilder.Entity<User>()
                 .HasMany(user => user.TransportationOrders)
                 .WithOne(transportationOrder => transportationOrder.Shipper)
                 .HasForeignKey(transportationOrder => transportationOrder.ShipperId)
                 .IsRequired();
 
-            modelBuilder.Entity<Driver>()
+            modelBuilder.Entity<User>()
                 .HasMany(user => user.Trucks)
                 .WithOne(truck => truck.Driver)
                 .HasForeignKey(truck => truck.DriverId)
                 .IsRequired();
             
-            modelBuilder.Entity<Driver>()
+            modelBuilder.Entity<User>()
                 .HasMany(x => x.DriverRequests)
                 .WithOne(x => x.Driver)
                 .HasForeignKey(x => x.DriverId)

@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Microsoft.VisualBasic;
 
 namespace Entities;
 
@@ -9,7 +8,7 @@ public class Transportation : EntityBase
     public TransportationOrder TransportationOrder { set; get; }
     
     public string DriverId { set; get; }
-    public Driver Driver { set; get; }
+    public User Driver { set; get; }
     
     public int TruckId { set; get; }
     public Truck Truck { set; get; }
