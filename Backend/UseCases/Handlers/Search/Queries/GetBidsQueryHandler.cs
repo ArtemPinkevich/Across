@@ -25,10 +25,12 @@ public class GetBidsQueryHandler : IRequestHandler<GetBidsQuery, BidsResultDto>
 
     public GetBidsQueryHandler(IMapper mapper,
         UserManager<User> userManager,
+        IRepository<Entities.Truck> trucksRepository,
         IRepository<Entities.TransportationOrder> transportationOrderRepository)
     {
         _mapper = mapper;
         _userManager = userManager;
+        _trucksRepository = trucksRepository;
         _transportationOrderRepository = transportationOrderRepository;
     }
     
@@ -52,42 +54,25 @@ public class GetBidsQueryHandler : IRequestHandler<GetBidsQuery, BidsResultDto>
     private async Task<CorrelationDto> CreateCorrelation(Entities.TransportationOrder order, Entities.DriverRequest driverRequest)
     {
         var shipper = order.Shipper;
-        var shipperRole = await _userManager.GetUserRole(shipper);
         var driver = _userManager.Users.FirstOrDefault(o => o.Id == driverRequest.DriverId);
-        var driverRole = await _userManager.GetUserRole(driver);
         var truck = await _trucksRepository.GetAsync(x => x.Id == driverRequest.TruckId);
         var correlation = new CorrelationDto {
-            #warning create ProfileDto mapper
-            Shipper = new ProfileDto()
-            {
-                Name = shipper.Name,
-                Surname = shipper.Surname,
-                Patronymic = shipper.Patronymic,
-                BirthDate = shipper.BirthDate,
-                PhoneNumber = shipper.PhoneNumber,
-                Role = shipperRole,
-                Status = shipper.UserStatus,
-                DocumentDtos = shipperRole == UserRoles.Driver
-                    ? UserDocumentsHelper.CreateDriverDocumentsList(shipper)
-                    : UserDocumentsHelper.CreateShipperDocumentsList(shipper)
-            },
-            Driver = new ProfileDto()
-            {
-                Name = driver.Name,
-                Surname = driver.Surname,
-                Patronymic = driver.Patronymic,
-                BirthDate = driver.BirthDate,
-                PhoneNumber = driver.PhoneNumber,
-                Role = driverRole,
-                Status = driver.UserStatus,
-                DocumentDtos = driverRole == UserRoles.Driver
-                    ? UserDocumentsHelper.CreateDriverDocumentsList(driver)
-                    : UserDocumentsHelper.CreateShipperDocumentsList(driver)
-            },
+            Shipper = await CreateProfileDto(shipper),
+            Driver = await CreateProfileDto(driver),
             Truck = _mapper.Map<TruckDto>(truck),
             TransportationOrder = _mapper.Map<TransportationOrderDto>(order)
         };
 
         return correlation;
+    }
+
+    private async Task<ProfileDto> CreateProfileDto(User user)
+    {
+        ProfileDto profileDto = _mapper.Map<ProfileDto>(user);
+        profileDto.Role = await _userManager.GetUserRole(user);
+        profileDto.DocumentDtos = profileDto.Role == UserRoles.Driver
+            ? UserDocumentsHelper.CreateDriverDocumentsList(user)
+            : UserDocumentsHelper.CreateShipperDocumentsList(user);
+        return profileDto;
     }
 }
