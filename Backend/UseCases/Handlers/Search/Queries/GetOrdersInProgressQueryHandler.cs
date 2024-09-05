@@ -64,22 +64,17 @@ public class GetOrdersInProgressQueryHandler : IRequestHandler<GetOrdersInProgre
     {
         foreach (var order in transportationOrders)
         {
+            var transportation = await _transportationRepository.GetAsync(x => x.TransportationOrderId == order.Id);
             var driver = await _userManager.FindByIdAsync(order.ShipperId);
             var shipper = await _userManager.FindByIdAsync(order.ShipperId);
             var dto = new CorrelationDto()
             {
                 Driver = await driver.ConvertToProfileDto(_userManager, _mapper),
                 Shipper = await shipper.ConvertToProfileDto(_userManager, _mapper),
-                Truck = await GetTruckDto(order),
+                Truck = _mapper.Map<TruckDto>(transportation.Truck),
                 TransportationOrder = _mapper.Map<TransportationOrderDto>(order)
             };
             yield return dto;
         }
-    }
-
-    private async Task<TruckDto> GetTruckDto(Entities.TransportationOrder order)
-    {
-        var transportation = await _transportationRepository.GetAsync(x => x.TransportationOrderId == order.Id);
-        return _mapper.Map<TruckDto>(transportation.Truck);
     }
 }
