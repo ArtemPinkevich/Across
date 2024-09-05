@@ -36,6 +36,7 @@ public class SearchRecommendationsQueryHandler : IRequestHandler<SearchRecommend
         _trucksRepository = trucksRepository;
     }
     
+    #warning TODO доделать поиск рекомендаций (добавить проверку по городу(брать из заказа) и примерной дате)
     public async Task<RecommendationsResultDto> Handle(SearchRecommendationsQuery request, CancellationToken cancellationToken)
     {
         var recommendationsResultDto = new RecommendationsResultDto()

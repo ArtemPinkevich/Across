@@ -54,10 +54,12 @@ public class SearchOrdersInShipperApprovingQueryHandler : IRequestHandler<Search
     {
         foreach (var order in transportationOrders)
         {
+            var driver = await _userManager.FindByIdWithDocuments(order.ShipperId);
+            var shipper = await _userManager.FindByIdWithDocuments(order.ShipperId);
             var dto = new CorrelationDto()
             {
-                Driver = await GetDriverProfileDto(order),
-                Shipper = await GetShipperProfileDto(order),
+                Driver = await driver.ConvertToProfileDto(_userManager, _mapper),
+                Shipper = await shipper.ConvertToProfileDto(_userManager, _mapper),
                 Truck = await GetTruckDto(order),
                 TransportationOrder = _mapper.Map<TransportationOrderDto>(order)
             };

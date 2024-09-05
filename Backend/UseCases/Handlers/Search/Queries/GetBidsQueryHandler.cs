@@ -53,26 +53,16 @@ public class GetBidsQueryHandler : IRequestHandler<GetBidsQuery, BidsResultDto>
 
     private async Task<CorrelationDto> CreateCorrelation(Entities.TransportationOrder order, Entities.DriverRequest driverRequest)
     {
-        var shipper = order.Shipper;
-        var driver = _userManager.Users.FirstOrDefault(o => o.Id == driverRequest.DriverId);
+        var shipper = await _userManager.FindByIdWithDocuments(order.ShipperId);
+        var driver = await _userManager.FindByIdWithDocuments(driverRequest.DriverId);
         var truck = await _trucksRepository.GetAsync(x => x.Id == driverRequest.TruckId);
         var correlation = new CorrelationDto {
-            Shipper = await CreateProfileDto(shipper),
-            Driver = await CreateProfileDto(driver),
+            Shipper = await shipper.ConvertToProfileDto(_userManager, _mapper),
+            Driver = await driver.ConvertToProfileDto(_userManager, _mapper),
             Truck = _mapper.Map<TruckDto>(truck),
             TransportationOrder = _mapper.Map<TransportationOrderDto>(order)
         };
 
         return correlation;
-    }
-
-    private async Task<ProfileDto> CreateProfileDto(User user)
-    {
-        ProfileDto profileDto = _mapper.Map<ProfileDto>(user);
-        profileDto.Role = await _userManager.GetUserRole(user);
-        profileDto.DocumentDtos = profileDto.Role == UserRoles.Driver
-            ? UserDocumentsHelper.CreateDriverDocumentsList(user)
-            : UserDocumentsHelper.CreateShipperDocumentsList(user);
-        return profileDto;
     }
 }

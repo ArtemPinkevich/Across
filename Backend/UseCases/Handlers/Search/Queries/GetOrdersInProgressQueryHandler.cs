@@ -64,10 +64,12 @@ public class GetOrdersInProgressQueryHandler : IRequestHandler<GetOrdersInProgre
     {
         foreach (var order in transportationOrders)
         {
+            var driver = await _userManager.FindByIdAsync(order.ShipperId);
+            var shipper = await _userManager.FindByIdAsync(order.ShipperId);
             var dto = new CorrelationDto()
             {
-                Driver = await GetDriverProfileDto(order),
-                Shipper = await GetShipperProfileDto(order),
+                Driver = await driver.ConvertToProfileDto(_userManager, _mapper),
+                Shipper = await shipper.ConvertToProfileDto(_userManager, _mapper),
                 Truck = await GetTruckDto(order),
                 TransportationOrder = _mapper.Map<TransportationOrderDto>(order)
             };
@@ -79,45 +81,5 @@ public class GetOrdersInProgressQueryHandler : IRequestHandler<GetOrdersInProgre
     {
         var transportation = await _transportationRepository.GetAsync(x => x.TransportationOrderId == order.Id);
         return _mapper.Map<TruckDto>(transportation.Truck);
-    }
-
-    private async Task<ProfileDto> GetDriverProfileDto(Entities.TransportationOrder order)
-    {
-        var driver = await _userManager.FindByIdAsync(order.ShipperId);
-        var driverRole = await _userManager.GetUserRole(driver);
-
-        return new ProfileDto()
-        {
-            Name = driver.Name,
-            Surname = driver.Surname,
-            Patronymic = driver.Patronymic,
-            BirthDate = driver.BirthDate,
-            PhoneNumber = driver.PhoneNumber,
-            Role = driverRole,
-            Status = driver.UserStatus,
-            DocumentDtos = driverRole == UserRoles.Driver
-                ? UserDocumentsHelper.CreateDriverDocumentsList(driver)
-                : UserDocumentsHelper.CreateShipperDocumentsList(driver)
-        };
-    }
-    
-    private async Task<ProfileDto> GetShipperProfileDto(Entities.TransportationOrder order)
-    {
-        var shipper = await _userManager.FindByIdAsync(order.ShipperId);
-        var shipperRole = await _userManager.GetUserRole(shipper);
-
-        return new ProfileDto()
-        {
-            Name = shipper.Name,
-            Surname = shipper.Surname,
-            Patronymic = shipper.Patronymic,
-            BirthDate = shipper.BirthDate,
-            PhoneNumber = shipper.PhoneNumber,
-            Role = shipperRole,
-            Status = shipper.UserStatus,
-            DocumentDtos = shipperRole == UserRoles.Driver
-                ? UserDocumentsHelper.CreateDriverDocumentsList(shipper)
-                : UserDocumentsHelper.CreateShipperDocumentsList(shipper)
-        };
     }
 }

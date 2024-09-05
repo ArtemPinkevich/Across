@@ -15,12 +15,15 @@ public class SearchShipperByOrderIdQueryHandler : IRequestHandler<SearchShipperB
 {
     private readonly IRepository<Entities.TransportationOrder> _transportationOrdersRepository;
     private readonly UserManager<User> _userManager;
+    private readonly IMapper _mapper;
 
     public SearchShipperByOrderIdQueryHandler (IRepository<Entities.TransportationOrder> transportationOrdersRepository,
-        UserManager<User> userManager)
+        UserManager<User> userManager,
+        IMapper mapper)
     {
         _transportationOrdersRepository = transportationOrdersRepository;
         _userManager = userManager;
+        _mapper = mapper;
     }
         
     public async Task<ProfileDto> Handle(SearchShipperByOrderIdQuery request, CancellationToken cancellationToken)
@@ -31,24 +34,14 @@ public class SearchShipperByOrderIdQueryHandler : IRequestHandler<SearchShipperB
             throw new Exception($"no orders found with id {request.OrderId}");
         }
 
-        var user = order.Shipper;
+        var shipper = await _userManager.FindByIdWithDocuments(order.ShipperId);
 
-        var role = await _userManager.GetUserRole(user);
+        var role = await _userManager.GetUserRole(shipper);
         if (role != UserRoles.Shipper)
         {
             throw new Exception($"user is not shipper {request.OrderId}");
         }
 
-        return new ProfileDto()
-        {
-            Name = user.Name,
-            Surname = user.Surname,
-            Patronymic = user.Patronymic,
-            BirthDate = user.BirthDate,
-            PhoneNumber = user.PhoneNumber,
-            Status = user.UserStatus,
-            Role = role,
-            DocumentDtos = null
-        };
+        return await shipper.ConvertToProfileDto(_userManager, _mapper);
     }
 }
