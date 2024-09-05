@@ -9,6 +9,7 @@ namespace UseCases.Handlers.Common.Extensions;
 
 public static class UserExtensions
 {
+    #warning this need to move to mapper profile
     public static async Task<ProfileDto> ConvertToProfileDto(this User user,
         UserManager<User> userManager,
         IMapper mapper)
