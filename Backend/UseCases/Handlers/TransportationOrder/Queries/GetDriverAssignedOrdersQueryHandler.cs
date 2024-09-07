@@ -58,7 +58,10 @@ public class GetDriverAssignedOrdersQueryHandler: IRequestHandler<GetDriverAssig
                                                                x.TransportationOrderStatus == TransportationOrderStatus.Transporting ||
                                                                x.TransportationOrderStatus == TransportationOrderStatus.Unloading ||
                                                                x.TransportationOrderStatus == TransportationOrderStatus.Delivered));
-            transportationOrderDtos.Add(_mapper.Map<TransportationOrderDto>(order));
+            if (order != null)
+            {
+                transportationOrderDtos.Add(_mapper.Map<TransportationOrderDto>(order));
+            }
         }
         
         return new TransportationOrdersListDto()
