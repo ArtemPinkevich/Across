@@ -42,7 +42,7 @@ public class GetBidsQueryHandler : IRequestHandler<GetBidsQuery, BidsResultDto>
 
         foreach (var order in orders)
         {
-            foreach (var driverRequest in order.DriverRequests)
+            foreach (var driverRequest in order.DriverRequests.Where(o => o.Status == DriverRequestStatus.PendingLogistReview))
             {
                 bidsResultDto.Correlations.Add(await CreateCorrelation(order, driverRequest));
             }
