@@ -42,7 +42,10 @@ public class GetDriverRequestedOrdersQueryHandler: IRequestHandler<GetDriverRequ
         
         List<TransportationOrderDto> transportationOrderDtos = new List<TransportationOrderDto>();
 
-        var driverRequests = await _driverRequestRepository.GetAllAsync(x => x.DriverId == user.Id && x.Status == DriverRequestStatus.PendingLogistReview);
+        var driverRequests = await _driverRequestRepository.GetAllAsync(x => x.DriverId == user.Id
+            && (x.Status == DriverRequestStatus.PendingLogistReview
+            || x.Status == DriverRequestStatus.PendingShipperApprove
+            || x.Status == DriverRequestStatus.Hold));
 
         foreach (var driverRequest in driverRequests)
         {
