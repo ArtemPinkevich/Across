@@ -6,7 +6,10 @@ public enum TransportationOrderStatus
     CarrierFinding,
     ManagerApproving,
     ShipperApproving,
+    WaitingForLoading,
+    Loading,
     Transporting,
+    Unloading,
     Delivered,
     Done
 }

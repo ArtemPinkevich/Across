@@ -52,10 +52,10 @@ public class TransportationOrderController:ControllerBase
     public async Task<TransportationOrdersListDto> GetDriverTransportationOrders()
     {
         string userId = HttpContext.User.Claims.FirstOrDefault( x => x.Type == JwtClaimsTypes.Id)?.Value;
-        return await _mediator.Send(new GetShipperOrdersQuery()
-        {
-            UserId = userId
-        });
+        return await _mediator.Send(new GetDriverAssignedOrdersQuery()
+            {
+                UserId = userId
+            });
     }
 
     [Authorize(Roles = $"{UserRoles.Admin},{UserRoles.Owner}")]
@@ -107,6 +107,71 @@ public class TransportationOrderController:ControllerBase
     [HttpPost("start_shipper_approving")]
     public async Task<TransportationOrderResult> StartShipperApproving([FromBody] StartShipperApprovingCommand command)
     {
+        return await _mediator.Send(command);
+    }
+
+    [Authorize(Roles = $"{UserRoles.Driver},{UserRoles.Admin}")]
+    [HttpPost("inform_arrival_for_loading/{id}")]
+    public async Task<TransportationOrderResult> InformArrivalForLoading(int id)
+    {
+        var command = new ChangeTransportationStatusCommand()
+        {
+            TransportationOrderId = id,
+            TransportationStatus = TransportationOrderStatus.Loading,
+        };
+
+        return await _mediator.Send(command);
+    }
+
+    [Authorize(Roles = $"{UserRoles.Driver},{UserRoles.Admin}")]
+    [HttpPost("start_transportation/{id}")]
+    public async Task<TransportationOrderResult> StartTransportation(int id)
+    {
+        var command = new ChangeTransportationStatusCommand()
+        {
+            TransportationOrderId = id,
+            TransportationStatus = TransportationOrderStatus.Transporting,
+        };
+
+        return await _mediator.Send(command);
+    }
+
+    [Authorize(Roles = $"{UserRoles.Driver},{UserRoles.Admin}")]
+    [HttpPost("inform_arrival_for_unloading/{id}")]
+    public async Task<TransportationOrderResult> InformArrivalForUnloading(int id)
+    {
+        var command = new ChangeTransportationStatusCommand()
+        {
+            TransportationOrderId = id,
+            TransportationStatus = TransportationOrderStatus.Unloading,
+        };
+
+        return await _mediator.Send(command);
+    }
+
+    [Authorize(Roles = $"{UserRoles.Driver},{UserRoles.Admin}")]
+    [HttpPost("delivered_transportation/{id}")]
+    public async Task<TransportationOrderResult> DeliveredTransportation(int id)
+    {
+        var command = new ChangeTransportationStatusCommand()
+        {
+            TransportationOrderId = id,
+            TransportationStatus = TransportationOrderStatus.Delivered,
+        };
+
+        return await _mediator.Send(command);
+    }
+
+    [Authorize(Roles = UserRoles.Admin)]
+    [HttpPost("done_transportation/{id}")]
+    public async Task<TransportationOrderResult> DoneTransportation(int id)
+    {
+        var command = new ChangeTransportationStatusCommand()
+        {
+            TransportationOrderId = id,
+            TransportationStatus = TransportationOrderStatus.Done,
+        };
+
         return await _mediator.Send(command);
     }
 }

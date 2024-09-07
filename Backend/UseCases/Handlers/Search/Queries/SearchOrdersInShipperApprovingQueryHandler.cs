@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -10,8 +9,6 @@ using MediatR;
 using Microsoft.AspNetCore.Identity;
 using UseCases.Handlers.Cargo.Dto;
 using UseCases.Handlers.Common.Extensions;
-using UseCases.Handlers.Profiles.Dto;
-using UseCases.Handlers.Profiles.Helpers;
 using UseCases.Handlers.Search.Dto;
 using UseCases.Handlers.Truck.Dto;
 
@@ -22,16 +19,19 @@ public class SearchOrdersInShipperApprovingQueryHandler : IRequestHandler<Search
     private readonly IMapper _mapper;
     private readonly UserManager<User> _userManager;
     private readonly IRepository<Entities.TransportationOrder> _ordersRepository;
-    private readonly IRepository<Transportation> _transportationRepository;
-    
+    private readonly IRepository<Entities.Truck> _trucksRepository;
+    private readonly IRepository<DriverRequest> _driverRequestRepository;
+
     public SearchOrdersInShipperApprovingQueryHandler(IRepository<Entities.TransportationOrder> ordersRepository,
         UserManager<User> userManager,
-        IRepository<Transportation> transportationRepository,
+        IRepository<Entities.Truck> trucksRepository,
+        IRepository<DriverRequest> driverRequestRepository,
         IMapper mapper)
     {
         _ordersRepository = ordersRepository;
         _userManager = userManager;
-        _transportationRepository = transportationRepository;
+        _trucksRepository = trucksRepository;
+        _driverRequestRepository = driverRequestRepository;
         _mapper = mapper;
     }
     
@@ -54,14 +54,15 @@ public class SearchOrdersInShipperApprovingQueryHandler : IRequestHandler<Search
     {
         foreach (var order in transportationOrders)
         {
-            var transportation = await _transportationRepository.GetAsync(x => x.TransportationOrderId == order.Id);
-            var driver = await _userManager.FindByIdWithDocuments(transportation.DriverId);
+            var driverRequest = await _driverRequestRepository.GetAsync(o => o.TransportationOrderId == order.Id && o.Status == DriverRequestStatus.PendingShipperApprove);
+            var truck = await _trucksRepository.GetAsync(x => x.Id == driverRequest.TruckId);
+            var driver = await _userManager.FindByIdWithDocuments(truck.DriverId);
             var shipper = await _userManager.FindByIdWithDocuments(order.ShipperId);
             var dto = new CorrelationDto()
             {
                 Driver = await driver.ConvertToProfileDto(_userManager, _mapper),
                 Shipper = await shipper.ConvertToProfileDto(_userManager, _mapper),
-                Truck = _mapper.Map<TruckDto>(transportation.Truck),
+                Truck = _mapper.Map<TruckDto>(truck),
                 TransportationOrder = _mapper.Map<TransportationOrderDto>(order)
             };
             yield return dto;

@@ -60,7 +60,7 @@ public class AssignTruckCommandHandler : IRequestHandler<AssignTruckCommand, Tra
     private async Task UpdateCurrentStatusAndTruck(AssignTruckCommand request)
     {
         var order = await _ordersRepository.GetAsync(x => x.Id == request.TransportationOrderId);
-        order.TransportationOrderStatus = TransportationOrderStatus.Transporting;
+        order.TransportationOrderStatus = TransportationOrderStatus.WaitingForLoading;
         await _ordersRepository.UpdateAsync(order);
     }
 
@@ -72,7 +72,6 @@ public class AssignTruckCommandHandler : IRequestHandler<AssignTruckCommand, Tra
             DriverId = truck.DriverId,
             TransportationOrderId = request.TransportationOrderId,
             TruckId = request.TruckId,
-            TransportationStatus = TransportationStatus.OnTheWay,
         }});
     }
 }

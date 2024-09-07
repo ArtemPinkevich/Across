@@ -8,6 +8,4 @@ public class TransportationStatusRecord : EntityBase
     public Transportation TransportationOrder { set; get; }
     
     public DateTime ChangeDatetime { set; get; }
-    
-    public TransportationStatus TransportationStatus { set; get; } 
 }

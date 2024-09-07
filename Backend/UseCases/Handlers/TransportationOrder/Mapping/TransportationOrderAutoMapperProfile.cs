@@ -28,9 +28,12 @@ public class SetOrderAddressDependingOnStatus : IMappingAction<Entities.Transpor
         destination.TransferInfo.LoadingDateFrom = source.LoadDateFrom;
         destination.TransferInfo.LoadingDateTo = source.LoadDateTo;
         
-        if (destination.TransportationOrderStatus == TransportationOrderStatus.Transporting
-            || destination.TransportationOrderStatus == TransportationOrderStatus.ManagerApproving
-            || destination.TransportationOrderStatus == TransportationOrderStatus.ShipperApproving)
+        if (destination.TransportationOrderStatus == TransportationOrderStatus.ManagerApproving
+            || destination.TransportationOrderStatus == TransportationOrderStatus.ShipperApproving
+            || destination.TransportationOrderStatus == TransportationOrderStatus.WaitingForLoading
+            || destination.TransportationOrderStatus == TransportationOrderStatus.Loading
+            || destination.TransportationOrderStatus == TransportationOrderStatus.Transporting
+            || destination.TransportationOrderStatus == TransportationOrderStatus.Unloading)
         {
             destination.TransferInfo.LoadingAddress = source.LoadingAddress;
             destination.TransferInfo.UnloadingAddress = source.UnloadingAddress;

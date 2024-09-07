@@ -15,8 +15,6 @@ public class Transportation : EntityBase
     
     public List<TransportationStatusRecord> TransportationOrderStatusRecords { set; get; }
     
-    public TransportationStatus TransportationStatus { set; get; }
-    
     public string Comment { set; get; }
     
     public List<RoutePoint> RoutePoints { set; get; }

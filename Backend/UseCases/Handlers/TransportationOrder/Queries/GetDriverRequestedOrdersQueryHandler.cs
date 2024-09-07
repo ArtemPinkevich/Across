@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -43,7 +42,7 @@ public class GetDriverRequestedOrdersQueryHandler: IRequestHandler<GetDriverRequ
         
         List<TransportationOrderDto> transportationOrderDtos = new List<TransportationOrderDto>();
 
-        var driverRequests = await _driverRequestRepository.GetAllAsync(x => x.DriverId == user.Id && x.Status == DriverRequestStatus.PendingReview);
+        var driverRequests = await _driverRequestRepository.GetAllAsync(x => x.DriverId == user.Id && x.Status == DriverRequestStatus.PendingLogistReview);
 
         foreach (var driverRequest in driverRequests)
         {

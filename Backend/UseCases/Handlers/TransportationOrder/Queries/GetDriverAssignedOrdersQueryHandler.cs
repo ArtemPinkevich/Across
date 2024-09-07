@@ -51,12 +51,13 @@ public class GetDriverAssignedOrdersQueryHandler: IRequestHandler<GetDriverAssig
         foreach (var transportation in transportations)
         {
             var order = await _ordersRepository.GetAsync(x => x.Id == transportation.TransportationOrderId &&
-                                                              (x.TransportationOrderStatus ==
-                                                               TransportationOrderStatus.Transporting ||
-                                                               x.TransportationOrderStatus ==
-                                                               TransportationOrderStatus.ManagerApproving ||
-                                                               x.TransportationOrderStatus ==
-                                                               TransportationOrderStatus.ShipperApproving));
+                                                              (x.TransportationOrderStatus == TransportationOrderStatus.ManagerApproving ||
+                                                               x.TransportationOrderStatus == TransportationOrderStatus.ShipperApproving ||
+                                                               x.TransportationOrderStatus == TransportationOrderStatus.WaitingForLoading ||
+                                                               x.TransportationOrderStatus == TransportationOrderStatus.Loading ||
+                                                               x.TransportationOrderStatus == TransportationOrderStatus.Transporting ||
+                                                               x.TransportationOrderStatus == TransportationOrderStatus.Unloading ||
+                                                               x.TransportationOrderStatus == TransportationOrderStatus.Delivered));
             transportationOrderDtos.Add(_mapper.Map<TransportationOrderDto>(order));
         }
         

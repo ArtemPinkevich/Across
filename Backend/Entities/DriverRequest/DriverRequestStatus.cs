@@ -2,8 +2,10 @@
 
 public enum DriverRequestStatus
 {
-    PendingReview,
+    PendingLogistReview,
+    PendingShipperApprove,
     Approved,
+    Hold,
     TakenByOtherDriver,
     Declined,
 }

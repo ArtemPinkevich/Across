@@ -45,7 +45,7 @@ public class TryTakeOrderCommandHandler:IRequestHandler<TryTakeOrderCommand, Tra
             TruckId = truck.Id,
             TransportationOrderId = order.Id,
             DriverId = truck.DriverId,
-            Status = DriverRequestStatus.PendingReview,
+            Status = DriverRequestStatus.PendingLogistReview,
             CreatedDateTime = DateTime.Now.ToString(CultureInfo.InvariantCulture)
         };
 
