@@ -21,15 +21,18 @@ public class GetOrdersInProgressQueryHandler : IRequestHandler<GetOrdersInProgre
     private readonly UserManager<User> _userManager;
     private readonly IRepository<Entities.TransportationOrder> _ordersRepository;
     private readonly IRepository<Entities.Transportation> _transportationRepository;
+    private readonly IRepository<Entities.Truck> _trucksRepository;
 
     public GetOrdersInProgressQueryHandler(IRepository<Entities.TransportationOrder> ordersRepository,
         UserManager<User> userManager,
         IRepository<Transportation> transportationRepository,
+        IRepository<Entities.Truck> trucksRepository,
         IMapper mapper)
     {
         _ordersRepository = ordersRepository;
         _userManager = userManager;
         _transportationRepository = transportationRepository;
+        _trucksRepository = trucksRepository;
         _mapper = mapper;
     }
     
@@ -80,11 +83,12 @@ public class GetOrdersInProgressQueryHandler : IRequestHandler<GetOrdersInProgre
             var driverRequest = order.DriverRequests.FirstOrDefault(o => o.Status == DriverRequestStatus.Approved || o.Status == DriverRequestStatus.PendingShipperApprove);
             var driver = await _userManager.FindByIdAsync(driverRequest.DriverId);
             var shipper = await _userManager.FindByIdAsync(order.ShipperId);
+            var truck = await _trucksRepository.GetAsync(x => x.Id == driverRequest.TruckId);
             var dto = new CorrelationDto()
             {
                 Driver = await driver.ConvertToProfileDto(_userManager, _mapper),
                 Shipper = await shipper.ConvertToProfileDto(_userManager, _mapper),
-                Truck = _mapper.Map<TruckDto>(driverRequest.Truck),
+                Truck = _mapper.Map<TruckDto>(truck),
                 TransportationOrder = _mapper.Map<TransportationOrderDto>(order)
             };
             yield return dto;
