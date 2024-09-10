@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using UseCases.Handlers.Authorization;
+using UseCases.Handlers.Common.Dto;
 using UseCases.Handlers.Profiles.Commands;
 
 namespace Across.Controllers;
@@ -64,17 +65,28 @@ public class FileController : ControllerBase
     }
 
     [Authorize(Roles = $"{UserRoles.Driver},{UserRoles.Shipper},{UserRoles.Lawyer}")]
-    [HttpGet("get-image/{docType}/{userId}")]
-    public IActionResult GetImage(int docType, string userId)
+    [HttpGet("get-image")]
+    public IActionResult GetImage([FromQuery] GetFileQuery getFileQuery)
     {
-        var userFolderPath = string.IsNullOrEmpty(userId) ? GetUserFolderPath() : Path.Combine(Directory.GetCurrentDirectory() + "Files", userId); 
+        var userId = getFileQuery.UserId;
+        if (userId == null)
+        {
+            userId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == JwtClaimsTypes.Id)?.Value;
+        }
+
+        if (userId == null)
+        {
+            return StatusCode(500);
+        }
+        
+        var userFolderPath = string.IsNullOrEmpty(getFileQuery.UserId) ? GetUserFolderPath() : Path.Combine(Directory.GetCurrentDirectory() + "Files", getFileQuery.UserId); 
 
         if (string.IsNullOrEmpty(userFolderPath))
         {
             return StatusCode(500);
         }
 
-        var files = Directory.GetFiles(userFolderPath, $"{docType}*.*").ToList();
+        var files = Directory.GetFiles(userFolderPath, $"{getFileQuery.DocumentType}*.*").ToList();
         var fullFileName = files.LastOrDefault();
         if (string.IsNullOrEmpty(fullFileName))
         {

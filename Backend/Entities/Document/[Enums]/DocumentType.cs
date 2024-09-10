@@ -2,6 +2,7 @@
 
 public enum DocumentType
 {
+    Avatar,
     PassportMain,
     PassportRegistration,
     DriverLicence,
