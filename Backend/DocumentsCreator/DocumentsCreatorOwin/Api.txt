@@ -1,0 +1,27 @@
+http://localhost:9000/api/Documents/order?route=Томск Астана&cargoName=value&cargoPrice=value&bank=value&clientBin=value&company=value&email &dest=value&transportPrice=value&unAddress=value&bankBin=value&account=value&legalAddress=value&nds=value&phone=value&driver=value&loadDate=value&manager=value&numberOfTrucks=value&unloadDate=value&receiver=value&bankSwift=value&ceo=value&loadPerson=value&unloadPerson=value
+
+route - маршрут
+cargoName - название груза
+cargoPrice - цена груза
+bank - банк заказчика
+clientBin - БИН/ИИН (ИНН) закзачика
+company - компания закзачика
+email - почта закзачика
+dest - адрес назначения
+transportPrice - цена перевозки
+unAddress - адрес разгрузки
+bankBin - БИН банка
+account - расчетный счет закзачика
+legalAddress - юридический адрес заказчика
+nds - ндс номер
+phone - телефон
+driver - ФИО водителя
+loadDate - дата погрузки
+manager - ФИО менеджера
+numberOfTrucks - количество машин
+unloadDate - дата разгрузки
+receiver - ФИО получателя
+bankSwift - SWIFT код банка
+ceo - ФИО директора
+loadPerson - ответственный за погрузку
+unloadPerson - ответственный за разгрузку
