@@ -1,6 +1,10 @@
 ﻿using System;
+using System.IO;
+using System.Linq;
 using System.Net.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Owin.Hosting;
+using DbContext = DocumentsCreatorOwin.DAL.DbContext;
 
 namespace DocumentsCreatorOwin
 {
@@ -8,6 +12,15 @@ namespace DocumentsCreatorOwin
     {
         public static void Main(string[] args)
         {
+            var optionsBuilder = new DbContextOptionsBuilder<DbContext>();
+
+            var options = optionsBuilder
+                .UseSqlite(@"Filename=../../../../Across/Across.db")
+                .Options;
+            using (DbContext dbContext = new DbContext(options))
+            {
+                var orders = dbContext.TransportationOrders.ToList();
+            }
             Console.WriteLine("Documents creator server starting");
             
             string baseAddress = "http://localhost:9000/"; 

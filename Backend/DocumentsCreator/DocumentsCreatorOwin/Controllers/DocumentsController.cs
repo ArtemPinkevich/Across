@@ -14,6 +14,22 @@ namespace DocumentsCreatorOwin.Controllers
     public class DocumentsController : ApiController
     {
         [HttpGet]
+        public HttpResponseMessage Get(int transportationOrderId)
+        {
+            DocumentsService documentsService = new DocumentsService();
+
+            Stream documentStream = documentsService.CreateDocument(transportationOrderId);
+            
+            HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
+            response.Content = new StreamContent(documentStream);
+            response.Content.Headers.ContentDisposition = new System.Net.Http.Headers.ContentDispositionHeaderValue("attachment");
+            response.Content.Headers.ContentDisposition.FileName = "transportation_order.docx";
+            response.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.openxmlformats-officedocument.wordprocessingml.document");
+
+            return response;
+        }
+        
+        [HttpGet]
         public HttpResponseMessage Get()
         {
             DocumentsService documentsService = new DocumentsService();

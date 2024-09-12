@@ -1,6 +1,9 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Office.Interop.Word;
+using DbContext = DocumentsCreatorOwin.DAL.DbContext;
 
 namespace DocumentsCreatorOwin.Services
 {
@@ -35,6 +38,22 @@ namespace DocumentsCreatorOwin.Services
         private Application _application;
         private Document _document;
 
+        public Stream CreateDocument(int transportationOrderId)
+        {
+            try
+            {
+                var document = GetOrderDocument(transportationOrderId);
+                string file = CreateWordOrderDocument(document);
+                return new FileStream(file, FileMode.Open, FileAccess.Read);
+            }
+            catch (Exception e)
+            {
+                _document.Close();
+                _application.Quit();
+                return null;
+            }
+        }
+        
         public Stream CreateDocument(OrderDocument order)
         {
             try
@@ -48,6 +67,21 @@ namespace DocumentsCreatorOwin.Services
                 _application.Quit();
                 return null;
             }
+        }
+
+        private OrderDocument GetOrderDocument(int transportationOrderId)
+        {
+            var optionsBuilder = new DbContextOptionsBuilder<DbContext>();
+
+            var options = optionsBuilder
+                .UseSqlite(@"Filename=../../../../Across/Across.db")
+                .Options;
+            using (DbContext dbContext = new DbContext(options))
+            {
+                var orders = dbContext.TransportationOrders.ToList();
+            }
+
+            return new OrderDocument();
         }
 
         private string CreateWordOrderDocument(OrderDocument order)
