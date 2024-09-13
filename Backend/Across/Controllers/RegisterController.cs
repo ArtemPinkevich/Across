@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Entities;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using UseCases.Handlers.Registration.Commands;
@@ -37,10 +38,17 @@ namespace Across.Controllers
         [HttpPost("admin")]
         public async Task<RegistrationDto> Register([FromBody] AdminRegistrationCommand adminRegistrationCommand)
         {
+            adminRegistrationCommand.SetRole(UserRoles.Admin);
             var res = await _mediator.Send(adminRegistrationCommand);
             return res;
         }
 
-
+        [HttpPost("lawyer")]
+        public async Task<RegistrationDto> RegisterLawyer([FromBody] AdminRegistrationCommand adminRegistrationCommand)
+        {
+            adminRegistrationCommand.SetRole(UserRoles.Lawyer);
+            var res = await _mediator.Send(adminRegistrationCommand);
+            return res;
+        }
     }
 }

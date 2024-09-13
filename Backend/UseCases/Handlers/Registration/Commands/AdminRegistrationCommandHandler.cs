@@ -31,7 +31,7 @@ namespace UseCases.Handlers.Registration.Commands
             if (!result.Succeeded)
                 return CreateErrorResult(result.Errors.Select(item => item.Description).ToArray());
 
-            await _userManager.AddToRoleAsync(user, UserRoles.Admin);
+            await _userManager.AddToRoleAsync(user, request.Role);
 
 
             return CreateSuccessResult(new [] { "Administrator regostered" });

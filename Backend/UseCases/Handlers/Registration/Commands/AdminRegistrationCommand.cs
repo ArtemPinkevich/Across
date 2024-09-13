@@ -12,5 +12,12 @@
         public string Login { set; get; }
 
         public string Password { set; get; }
+
+        public string Role { private set; get; }
+
+        public void SetRole(string role)
+        {
+            Role = role;
+        }
     }
 }

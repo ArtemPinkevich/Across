@@ -64,7 +64,7 @@ public class FileController : ControllerBase
         return StatusCode(200);
     }
 
-    [Authorize(Roles = $"{UserRoles.Driver},{UserRoles.Shipper},{UserRoles.Lawyer}")]
+    [Authorize(Roles = $"{UserRoles.Driver},{UserRoles.Shipper},{UserRoles.Lawyer},{UserRoles.Admin},{UserRoles.Owner}")]
     [HttpGet("get-image")]
     public IActionResult GetImage([FromQuery] GetFileQuery getFileQuery)
     {
