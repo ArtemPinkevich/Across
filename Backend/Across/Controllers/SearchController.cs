@@ -56,13 +56,6 @@ public class SearchController: ControllerBase
     }
 
     [Authorize(Roles = UserRoles.Admin)]
-    [HttpGet("get_bids")]
-    public async Task<BidsResultDto> GetBids()
-    {
-        return await _mediator.Send(new GetBidsQuery());
-    }
-    
-    [Authorize(Roles = UserRoles.Admin)]
     [HttpGet("search_recommendations")]
     public async Task<RecommendationsResultDto> SearchRecommendations()
     {
@@ -74,13 +67,6 @@ public class SearchController: ControllerBase
     public async Task<SearchResultDto> SearchRecommendationsByTruck(int truck_id)
     {
         return await _mediator.Send(new SearchRecommendationsByTruckQuery() { TruckId = truck_id });
-    }
-
-    [Authorize(Roles = UserRoles.Admin)]
-    [HttpGet("search_orders_in_progress")]
-    public async Task<OrdersInProgressResultDto> SearchOrdersInProgress()
-    {
-        return await _mediator.Send(new GetOrdersInProgressQuery());
     }
 
     [Authorize(Roles = UserRoles.Shipper)]

@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using UseCases.Handlers.Authorization;
 using UseCases.Handlers.Cargo.Dto;
+using UseCases.Handlers.Search.Dto;
+using UseCases.Handlers.Search.Queries;
 using UseCases.Handlers.TransportationOrder.Commands;
 using UseCases.Handlers.TransportationOrder.Queries;
 
@@ -56,6 +58,20 @@ public class TransportationOrderController:ControllerBase
             {
                 UserId = userId
             });
+    }
+
+    [Authorize(Roles = UserRoles.Admin)]
+    [HttpGet("get_orders_in_progress")]
+    public async Task<OrdersInProgressResultDto> SearchOrdersInProgress()
+    {
+        return await _mediator.Send(new GetOrdersInProgressQuery());
+    }
+
+    [Authorize(Roles = UserRoles.Admin)]
+    [HttpGet("get_bids")]
+    public async Task<BidsResultDto> GetBids()
+    {
+        return await _mediator.Send(new GetBidsQuery());
     }
 
     [Authorize(Roles = $"{UserRoles.Admin},{UserRoles.Owner}")]
