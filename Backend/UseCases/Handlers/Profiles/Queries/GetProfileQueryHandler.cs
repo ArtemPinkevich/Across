@@ -28,6 +28,7 @@ public class GetProfileQueryHandler : IRequestHandler<GetProfileQuery, ProfileDt
     {
         User user = await _userManager.Users
             .Include(x => x.Documents)
+            .Include(x => x.LegalInformation)
             .FirstOrDefaultAsync(x => x.Id == request.UserId, cancellationToken);
         if (user == null)
         {

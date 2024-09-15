@@ -31,7 +31,12 @@
         /// <summary>
         /// List of TransportationOrders of Shipper
         /// </summary>
-        public List<TransportationOrder> TransportationOrders { set; get; }      
+        public List<TransportationOrder> TransportationOrders { set; get; } 
+        
+        /// <summary>
+        /// Юридическая 
+        /// </summary>
+        public LegalInformation LegalInformation { set; get; }
 
         #endregion
         

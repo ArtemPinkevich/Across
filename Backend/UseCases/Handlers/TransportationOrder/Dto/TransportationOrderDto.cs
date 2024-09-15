@@ -69,6 +69,7 @@ public class CargoDto
     public double? Width { set; get; }
     public double? Height { set; get; }
     public double Diameter { set; get; }
+    public int Price { set; get; }
     public TruckRequirementsDto TruckRequirements { set; get; }
 }
 

@@ -23,6 +23,8 @@ namespace UseCases.Handlers.Profiles.Dto
         
         public string ReservePhoneNumber { set; get; }
 
+        public LegalInformationDto LegalInformationDto { set; get; }
+        
         public List<DocumentDto> DocumentDtos { set; get; }
     }
 }

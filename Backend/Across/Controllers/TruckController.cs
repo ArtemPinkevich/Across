@@ -68,10 +68,9 @@ public class TruckController: ControllerBase
     }
 
     [Authorize(Roles = UserRoles.Driver)]
-    [HttpPost("set_truck_location/{id}")]
-    public async Task<TruckResultDto> SetTruckLocation(int id)
+    [HttpPost("set_truck_location")]
+    public async Task<TruckResultDto> SetTruckLocation(SetTruckLocationCommand setTruckLocationCommand)
     {
-        var setTruckLocationCommand = new SetTruckLocationCommand() { TruckId = id, };
         return await _mediator.Send(setTruckLocationCommand);
     }
 

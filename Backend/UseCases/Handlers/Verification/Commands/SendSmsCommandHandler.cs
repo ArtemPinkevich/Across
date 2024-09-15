@@ -52,7 +52,8 @@ public class SendSmsCommandHandler: IRequestHandler<SendSmsCommand, SendSmsCodeR
         return new User()
         {
             UserName = request.PhoneNumber,
-            PhoneNumber = request.PhoneNumber
+            PhoneNumber = request.PhoneNumber,
+            LegalInformation = new LegalInformation()
         };
     }
 

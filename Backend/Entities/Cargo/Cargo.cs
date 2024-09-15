@@ -35,6 +35,11 @@ public class Cargo: EntityBase
 
     public double Diameter { set; get; }
     
+    /// <summary>
+    /// стоимость груза
+    /// </summary>
+    public int Price { set; get; }
+    
     public int TransportationOrderId { set; get; }
     public TransportationOrder TransportationOrder { set; get; }
 }

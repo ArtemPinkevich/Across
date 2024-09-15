@@ -34,7 +34,6 @@ public class ProfileAutoMapperProfile : Profile
     {
         CreateMap<User, ProfileDto>()
             .ForMember(d => d.Id, opt => opt.MapFrom(s => s.Id))
-            .ForMember(d => d.Id, opt => opt.MapFrom(s => s.Id))
             .ForMember(d => d.Name, opt => opt.MapFrom(s => s.Name))
             .ForMember(d => d.Patronymic, opt => opt.MapFrom(s => s.Patronymic))
             .ForMember(d => d.Status, opt => opt.MapFrom(s => s.UserStatus))
@@ -42,8 +41,16 @@ public class ProfileAutoMapperProfile : Profile
             .ForMember(d => d.BirthDate, opt => opt.MapFrom(s => s.BirthDate))
             .ForMember(d => d.PhoneNumber, opt => opt.MapFrom(s => s.PhoneNumber))
             .ForMember(d => d.ReservePhoneNumber, opt => opt.MapFrom(s => s.ReservePhoneNumber))
+            .ForMember(d => d.LegalInformationDto, opt => opt.MapFrom(s => s.LegalInformation))
             .ForMember(d => d.DocumentDtos, opt => opt.Ignore())
             .ForMember(d => d.Role, opt => opt.Ignore())
-            .ReverseMap();
+            .ReverseMap()
+            .ForMember(d => d.LegalInformation, opt => opt.MapFrom(s => s.LegalInformationDto))
+            ;
+
+        CreateMap<LegalInformation, LegalInformationDto>()
+            .ReverseMap()
+            .ForMember(x => x.ShipperId, opt => opt.Ignore())
+            .ForMember(x => x.Shipper, opt => opt.Ignore());
     }
 }

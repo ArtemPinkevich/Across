@@ -24,7 +24,9 @@ internal class UpdateProfileCommandHandler : IRequestHandler<UpdateProfileComman
     {
         try
         {
-            var user = await _userManager.FindByIdAsync(request.UserId);
+            var user = await _userManager.Users
+                .Include(x => x.LegalInformation)
+                .FirstOrDefaultAsync(x => x.Id == request.UserId, cancellationToken);
             if (user != null)
             {
                 user.Name = request.ProfileDto.Name;
@@ -32,6 +34,21 @@ internal class UpdateProfileCommandHandler : IRequestHandler<UpdateProfileComman
                 user.Patronymic = request.ProfileDto.Patronymic;
                 user.BirthDate = request.ProfileDto.BirthDate;
                 user.ReservePhoneNumber = request.ProfileDto.ReservePhoneNumber;
+                user.LegalInformation ??= new LegalInformation();
+                if (request.ProfileDto.LegalInformationDto != null)
+                {
+                    user.LegalInformation.Bin = request.ProfileDto.LegalInformationDto.Bin ?? String.Empty;
+                    user.LegalInformation.Email = request.ProfileDto.LegalInformationDto.Email ?? String.Empty;
+                    user.LegalInformation.AccountNumber = request.ProfileDto.LegalInformationDto.AccountNumber ?? String.Empty;
+                    user.LegalInformation.BankBin = request.ProfileDto.LegalInformationDto.BankBin ?? String.Empty;
+                    user.LegalInformation.BankName = request.ProfileDto.LegalInformationDto.BankName ?? String.Empty;
+                    user.LegalInformation.CompanyCeo = request.ProfileDto.LegalInformationDto.CompanyCeo ?? String.Empty;
+                    user.LegalInformation.CompanyName = request.ProfileDto.LegalInformationDto.CompanyName ?? String.Empty;
+                    user.LegalInformation.LegalAddress = request.ProfileDto.LegalInformationDto.LegalAddress ?? String.Empty;
+                    user.LegalInformation.PhoneNumber = request.ProfileDto.LegalInformationDto.PhoneNumber ?? String.Empty;
+                    user.LegalInformation.VatSeria = request.ProfileDto.LegalInformationDto.VatSeria ?? String.Empty;
+                    user.LegalInformation.BankSwiftCode = request.ProfileDto.LegalInformationDto.BankSwiftCode ?? String.Empty;
+                }
 
                 await _userManager.UpdateAsync(user);
             }

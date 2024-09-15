@@ -14,6 +14,8 @@
         //public DbSet<Driver> Drivers { set; get; }
         
         //public DbSet<Shipper> Shippers { set; get; }
+        
+        public DbSet<LegalInformation> LegalInformations { set; get; }
 
         public DbSet<Truck> Trucks { set; get; }
         
@@ -51,6 +53,12 @@
                 .HasMany(x => x.DriverRequests)
                 .WithOne(x => x.Driver)
                 .HasForeignKey(x => x.DriverId)
+                .IsRequired();
+
+            modelBuilder.Entity<User>()
+                .HasOne(x => x.LegalInformation)
+                .WithOne(x => x.Shipper)
+                .HasForeignKey<LegalInformation>(info => info.ShipperId)
                 .IsRequired();
 
             modelBuilder.Entity<TransportationOrder>()
