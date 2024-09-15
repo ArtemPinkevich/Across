@@ -66,7 +66,18 @@ public class AssignTruckCommandHandler : IRequestHandler<AssignTruckCommand, Tra
 
     private async Task AddTransportationForOrder(AssignTruckCommand request)
     {
+        var transportation = await _transportationRepository.GetAsync(x => x.TransportationOrderId == request.TransportationOrderId);
         var truck = await _truckRepository.GetAsync(x => x.Id == request.TruckId);
+        if (transportation != null)
+        {
+            transportation.DriverId = truck.DriverId;
+            transportation.TransportationOrderId = request.TransportationOrderId;
+            transportation.TruckId = request.TruckId;
+            await _transportationRepository.UpdateAsync(transportation);
+            
+            return;
+        }
+        
         await _transportationRepository.AddAsync(new List<Transportation>(){new ()
         {
             DriverId = truck.DriverId,
