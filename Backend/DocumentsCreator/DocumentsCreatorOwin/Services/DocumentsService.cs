@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using DocumentsCreatorOwin.DAL.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Office.Interop.Word;
 using DbContext = DocumentsCreatorOwin.DAL.DbContext;
@@ -86,16 +87,25 @@ namespace DocumentsCreatorOwin.Services
                 var order = await dbContext.TransportationOrders
                     .Include(x => x.Cargo)
                     .FirstOrDefaultAsync(x => x.Id == transportationOrderId);
+                if (order == null)
+                {
+                    return new OrderDocument() { Route = $"no order found with id {transportationOrderId}" };
+                }
 
+                var legalInfo =
+                    await dbContext.LegalInformations.FirstOrDefaultAsync(x => x.ShipperId == order.ShipperId);
+                
                 var transportation =
                     await dbContext.Transportations.FirstOrDefaultAsync(x =>
                         x.TransportationOrderId == transportationOrderId);
 
-                var driver = await dbContext.AspNetUsers
-                    .FirstOrDefaultAsync(x => x.Id == transportation.DriverId);
+                var driver = new AspNetUser() { Name = "", Surname = "", Patronymic = "" };
+                if (transportation != null)
+                {
+                    driver = await dbContext.AspNetUsers
+                        .FirstOrDefaultAsync(x => x.Id == transportation.DriverId);  
+                }
 
-                var legalInfo =
-                    await dbContext.LegalInformations.FirstOrDefaultAsync(x => x.ShipperId == order.ShipperId);
                 
                 document.Route = $"{order.LoadingLocalityName} - {order.UnloadingLocalityName}";
                 document.NumberOfTrucks = 1.ToString();
