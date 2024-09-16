@@ -11,5 +11,7 @@
         public string Patronymic { set; get; }
         
         public string PhoneNumber { set; get; }
+        
+        public LegalInformation LegalInformation { set; get; }
     }
 }

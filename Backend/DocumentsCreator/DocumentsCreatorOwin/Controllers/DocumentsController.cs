@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Threading.Tasks;
 using System.Web.Http;
 using DocumentsCreatorOwin.Helpers;
 using DocumentsCreatorOwin.Services;
@@ -14,21 +15,11 @@ namespace DocumentsCreatorOwin.Controllers
     public class DocumentsController : ApiController
     {
         [HttpGet]
-        public HttpResponseMessage Get(int transportationOrderId)
+        public IHttpActionResult Get(int id)
         {
-            DocumentsService documentsService = new DocumentsService();
-
-            Stream documentStream = documentsService.CreateDocument(transportationOrderId);
-            
-            HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
-            response.Content = new StreamContent(documentStream);
-            response.Content.Headers.ContentDisposition = new System.Net.Http.Headers.ContentDispositionHeaderValue("attachment");
-            response.Content.Headers.ContentDisposition.FileName = "transportation_order.docx";
-            response.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.openxmlformats-officedocument.wordprocessingml.document");
-
-            return response;
+            return new StreamContextResult( new DocumentsService().CreateDocument(id), Request);
         }
-        
+
         [HttpGet]
         public HttpResponseMessage Get()
         {

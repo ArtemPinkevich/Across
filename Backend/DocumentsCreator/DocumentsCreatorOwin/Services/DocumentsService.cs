@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Office.Interop.Word;
 using DbContext = DocumentsCreatorOwin.DAL.DbContext;
@@ -9,6 +10,8 @@ namespace DocumentsCreatorOwin.Services
 {
     public class DocumentsService
     {
+        private const string SQLITE_CONNECTION_STRING = @"Filename=../../../../Across/Across.db";
+        
         private const string ROUTE = "ROUTE";
         private const string NUMBER_OF_TRUCKS = "NUMBER_OF_TRUCKS";
         private const string DESTIANTION_ADDRESS = "DESTIANTION_ADDRESS";
@@ -38,11 +41,11 @@ namespace DocumentsCreatorOwin.Services
         private Application _application;
         private Document _document;
 
-        public Stream CreateDocument(int transportationOrderId)
+        public async Task<Stream> CreateDocument(int transportationOrderId)
         {
             try
             {
-                var document = GetOrderDocument(transportationOrderId);
+                var document = await GetOrderDocument(transportationOrderId);
                 string file = CreateWordOrderDocument(document);
                 return new FileStream(file, FileMode.Open, FileAccess.Read);
             }
@@ -69,19 +72,58 @@ namespace DocumentsCreatorOwin.Services
             }
         }
 
-        private OrderDocument GetOrderDocument(int transportationOrderId)
+        private async Task<OrderDocument> GetOrderDocument(int transportationOrderId)
         {
+            OrderDocument document = new OrderDocument();
             var optionsBuilder = new DbContextOptionsBuilder<DbContext>();
 
             var options = optionsBuilder
-                .UseSqlite(@"Filename=../../../../Across/Across.db")
+                .UseSqlite(SQLITE_CONNECTION_STRING)
                 .Options;
+            
             using (DbContext dbContext = new DbContext(options))
             {
-                var orders = dbContext.TransportationOrders.ToList();
+                var order = await dbContext.TransportationOrders
+                    .Include(x => x.Cargo)
+                    .FirstOrDefaultAsync(x => x.Id == transportationOrderId);
+
+                var transportation =
+                    await dbContext.Transportations.FirstOrDefaultAsync(x =>
+                        x.TransportationOrderId == transportationOrderId);
+
+                var driver = await dbContext.AspNetUsers
+                    .FirstOrDefaultAsync(x => x.Id == transportation.DriverId);
+
+                var legalInfo =
+                    await dbContext.LegalInformations.FirstOrDefaultAsync(x => x.ShipperId == order.ShipperId);
+                
+                document.Route = $"{order.LoadingLocalityName} - {order.UnloadingLocalityName}";
+                document.NumberOfTrucks = 1.ToString();
+                document.DestinationAddress = order.UnloadingLocalityName;
+                document.LoadingDateTime = order.LoadDateFrom;
+                document.LoadingPersonFullName = "";
+                document.CargoName = order.Cargo.Name;
+                document.CargoPrice = order.Cargo.Price.ToString();
+                document.CargoReceiverFullName = "";
+                document.UnloadingAddress = order.UnloadingLocalityName;
+                document.UnloadingPersonFullName = "";
+                document.UnloadingDateTime = order.LoadDateTo;
+                document.TransportationPrice = order.Price.ToString();
+                document.DriverFullName = $"{driver.Name} {driver.Surname} {driver.Patronymic}";
+                document.ManagerFullName = "";
+                document.ClientCompany = legalInfo.CompanyName;
+                document.ClientPhoneNumber = legalInfo.PhoneNumber;
+                document.ClientEmail = legalInfo.Email;
+                document.ClientBin = legalInfo.Bin;
+                document.ClientNdsSeria = legalInfo.VatSeria;
+                document.ClientBank = legalInfo.BankName;
+                document.ClientBankSwiftCode = legalInfo.BankSwiftCode;
+                document.ClientCurrentAccount = legalInfo.AccountNumber;
+                document.ClientLegalAddress = legalInfo.LegalAddress;
+                document.ClientCeoFullName = legalInfo.CompanyCeo;
             }
 
-            return new OrderDocument();
+            return document;
         }
 
         private string CreateWordOrderDocument(OrderDocument order)

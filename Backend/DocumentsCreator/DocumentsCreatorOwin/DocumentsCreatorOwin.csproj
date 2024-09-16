@@ -176,8 +176,13 @@
     </ItemGroup>
     <ItemGroup>
         <Compile Include="Controllers\DocumentsController.cs" />
+        <Compile Include="Controllers\StreamContextResult.cs" />
         <Compile Include="DAL\DbContext.cs" />
         <Compile Include="DAL\Entities\AspNetUser.cs" />
+        <Compile Include="DAL\Entities\Cargo.cs" />
+        <Compile Include="DAL\Entities\LegalInformation.cs" />
+        <Compile Include="DAL\Entities\PackagingType.cs" />
+        <Compile Include="DAL\Entities\Transportation.cs" />
         <Compile Include="DAL\Entities\TransportationOrder.cs" />
         <Compile Include="Helpers\FileExtensionContentTypeProvider.cs" />
         <Compile Include="Program.cs" />
