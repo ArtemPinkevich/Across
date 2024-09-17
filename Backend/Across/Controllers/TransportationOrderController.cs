@@ -60,6 +60,17 @@ public class TransportationOrderController:ControllerBase
             });
     }
 
+    [Authorize(Roles = $"{UserRoles.Driver},{UserRoles.Shipper}")]
+    [HttpGet("get_orders_history")]
+    public async Task<TransportationOrdersListDto> GetOrdersHistory()
+    {
+        string userId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == JwtClaimsTypes.Id)?.Value;
+        return await _mediator.Send(new GetOrdersHistoryQuery()
+        {
+            UserId = userId
+        });
+    }
+
     [Authorize(Roles = UserRoles.Admin)]
     [HttpGet("get_orders_in_progress")]
     public async Task<OrdersInProgressResultDto> SearchOrdersInProgress()
