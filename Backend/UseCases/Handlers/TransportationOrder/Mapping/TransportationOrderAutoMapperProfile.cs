@@ -393,6 +393,8 @@ public class TransportationOrderMapperProfile : Profile
                 opt => opt.MapFrom(s => s.TruckRequirements))
             .ForMember(s => s.TransportationOrderStatus,
                 opt => opt.MapFrom(d => d.TransportationOrderStatus))
+            .ForMember(s => s.Price,
+                opt => opt.MapFrom(d => d.Price))
             .ForPath(s => s.TransferInfo.LoadingPlace,
                 opt => opt.MapFrom(d => ConvertLocationReverse(d.LoadingLocalityName)))
             .ForPath(s => s.TransferInfo.UnloadingPlace,
