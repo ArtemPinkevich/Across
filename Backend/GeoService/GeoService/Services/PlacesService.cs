@@ -1,38 +1,54 @@
 ﻿using GeoService.DataAccess;
 using GeoService.Dto;
+using GeoService.Infrastructure.GeocodingGateway;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using GeoService.Entities;
 
 namespace GeoService.Services;
 
 public class PlacesService:IPlacesService
 {
-    private const int MaxCities = 20;
+    private const int MaxCities = 5;
     
     private readonly GeoDbContext _geoDbContext;
+    private readonly IGeocoderGateway _geocoderGateway;
     
-    public PlacesService(GeoDbContext geoDbContext)
+    public PlacesService(GeoDbContext geoDbContext,
+        IGeocoderGateway geocoderGateway)
     {
         _geoDbContext = geoDbContext;
+        _geocoderGateway = geocoderGateway;
     }
 
-    public IEnumerable<PlaceDto> GetPlaces(string startsWith)
+    public async Task<IEnumerable<PlaceDto>> GetPlaces(string startsWith)
     {
         var start = startsWith.ToLower();
-        var cities = _geoDbContext.Cities
+        var cities = await _geoDbContext.Cities
             .Where(x => EF.Functions.Like(x.Name, $"{start}%"))
             .Include(x => x.Country)
             .Include(x => x.Region)
             .Take(MaxCities)
-            .ToList();
+            .ToListAsync();
+        
+        return await ConvertToPlaceDto(cities).ToListAsync();
+    }
 
-        IEnumerable<PlaceDto> places = cities.Select(x => new PlaceDto()
+    private async IAsyncEnumerable<PlaceDto> ConvertToPlaceDto(IEnumerable<City> cities)
+    {
+        foreach (var city in cities)
         {
-            Country = x.Country == null ? "" : FirstCharToUpper(x.Country.Name),
-            Region = x.Region == null ? "" : FirstCharToUpper(x.Region.Name),
-            City = FirstCharToUpper(x.Name),
-        });
-
-        return places;
+            var result = await _geocoderGateway.FindCoordinates(city.Name);
+            yield return new PlaceDto()
+            {
+                Country = city.Country == null ? "" : FirstCharToUpper(city.Country.Name),
+                Region = city.Region == null ? "" : FirstCharToUpper(city.Region.Name),
+                City = FirstCharToUpper(city.Name),
+                Latitide = result.Latitude,
+                Longtitude = result.Longtitude,
+                MapDisplayName = result.DisplayName
+            };
+        }
     }
 
     private string FirstCharToUpper(string input)

@@ -24,8 +24,8 @@ public class PlacesController : ControllerBase
     //[Authorize(Roles = $"Driver,Shipper")]
    
     [HttpGet("get_places/{startswith}")]
-    public IEnumerable<PlaceDto> GetCountriesStartsWith(string startswith)
+    public async Task<IEnumerable<PlaceDto>> GetCountriesStartsWith(string startswith)
     {
-        return _placesService.GetPlaces(startswith);
+        return await _placesService.GetPlaces(startswith);
     }
 }

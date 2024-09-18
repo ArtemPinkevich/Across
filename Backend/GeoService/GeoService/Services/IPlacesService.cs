@@ -4,5 +4,5 @@ namespace GeoService.Services;
 
 public interface IPlacesService
 {
-    IEnumerable<PlaceDto> GetPlaces(string startsWith);
+    Task<IEnumerable<PlaceDto>> GetPlaces(string startsWith);
 }
