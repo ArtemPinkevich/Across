@@ -10,10 +10,10 @@ public class UserDocumentsHelper
     public static List<DocumentDto> CreateDriverDocumentsList(User user)
     {
         List<DocumentDto> documents = new List<DocumentDto>();
-        var driverLicense = user.Documents?.FirstOrDefault(x => x.DocumentType == DocumentType.DriverLicence) ?? new Document()
+        var driverLicense = user.Documents?.FirstOrDefault(x => x.DocumentType == UserContentType.DriverLicence) ?? new Document()
         {
             DocumentStatus = DocumentStatus.None,
-            DocumentType = DocumentType.DriverLicence,
+            DocumentType = UserContentType.DriverLicence,
             Comment = ""
         };
         documents.Add(new DocumentDto()
@@ -23,10 +23,10 @@ public class UserDocumentsHelper
             Comment = driverLicense.Comment
         });
 
-        var passportMain = user.Documents?.FirstOrDefault(x => x.DocumentType == DocumentType.PassportMain) ?? new Document()
+        var passportMain = user.Documents?.FirstOrDefault(x => x.DocumentType == UserContentType.PassportMain) ?? new Document()
         {
             DocumentStatus = DocumentStatus.None,
-            DocumentType = DocumentType.PassportMain,
+            DocumentType = UserContentType.PassportMain,
             Comment = ""
         };
         documents.Add(new DocumentDto()
@@ -36,10 +36,10 @@ public class UserDocumentsHelper
             Comment = passportMain.Comment
         });
 
-        var passportRegistration = user.Documents?.FirstOrDefault(x => x.DocumentType == DocumentType.PassportRegistration) ?? new Document()
+        var passportRegistration = user.Documents?.FirstOrDefault(x => x.DocumentType == UserContentType.PassportRegistration) ?? new Document()
         {
             DocumentStatus = DocumentStatus.None,
-            DocumentType = DocumentType.PassportRegistration,
+            DocumentType = UserContentType.PassportRegistration,
             Comment = ""
         };
         documents.Add(new DocumentDto()
@@ -49,10 +49,10 @@ public class UserDocumentsHelper
             Comment = passportRegistration.Comment
         });
 
-        var taxPayerIdentificationNumber = user.Documents?.FirstOrDefault(x => x.DocumentType == DocumentType.TaxPayerIdentificationNumber) ?? new Document()
+        var taxPayerIdentificationNumber = user.Documents?.FirstOrDefault(x => x.DocumentType == UserContentType.TaxPayerIdentificationNumber) ?? new Document()
         {
             DocumentStatus = DocumentStatus.None,
-            DocumentType = DocumentType.TaxPayerIdentificationNumber,
+            DocumentType = UserContentType.TaxPayerIdentificationNumber,
             Comment = ""
         };
         documents.Add(new DocumentDto()

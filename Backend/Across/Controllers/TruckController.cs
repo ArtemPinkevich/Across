@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using UseCases.Handlers.Authorization;
+using UseCases.Handlers.Common.Dto;
 using UseCases.Handlers.Truck.Commands;
 using UseCases.Handlers.Truck.Dto;
 using UseCases.Handlers.Truck.Queries;
@@ -30,6 +31,28 @@ public class TruckController: ControllerBase
     public async Task<TrucksListResultDto> GetTrucks()
     {
         string userId = HttpContext.User.Claims.FirstOrDefault( x => x.Type == JwtClaimsTypes.Id)?.Value;
+        return await _mediator.Send(new GetTrucksQuery()
+        {
+            UserId = userId,
+        });
+    }
+
+    [Authorize(Roles = UserRoles.Lawyer)]
+    [HttpGet("get_trucks/{UserId}")]
+    public async Task<TrucksListResultDto> GetTrucks(string userId)
+    {
+        if(string.IsNullOrEmpty(userId))
+        {
+            return new TrucksListResultDto() 
+            { 
+                Result = new TruckResultDto()
+                {
+                    Result = ApiResult.Failed,
+                    Reasons = new[] { "User Id must not be empty" }
+                }
+            };
+        }
+
         return await _mediator.Send(new GetTrucksQuery()
         {
             UserId = userId,

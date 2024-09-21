@@ -7,4 +7,6 @@ public class TruckResultDto
     public ApiResult Result { set; get; }
     
     public string[] Reasons { set; get; }
+
+    public int? TruckId { set; get; }
 }

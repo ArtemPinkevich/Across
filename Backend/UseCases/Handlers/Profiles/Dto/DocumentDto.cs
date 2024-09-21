@@ -6,7 +6,7 @@ public class DocumentDto
 {
     public DocumentStatus DocumentStatus { set; get; }
     
-    public DocumentType DocumentType { set; get; }
+    public UserContentType DocumentType { set; get; }
     
     public string Comment { set; get; }
 }

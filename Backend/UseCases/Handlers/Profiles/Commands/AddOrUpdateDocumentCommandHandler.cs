@@ -31,12 +31,12 @@ public class AddOrUpdateDocumentCommandHandler: IRequestHandler<AddOrUpdateDocum
             throw new Exception($"no user found with id {request.UserId}");
         }
 
-        var doc = user.Documents.FirstOrDefault(x => x.DocumentType == (DocumentType)request.DocumentType);
+        var doc = user.Documents.FirstOrDefault(x => x.DocumentType == request.DocumentType);
         if (doc == null)
         {
             user.Documents.Add(new Document()
             {
-                DocumentType = (DocumentType)request.DocumentType,
+                DocumentType = request.DocumentType,
                 DocumentStatus = DocumentStatus.Verification,
                 Comment = request.Comment,
                 UserId = user.Id

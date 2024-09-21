@@ -27,8 +27,8 @@ public class FileController : ControllerBase
     }
 
     [Authorize(Roles = $"{UserRoles.Driver},{UserRoles.Shipper}")]
-    [HttpPost("upload/{docType}")]
-    public async Task<IActionResult> Upload([FromForm(Name = "image")] IFormFile formFile, int docType)
+    [HttpPost("upload-user-content")]
+    public async Task<IActionResult> UploadUserContent([FromForm(Name = "image")] IFormFile formFile, [FromQuery] UserContentQuery query)
     {
         if (formFile == null)
         {
@@ -41,8 +41,14 @@ public class FileController : ControllerBase
             return StatusCode(500);
         }
 
+        var resultPath = string.IsNullOrEmpty(query.SectionKey) ? userFolderPath : GetSectionFolderPath(userFolderPath, query.SectionKey);
+        if (string.IsNullOrEmpty(resultPath))
+        {
+            return StatusCode(500);
+        }
+
         var extension = Path.GetExtension(formFile.FileName);
-        var filePath = Path.Combine(userFolderPath, $"{docType}_{DateTime.UtcNow.ToString("yyyy.MM.dd.HH.mm.ss")}{extension}");
+        var filePath = Path.Combine(resultPath, $"{query.DocumentType}_{DateTime.UtcNow.ToString("yyyy.MM.dd.HH.mm.ss")}{extension}");
         if (System.IO.File.Exists(filePath))
         {
             return StatusCode(500);
@@ -53,22 +59,28 @@ public class FileController : ControllerBase
             await formFile.CopyToAsync(stream);
         }
 
-        await _mediator.Send(new AddOrUpdateDocument()
+        if (query.DocumentType == UserContentType.DriverLicence
+            || query.DocumentType == UserContentType.PassportMain
+            || query.DocumentType == UserContentType.PassportRegistration
+            || query.DocumentType == UserContentType.TaxPayerIdentificationNumber)
         {
-            UserId =  HttpContext.User.Claims.FirstOrDefault(x => x.Type == JwtClaimsTypes.Id)?.Value,
-            Comment = "",
-            DocumentStatus = 1,
-            DocumentType = docType
-        });
+            await _mediator.Send(new AddOrUpdateDocument()
+            {
+                UserId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == JwtClaimsTypes.Id)?.Value,
+                Comment = "",
+                DocumentStatus = 1,
+                DocumentType = query.DocumentType
+            });
+        }
 
         return StatusCode(200);
     }
 
     [Authorize(Roles = $"{UserRoles.Driver},{UserRoles.Shipper},{UserRoles.Lawyer},{UserRoles.Admin},{UserRoles.Owner}")]
-    [HttpGet("get-image")]
-    public IActionResult GetImage([FromQuery] GetFileQuery getFileQuery)
+    [HttpGet("get-user-content")]
+    public IActionResult GetImage([FromQuery] UserContentQuery query)
     {
-        var userId = getFileQuery.UserId;
+        var userId = query.UserId;
         if (userId == null)
         {
             userId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == JwtClaimsTypes.Id)?.Value;
@@ -78,15 +90,21 @@ public class FileController : ControllerBase
         {
             return StatusCode(500);
         }
-        
-        var userFolderPath = string.IsNullOrEmpty(getFileQuery.UserId) ? GetUserFolderPath() : Path.Combine(Directory.GetCurrentDirectory() + "Files", getFileQuery.UserId); 
+
+        var userFolderPath = string.IsNullOrEmpty(query.UserId) ? GetUserFolderPath() : Path.Combine(Directory.GetCurrentDirectory() + "Files", query.UserId);
 
         if (string.IsNullOrEmpty(userFolderPath))
         {
             return StatusCode(500);
         }
 
-        var files = Directory.GetFiles(userFolderPath, $"{getFileQuery.DocumentType}*.*").ToList();
+        var resultPath = string.IsNullOrEmpty(query.SectionKey) ? userFolderPath : GetSectionFolderPath(userFolderPath, query.SectionKey);
+        if (string.IsNullOrEmpty(resultPath))
+        {
+            return StatusCode(500);
+        }
+
+        var files = Directory.GetFiles(resultPath, $"{query.DocumentType}*.*").ToList();
         var fullFileName = files.LastOrDefault();
         if (string.IsNullOrEmpty(fullFileName))
         {
@@ -114,5 +132,16 @@ public class FileController : ControllerBase
         }
 
         return userFolder;
+    }
+
+    private string GetSectionFolderPath(string userFolderPath, string sectionKey)
+    {
+        var sectionFolderPath = Path.Combine(userFolderPath, sectionKey?.ToString());
+        if (!Directory.Exists(sectionFolderPath))
+        {
+            Directory.CreateDirectory(sectionFolderPath);
+        }
+
+        return sectionFolderPath;
     }
 }

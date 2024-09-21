@@ -34,15 +34,16 @@ public class AddOrUpdateTruckToUserCommandHandler : IRequestHandler<AddOrUpdateT
             return CreateNoUserFoundResult();
         }
 
+        Entities.Truck truck;
         if (request.TruckDto.TruckId == null)
         {
-            Entities.Truck truck = _mapper.Map<Entities.Truck>(request.TruckDto);
+            truck = _mapper.Map<Entities.Truck>(request.TruckDto);
             truck.DriverId = user.Id;
             await _repository.AddAsync(new List<Entities.Truck>() { truck });
         }
         else
         {
-            var truck = await _repository.GetAsync(x => x.Id == request.TruckDto.TruckId);
+            truck = await _repository.GetAsync(x => x.Id == request.TruckDto.TruckId);
             if (truck == null)
             {
                 return CreateNoTruckFoundResult(request.TruckDto.TruckId);
@@ -83,6 +84,7 @@ public class AddOrUpdateTruckToUserCommandHandler : IRequestHandler<AddOrUpdateT
         return new TruckResultDto()
         {
             Result = ApiResult.Success,
+            TruckId = truck.Id,
         };
     }
     

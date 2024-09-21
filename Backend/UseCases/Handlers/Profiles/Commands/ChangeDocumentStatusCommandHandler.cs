@@ -27,7 +27,7 @@ public class ChangeDocumentStatusCommandHandler: IRequestHandler<ChangeDocumentS
             return CreateErrorResult($"user not found with id {request.UserId}");
 
         var documents = user.Documents;
-        var document = documents.FirstOrDefault(x => x.DocumentType == (DocumentType)request.DocumentType);
+        var document = documents.FirstOrDefault(x => x.DocumentType == (UserContentType)request.DocumentType);
         if (document == null)
             return CreateErrorResult($"no document found with type {request.DocumentType}");
 
