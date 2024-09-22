@@ -201,4 +201,11 @@ public class TransportationOrderController:ControllerBase
 
         return await _mediator.Send(command);
     }
+
+    [Authorize(Roles = UserRoles.Admin)]
+    [HttpPost("clarify")]
+    public async Task<TransportationOrderResult> Clarify([FromBody] ClarifyCommand clarifyCommand)
+    {
+        return await _mediator.Send(clarifyCommand);
+    }
 }

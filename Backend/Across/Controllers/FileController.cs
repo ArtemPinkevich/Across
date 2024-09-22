@@ -93,9 +93,9 @@ public class FileController : ControllerBase
 
         var userFolderPath = string.IsNullOrEmpty(query.UserId) ? GetUserFolderPath() : Path.Combine(Directory.GetCurrentDirectory() + "Files", query.UserId);
 
-        if (string.IsNullOrEmpty(userFolderPath))
+        if (string.IsNullOrEmpty(userFolderPath) || !Directory.Exists(userFolderPath))
         {
-            return StatusCode(500);
+            return NotFound();
         }
 
         var resultPath = string.IsNullOrEmpty(query.SectionKey) ? userFolderPath : GetSectionFolderPath(userFolderPath, query.SectionKey);
