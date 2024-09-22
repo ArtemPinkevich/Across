@@ -25,6 +25,8 @@
         
         public DbSet<TruckRequirements> TruckRequirements { set; get; }
         
+        public DbSet<ContactInformation> ContactInformations { set; get; }
+
         public DbSet<DriverRequest> DriverRequests { set; get; }
         
         public DbSet<Transportation> Transportations { set; get; }

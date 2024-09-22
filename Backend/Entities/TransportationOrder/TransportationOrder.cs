@@ -11,6 +11,8 @@ public class TransportationOrder : EntityBase
     
     public TruckRequirements TruckRequirements { set; get; }
     
+    public ContactInformation ContactInformation { set; get; }
+    
     public int Price { set; get; }
     
     public string LoadDateFrom { set; get; }

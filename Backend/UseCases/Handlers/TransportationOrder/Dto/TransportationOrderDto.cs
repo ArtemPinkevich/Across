@@ -73,6 +73,15 @@ public class CargoDto
     public TruckRequirementsDto TruckRequirements { set; get; }
 }
 
+public class ContactInfoDto
+{
+    public string LoadingTime { set; get; }
+    public string LoadingContactPerson { set; get; }
+    public string LoadingContactPhone { set; get; }
+    public string UnloadingContactPerson { set; get; }
+    public string UnloadingContactPhone { set; get; }
+}
+
 public class TransportationOrderDto
 {
     public int? TransportationOrderId { set; get; }
@@ -80,6 +89,8 @@ public class TransportationOrderDto
     public TransferInfoDto TransferInfo { set; get; }
     
     public CargoDto Cargo { set; get; }
+    
+    public ContactInfoDto ContactInfoDto { set; get; }
     
     public TransportationOrderStatus TransportationOrderStatus { set; get; }
     

@@ -57,6 +57,11 @@ public class TransportationOrderMapperProfile : Profile
 {
     public TransportationOrderMapperProfile()
     {
+        CreateMap<ContactInfoDto, ContactInformation>()
+            .ForMember(x => x.TransportationOrder, s => s.Ignore())
+            .ForMember(x => x.TransportationOrderId, s => s.Ignore())
+            .ReverseMap();
+        
         CreateMap<CargoDto, Entities.Cargo>()
             .ForMember(x => x.TransportationOrder, s => s.Ignore())
             .ForMember(x => x.TransportationOrderId, s => s.Ignore())
@@ -382,6 +387,8 @@ public class TransportationOrderMapperProfile : Profile
             .ForMember(d => d.Cargo, opt => opt.MapFrom(s => s.Cargo))
             .ForMember(d => d.TruckRequirements,
                 opt => opt.MapFrom(s => s.Cargo.TruckRequirements))
+            .ForMember(d => d.ContactInformation,
+                opt => opt.MapFrom(s => s.ContactInfoDto))
             .ForMember(d => d.Shipper, opt => opt.Ignore())
             .ForMember(d => d.ShipperId, opt => opt.Ignore())
             .ForMember(d => d.DriverRequests, opt => opt.Ignore())
@@ -389,6 +396,8 @@ public class TransportationOrderMapperProfile : Profile
             .ReverseMap()
             .ForMember(d => d.Cargo, 
                 opt => opt.MapFrom(s => s.Cargo))
+            .ForMember(d => d.ContactInfoDto,
+                opt => opt.MapFrom(s => s.ContactInformation))
             .ForPath(d => d.Cargo.TruckRequirements,
                 opt => opt.MapFrom(s => s.TruckRequirements))
             .ForMember(s => s.TransportationOrderStatus,
