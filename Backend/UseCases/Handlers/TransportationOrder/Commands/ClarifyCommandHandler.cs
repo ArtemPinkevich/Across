@@ -39,6 +39,7 @@ public class ClarifyCommandHandler:IRequestHandler<ClarifyCommand, Transportatio
         order.ContactInformation.UnloadingContactPhone = request.UnloadingContactPhone;
 
         await _ordersRepository.UpdateAsync(order);
+        await _ordersRepository.SaveAsync();
 
         return new TransportationOrderResult() { TransportationId = order.Id, Result = ApiResult.Success, };
     }
