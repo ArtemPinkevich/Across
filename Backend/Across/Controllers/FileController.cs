@@ -48,7 +48,7 @@ public class FileController : ControllerBase
         }
 
         var extension = Path.GetExtension(formFile.FileName);
-        var filePath = Path.Combine(resultPath, $"{query.DocumentType}_{DateTime.UtcNow.ToString("yyyy.MM.dd.HH.mm.ss")}{extension}");
+        var filePath = Path.Combine(resultPath, $"{query.ContentType}_{DateTime.UtcNow.ToString("yyyy.MM.dd.HH.mm.ss")}{extension}");
         if (System.IO.File.Exists(filePath))
         {
             return StatusCode(500);
@@ -59,17 +59,17 @@ public class FileController : ControllerBase
             await formFile.CopyToAsync(stream);
         }
 
-        if (query.DocumentType == UserContentType.DriverLicence
-            || query.DocumentType == UserContentType.PassportMain
-            || query.DocumentType == UserContentType.PassportRegistration
-            || query.DocumentType == UserContentType.TaxPayerIdentificationNumber)
+        if (query.ContentType == UserContentType.DriverLicence
+            || query.ContentType == UserContentType.PassportMain
+            || query.ContentType == UserContentType.PassportBackSide
+            || query.ContentType == UserContentType.AdrCertificate)
         {
             await _mediator.Send(new AddOrUpdateDocument()
             {
                 UserId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == JwtClaimsTypes.Id)?.Value,
                 Comment = "",
                 DocumentStatus = 1,
-                DocumentType = query.DocumentType
+                DocumentType = query.ContentType
             });
         }
 
@@ -104,7 +104,7 @@ public class FileController : ControllerBase
             return StatusCode(500);
         }
 
-        var files = Directory.GetFiles(resultPath, $"{query.DocumentType}*.*").ToList();
+        var files = Directory.GetFiles(resultPath, $"{query.ContentType}*.*").ToList();
         var fullFileName = files.LastOrDefault();
         if (string.IsNullOrEmpty(fullFileName))
         {

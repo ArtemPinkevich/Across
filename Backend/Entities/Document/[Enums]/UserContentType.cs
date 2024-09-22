@@ -4,9 +4,9 @@ public enum UserContentType
 {
     Avatar,
     PassportMain,
-    PassportRegistration,
+    PassportBackSide,
     DriverLicence,
-    TaxPayerIdentificationNumber,
+    AdrCertificate,
     TruckPhotoFront,
     TruckPhotoBack,
     TruckPhotoLeft,

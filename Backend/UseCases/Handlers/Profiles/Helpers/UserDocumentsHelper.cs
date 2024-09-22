@@ -36,10 +36,10 @@ public class UserDocumentsHelper
             Comment = passportMain.Comment
         });
 
-        var passportRegistration = user.Documents?.FirstOrDefault(x => x.DocumentType == UserContentType.PassportRegistration) ?? new Document()
+        var passportRegistration = user.Documents?.FirstOrDefault(x => x.DocumentType == UserContentType.PassportBackSide) ?? new Document()
         {
             DocumentStatus = DocumentStatus.None,
-            DocumentType = UserContentType.PassportRegistration,
+            DocumentType = UserContentType.PassportBackSide,
             Comment = ""
         };
         documents.Add(new DocumentDto()
@@ -49,10 +49,10 @@ public class UserDocumentsHelper
             Comment = passportRegistration.Comment
         });
 
-        var taxPayerIdentificationNumber = user.Documents?.FirstOrDefault(x => x.DocumentType == UserContentType.TaxPayerIdentificationNumber) ?? new Document()
+        var taxPayerIdentificationNumber = user.Documents?.FirstOrDefault(x => x.DocumentType == UserContentType.AdrCertificate) ?? new Document()
         {
             DocumentStatus = DocumentStatus.None,
-            DocumentType = UserContentType.TaxPayerIdentificationNumber,
+            DocumentType = UserContentType.AdrCertificate,
             Comment = ""
         };
         documents.Add(new DocumentDto()
