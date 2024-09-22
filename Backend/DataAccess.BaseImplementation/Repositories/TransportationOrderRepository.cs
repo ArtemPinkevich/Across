@@ -24,6 +24,7 @@ public class TransportationOrderRepository: IRepository<TransportationOrder>
             .Include(item => item.Shipper)
             .Include(item => item.Cargo)
             .Include(item => item.DriverRequests)
+            .Include(item => item.ContactInformation)
             .Include(item => item.TruckRequirements)
             .ThenInclude(item => item.CarBodyRequirement)
             .FirstOrDefaultAsync(condition);
@@ -36,6 +37,7 @@ public class TransportationOrderRepository: IRepository<TransportationOrder>
             .Include(item => item.Cargo)
             .Include(item => item.DriverRequests)
             .Include(item => item.TruckRequirements)
+            .Include(item => item.TruckRequirements)
             .ThenInclude(item => item.CarBodyRequirement)
             .ToListAsync();
     }
@@ -46,6 +48,7 @@ public class TransportationOrderRepository: IRepository<TransportationOrder>
             .Include(item => item.Shipper)
             .Include(item => item.Cargo)
             .Include(item => item.DriverRequests)
+            .Include(item => item.TruckRequirements)
             .Include(item => item.TruckRequirements)
             .ThenInclude(item => item.CarBodyRequirement)
             .Where(condition)
@@ -65,6 +68,7 @@ public class TransportationOrderRepository: IRepository<TransportationOrder>
             .Include(item => item.Cargo)
             .Include(item => item.DriverRequests)
             .Include(item => item.TruckRequirements)
+            .Include(item => item.TruckRequirements)
             .ThenInclude(item => item.CarBodyRequirement)
             .Where(condition)
             .TakeLast(limit)
@@ -78,6 +82,7 @@ public class TransportationOrderRepository: IRepository<TransportationOrder>
             .Include(item => item.Shipper)
             .Include(item => item.Cargo)
             .Include(item => item.DriverRequests)
+            .Include(item => item.TruckRequirements)
             .Include(item => item.TruckRequirements)
             .Where(condition)
             .Take(limit)
