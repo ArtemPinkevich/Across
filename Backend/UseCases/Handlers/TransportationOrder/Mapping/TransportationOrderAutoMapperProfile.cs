@@ -45,6 +45,21 @@ public class SetOrderAddressDependingOnStatus : IMappingAction<Entities.Transpor
         }
     }
 }
+
+public class ClearContactInfoDependingOnStatus : IMappingAction<Entities.TransportationOrder, TransportationOrderDto>
+{
+    public void Process(Entities.TransportationOrder source, TransportationOrderDto destination, ResolutionContext context)
+    {
+        if (destination.TransportationOrderStatus == TransportationOrderStatus.NotPublished
+            || destination.TransportationOrderStatus == TransportationOrderStatus.CarrierFinding
+            || destination.TransportationOrderStatus == TransportationOrderStatus.ManagerApproving
+            || destination.TransportationOrderStatus == TransportationOrderStatus.ShipperApproving)
+        {
+            destination.ContactInfoDto = null;
+        }
+    }
+}
+
 public class TransportationOrderLocationConverter : IValueConverter<LocationDto, string>
 {
     public string Convert(LocationDto sourceMember, ResolutionContext context)
@@ -408,7 +423,8 @@ public class TransportationOrderMapperProfile : Profile
                 opt => opt.MapFrom(d => ConvertLocationReverse(d.LoadingLocalityName)))
             .ForPath(s => s.TransferInfo.UnloadingPlace,
                 opt => opt.MapFrom(d => ConvertLocationReverse(d.UnloadingLocalityName)))
-            .AfterMap<SetOrderAddressDependingOnStatus>();
+            .AfterMap<SetOrderAddressDependingOnStatus>()
+            .AfterMap<ClearContactInfoDependingOnStatus>();
     }
 
     public static LocationDto ConvertLocationReverse(string location)
