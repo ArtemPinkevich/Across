@@ -27,6 +27,8 @@
         
         public DbSet<ContactInformation> ContactInformations { set; get; }
 
+        public DbSet<TransportationInfo> TransportationInfos { set; get; }
+        
         public DbSet<DriverRequest> DriverRequests { set; get; }
         
         public DbSet<Transportation> Transportations { set; get; }

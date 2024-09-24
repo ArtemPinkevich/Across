@@ -22,9 +22,17 @@ public class TransferInfoDto
     
     public string LoadingAddress { set; get; }
     
+    public string LoadingLatitude { set; get; }
+    
+    public string LoadingLongitude { set; get; }
+    
     public LocationDto UnloadingPlace { set; get; }
     
     public string UnloadingAddress { set; get; }
+    
+    public string UnloadingLatitude { set; get; }
+    
+    public string UnloadingLongitude { set; get; }
 }
 
 public class TruckRequirementsDto
@@ -69,6 +77,7 @@ public class CargoDto
     public double? Width { set; get; }
     public double? Height { set; get; }
     public double Diameter { set; get; }
+    
     public int Price { set; get; }
     public TruckRequirementsDto TruckRequirements { set; get; }
 }

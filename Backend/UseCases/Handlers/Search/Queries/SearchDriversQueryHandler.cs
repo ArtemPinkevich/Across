@@ -81,7 +81,7 @@ public class SearchDriversQueryHandler : IRequestHandler<SearchDriversQuery, Sea
         List<Entities.Truck> trucks = new List<Entities.Truck>();
         
         #warning TODO change TransferChangeHistoryRecords to current status and change to AsyncEnumerable
-        var orders = await _transportationOrdersRepository.GetAllAsync(x => x.UnloadingLocalityName == request.DriverLocation
+        var orders = await _transportationOrdersRepository.GetAllAsync(x => x.TransportationInfo.UnloadingLocalityName == request.DriverLocation
                                                                             && x.TransportationOrderStatus == TransportationOrderStatus.Transporting);
 
         foreach (var order in orders)

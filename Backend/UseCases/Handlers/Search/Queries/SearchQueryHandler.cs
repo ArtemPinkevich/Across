@@ -46,15 +46,15 @@ public class SearchQueryHandler : IRequestHandler<SearchQuery, SearchResultDto>
 
         transportationOrders.ForEach(order =>
         {
-            var loadingPlace = TransportationOrderMapperProfile.ConvertLocationReverse(order.LoadingLocalityName);
+            var loadingPlace = TransportationOrderMapperProfile.ConvertLocationReverse(order.TransportationInfo.LoadingLocalityName);
             if (!loadingPlace.City.ToLower().Contains(fromAddressLower))
             {
                 return;
             }
 
-            if (!string.IsNullOrEmpty(toAddressLower) && toAddressLower != order.UnloadingAddress.ToLower())
+            if (!string.IsNullOrEmpty(toAddressLower) && toAddressLower != order.TransportationInfo.UnloadingAddress.ToLower())
             {
-                var unloadingPlace = TransportationOrderMapperProfile.ConvertLocationReverse(order.UnloadingLocalityName);
+                var unloadingPlace = TransportationOrderMapperProfile.ConvertLocationReverse(order.TransportationInfo.UnloadingLocalityName);
                 if (!unloadingPlace.City.ToLower().Contains(toAddressLower))
                 {
                     return;
@@ -62,7 +62,7 @@ public class SearchQueryHandler : IRequestHandler<SearchQuery, SearchResultDto>
             }
 
             // Ожидаем в order.LoadDateFrom дату в ISO формате
-            if (!DateTime.TryParse(order.LoadDateFrom, out DateTime loadDateFrom))
+            if (!DateTime.TryParse(order.TransportationInfo.LoadDateFrom, out DateTime loadDateFrom))
             {
                 return;
             }
@@ -73,7 +73,7 @@ public class SearchQueryHandler : IRequestHandler<SearchQuery, SearchResultDto>
                 return;
             }
 
-            if (DateTime.TryParse(order.LoadDateTo, out DateTime loadDateTo))
+            if (DateTime.TryParse(order.TransportationInfo.LoadDateTo, out DateTime loadDateTo))
             {
                 if (desiredLoadDate.Date >= loadDateFrom.Date && desiredLoadDate.Date <= loadDateTo.Date)
                 {

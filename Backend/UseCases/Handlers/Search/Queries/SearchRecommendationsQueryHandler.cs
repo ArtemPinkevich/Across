@@ -47,7 +47,7 @@ public class SearchRecommendationsQueryHandler : IRequestHandler<SearchRecommend
         var orders = await _ordersRepository.GetAllAsync(searchByStatusExpression);
         foreach (var order in orders)
         {
-            var trucks = await _trucksRepository.GetAllAsync(x => x.TruckLocation == order.LoadingLocalityName
+            var trucks = await _trucksRepository.GetAllAsync(x => x.TruckLocation == order.TransportationInfo.LoadingLocalityName
                                                                   && x.LoadingType == order.TruckRequirements.LoadingType
                                                                   && x.InnerBodyHeight >= order.TruckRequirements.InnerBodyHeight
                                                                   && x.CarryingCapacity >= order.TruckRequirements.CarryingCapacity

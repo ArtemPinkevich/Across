@@ -41,7 +41,7 @@ public class SearchRecommendationsByTruckQueryHandler : IRequestHandler<SearchRe
         }
 
         var orders =
-            await _ordersRepository.GetAllAsync(x => x.LoadingLocalityName == truck.TruckLocation
+            await _ordersRepository.GetAllAsync(x => x.TransportationInfo.LoadingLocalityName == truck.TruckLocation
                                                      && x.TruckRequirements.LoadingType == truck.LoadingType
                                                      && x.TruckRequirements.InnerBodyHeight >= truck.InnerBodyHeight
                                                      && x.TruckRequirements.CarryingCapacity >= truck.CarryingCapacity

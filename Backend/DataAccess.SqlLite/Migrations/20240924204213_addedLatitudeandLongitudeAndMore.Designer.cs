@@ -3,6 +3,7 @@ using System;
 using DataAccess.SqlLite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.SqlLite.Migrations
 {
     [DbContext(typeof(SqlLiteDbContext))]
-    partial class SqlLiteDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240924204213_addedLatitudeandLongitudeAndMore")]
+    partial class addedLatitudeandLongitudeAndMore
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.4");
@@ -492,16 +494,16 @@ namespace DataAccess.SqlLite.Migrations
                     b.Property<int>("TransportationOrderId")
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("UnLoadingLatitude")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("UnLoadingLongitude")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("UnloadingAddress")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("UnloadingLatitude")
-                        .HasColumnType("TEXT");
-
                     b.Property<string>("UnloadingLocalityName")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("UnloadingLongitude")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");

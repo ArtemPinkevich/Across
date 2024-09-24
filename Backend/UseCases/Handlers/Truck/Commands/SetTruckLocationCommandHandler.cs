@@ -28,6 +28,8 @@ public class SetTruckLocationCommandHandler:IRequestHandler<SetTruckLocationComm
         }
 
         truck.TruckLocation = request.TruckLocation;
+        truck.Latitude = request.Latitude;
+        truck.Longitude = request.Longitude;
         await _truckRepository.UpdateAsync(truck);
         await _truckRepository.SaveAsync();
 

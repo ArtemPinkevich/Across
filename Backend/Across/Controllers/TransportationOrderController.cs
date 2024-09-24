@@ -208,4 +208,18 @@ public class TransportationOrderController:ControllerBase
     {
         return await _mediator.Send(clarifyCommand);
     }
+
+    [Authorize(Roles = UserRoles.Driver)]
+    [HttpPost("add_transportation_location")]
+    public async Task<TransportationOrderResult> AddTransportationLocation(AddTransportationLocationCommand locationCommand)
+    {
+        return await _mediator.Send(locationCommand);
+    }
+    
+    [Authorize(Roles = $"{UserRoles.Shipper},{UserRoles.Admin}")]
+    [HttpPost("get_transportation_location")]
+    public async Task<TransportationOrderLocationResultDto> GetTransportationLocation(GetTransportationLocationCommand locationCommand)
+    {
+        return await _mediator.Send(locationCommand);
+    }
 }

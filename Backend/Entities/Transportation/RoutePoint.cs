@@ -9,5 +9,7 @@ public class RoutePoint: EntityBase
     
     public string Latitude { set; get; }
     
-    public string Longtitude { set; get; }
+    public string Longitude { set; get; }
+    
+    public string DateTime { set; get; }
 }

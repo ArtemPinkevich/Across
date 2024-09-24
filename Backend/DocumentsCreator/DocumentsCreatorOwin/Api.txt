@@ -1,4 +1,4 @@
-http://localhost:9000/api/Documents/order?route=Томск Астана&cargoName=value&cargoPrice=value&bank=value&clientBin=value&company=value&email &dest=value&transportPrice=value&unAddress=value&bankBin=value&account=value&legalAddress=value&nds=value&phone=value&driver=value&loadDate=value&manager=value&numberOfTrucks=value&unloadDate=value&receiver=value&bankSwift=value&ceo=value&loadPerson=value&unloadPerson=value
+http://localhost:9000/api/Documents/order?route=Томск Астана&cargoName=value&cargoPrice=value&bank=value&clientBin=value&company=value&email=value&dest=value&transportPrice=value&unAddress=value&bankBin=value&account=value&legalAddress=value&nds=value&phone=value&driver=value&loadDate=value&manager=value&numberOfTrucks=value&unloadDate=value&receiver=value&bankSwift=value&ceo=value&loadPerson=value&unloadPerson=value
 
 route - маршрут
 cargoName - название груза

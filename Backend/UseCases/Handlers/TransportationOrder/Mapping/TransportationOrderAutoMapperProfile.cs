@@ -25,8 +25,8 @@ public class SetOrderAddressDependingOnStatus : IMappingAction<Entities.Transpor
     public void Process(Entities.TransportationOrder source, TransportationOrderDto destination, ResolutionContext context)
     {
         destination.TransferInfo ??= new TransferInfoDto();
-        destination.TransferInfo.LoadingDateFrom = source.LoadDateFrom;
-        destination.TransferInfo.LoadingDateTo = source.LoadDateTo;
+        destination.TransferInfo.LoadingDateFrom = source.TransportationInfo.LoadDateFrom;
+        destination.TransferInfo.LoadingDateTo = source.TransportationInfo.LoadDateTo;
         
         if (destination.TransportationOrderStatus == TransportationOrderStatus.ManagerApproving
             || destination.TransportationOrderStatus == TransportationOrderStatus.ShipperApproving
@@ -35,8 +35,8 @@ public class SetOrderAddressDependingOnStatus : IMappingAction<Entities.Transpor
             || destination.TransportationOrderStatus == TransportationOrderStatus.Transporting
             || destination.TransportationOrderStatus == TransportationOrderStatus.Unloading)
         {
-            destination.TransferInfo.LoadingAddress = source.LoadingAddress;
-            destination.TransferInfo.UnloadingAddress = source.UnloadingAddress;
+            destination.TransferInfo.LoadingAddress = source.TransportationInfo.LoadingAddress;
+            destination.TransferInfo.UnloadingAddress = source.TransportationInfo.UnloadingAddress;
         }
         else
         {
@@ -93,6 +93,21 @@ public class TransportationOrderMapperProfile : Profile
             .ForMember(d => d.CarBodies, opt => opt.MapFrom(s => s.CarBodyRequirement))
             .ForMember(d => d.LoadingTypeDtos, opt => opt.MapFrom(s => s.LoadingType))
             .ForMember(d => d.UnloadingTypeDtos, opt => opt.MapFrom(s => s.UnloadingType));
+
+        CreateMap<TransferInfoDto, TransportationInfo>()
+            .ForMember(d => d.LoadingLocalityName,
+                opt => opt.ConvertUsing(new TransportationOrderLocationConverter(), src => src.LoadingPlace))
+            .ForMember(d => d.UnloadingLocalityName,
+                opt => opt.ConvertUsing(new TransportationOrderLocationConverter(),
+                    src => src.UnloadingPlace))
+            .ReverseMap()
+            .ForPath(s => s.LoadingPlace,
+                opt => opt.MapFrom(d => ConvertLocationReverse(d.LoadingLocalityName)))
+            .ForPath(s => s.UnloadingPlace,
+                opt => opt.MapFrom(d => ConvertLocationReverse(d.UnloadingLocalityName)));
+
+        CreateMap<LocationDto, string>()
+            .ConstructUsing(s => ConvertLocation(s));
         
         CreateMap<CarBodyType[], CarBodyRequirement>().ConvertUsing((value, dest) =>
         {
@@ -385,20 +400,8 @@ public class TransportationOrderMapperProfile : Profile
         CreateMap<TransportationOrderDto, Entities.TransportationOrder>()
             .ForMember(d => d.Id,
                 opt => opt.MapFrom(s => s.TransportationOrderId))
-            .ForMember(d => d.LoadingAddress,
-                opt => opt.MapFrom(s => s.TransferInfo.LoadingAddress))
-            .ForMember(d => d.UnloadingAddress,
-                opt => opt.MapFrom(s => s.TransferInfo.UnloadingAddress))
-            .ForMember(d => d.LoadingLocalityName,
-                opt => opt.ConvertUsing(new TransportationOrderLocationConverter(),
-                    src => src.TransferInfo.LoadingPlace))
-            .ForMember(d => d.UnloadingLocalityName,
-                opt => opt.ConvertUsing(new TransportationOrderLocationConverter(),
-                    src => src.TransferInfo.UnloadingPlace))
-            .ForMember(d => d.LoadDateFrom,
-                opt => opt.MapFrom(s => s.TransferInfo.LoadingDateFrom))
-            .ForMember(d => d.LoadDateTo,
-                opt => opt.MapFrom(s => s.TransferInfo.LoadingDateTo))
+            .ForMember(d => d.TransportationInfo,
+                opt => opt.MapFrom(s => s.TransferInfo))
             .ForMember(d => d.Cargo, opt => opt.MapFrom(s => s.Cargo))
             .ForMember(d => d.TruckRequirements,
                 opt => opt.MapFrom(s => s.Cargo.TruckRequirements))
@@ -415,18 +418,21 @@ public class TransportationOrderMapperProfile : Profile
                 opt => opt.MapFrom(s => s.ContactInformation))
             .ForPath(d => d.Cargo.TruckRequirements,
                 opt => opt.MapFrom(s => s.TruckRequirements))
+            .ForMember(d => d.TransferInfo,
+                opt => opt.MapFrom(s => s.TransportationInfo))
             .ForMember(s => s.TransportationOrderStatus,
                 opt => opt.MapFrom(d => d.TransportationOrderStatus))
             .ForMember(s => s.Price,
                 opt => opt.MapFrom(d => d.Price))
-            .ForPath(s => s.TransferInfo.LoadingPlace,
-                opt => opt.MapFrom(d => ConvertLocationReverse(d.LoadingLocalityName)))
-            .ForPath(s => s.TransferInfo.UnloadingPlace,
-                opt => opt.MapFrom(d => ConvertLocationReverse(d.UnloadingLocalityName)))
             .AfterMap<SetOrderAddressDependingOnStatus>()
             .AfterMap<ClearContactInfoDependingOnStatus>();
     }
 
+    public static string ConvertLocation(LocationDto location)
+    {
+        return $"{location.Country}{Constants.LocationDelimiter}{location.Region}{Constants.LocationDelimiter}{location.City}";
+    }
+    
     public static LocationDto ConvertLocationReverse(string location)
     {
         var res = location.Split(Constants.LocationDelimiter);
