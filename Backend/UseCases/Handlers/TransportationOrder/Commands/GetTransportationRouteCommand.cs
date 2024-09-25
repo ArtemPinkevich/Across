@@ -3,7 +3,7 @@ using UseCases.Handlers.Cargo.Dto;
 
 namespace UseCases.Handlers.TransportationOrder.Commands;
 
-public class GetTransportationLocationCommand : IRequest<TransportationOrderLocationResultDto>
+public class GetTransportationRouteCommand : IRequest<TransportationOrderRouteResultDto>
 {
     public int TransportationOrderId { set; get; }
 }
