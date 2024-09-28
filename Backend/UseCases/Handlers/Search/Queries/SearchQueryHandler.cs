@@ -46,7 +46,7 @@ public class SearchQueryHandler : IRequestHandler<SearchQuery, SearchResultDto>
 
         transportationOrders.ForEach(order =>
         {
-            var loadingPlace = TransportationOrderMapperProfile.ConvertLocationReverse(order.TransportationInfo.LoadingLocalityName);
+            var loadingPlace = TransportationOrderMapperProfile.ConvertLocationReverse(order.TransportationInfo.LoadingLocalityName, order.TransportationInfo.LoadingLatitude, order.TransportationInfo.LoadingLongitude);
             if (!loadingPlace.City.ToLower().Contains(fromAddressLower))
             {
                 return;
@@ -54,7 +54,7 @@ public class SearchQueryHandler : IRequestHandler<SearchQuery, SearchResultDto>
 
             if (!string.IsNullOrEmpty(toAddressLower) && toAddressLower != order.TransportationInfo.UnloadingAddress.ToLower())
             {
-                var unloadingPlace = TransportationOrderMapperProfile.ConvertLocationReverse(order.TransportationInfo.UnloadingLocalityName);
+                var unloadingPlace = TransportationOrderMapperProfile.ConvertLocationReverse(order.TransportationInfo.UnloadingLocalityName, order.TransportationInfo.UnloadingLatitude, order.TransportationInfo.UnloadingLongitude);
                 if (!unloadingPlace.City.ToLower().Contains(toAddressLower))
                 {
                     return;

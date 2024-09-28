@@ -107,12 +107,12 @@ public class AddOrUpdateTransportationOrderCommandHandler: IRequestHandler<AddOr
             order.TransportationInfo.LoadDateTo = request.TransportationOrderDto.TransferInfo.LoadingDateTo;
             order.TransportationInfo.LoadingLocalityName = _mapper.Map<string>(request.TransportationOrderDto.TransferInfo.LoadingPlace);
             order.TransportationInfo.LoadingAddress = request.TransportationOrderDto.TransferInfo.LoadingAddress;
-            order.TransportationInfo.LoadingLatitude = request.TransportationOrderDto.TransferInfo.LoadingLatitude;
-            order.TransportationInfo.LoadingLongitude = request.TransportationOrderDto.TransferInfo.LoadingLongitude;
+            order.TransportationInfo.LoadingLatitude = request.TransportationOrderDto.TransferInfo.LoadingPlace?.Latitide ?? "";
+            order.TransportationInfo.LoadingLongitude = request.TransportationOrderDto.TransferInfo.LoadingPlace?.Longtitude ?? "";
             order.TransportationInfo.UnloadingLocalityName =_mapper.Map<string>(request.TransportationOrderDto.TransferInfo.UnloadingPlace);
             order.TransportationInfo.UnloadingAddress = request.TransportationOrderDto.TransferInfo.UnloadingAddress;
-            order.TransportationInfo.UnloadingLatitude = request.TransportationOrderDto.TransferInfo.UnloadingLatitude;
-            order.TransportationInfo.UnloadingLongitude = request.TransportationOrderDto.TransferInfo.UnloadingLongitude;
+            order.TransportationInfo.UnloadingLatitude = request.TransportationOrderDto.TransferInfo.UnloadingPlace?.Latitide ?? "";
+            order.TransportationInfo.UnloadingLongitude = request.TransportationOrderDto.TransferInfo.UnloadingPlace?.Longtitude ?? "";
             
 #endif
             

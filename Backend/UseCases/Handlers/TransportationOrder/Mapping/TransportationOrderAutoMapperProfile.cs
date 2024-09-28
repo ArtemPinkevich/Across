@@ -100,11 +100,16 @@ public class TransportationOrderMapperProfile : Profile
             .ForMember(d => d.UnloadingLocalityName,
                 opt => opt.ConvertUsing(new TransportationOrderLocationConverter(),
                     src => src.UnloadingPlace))
+            .ForMember(d => d.LoadingLatitude, opt => opt.MapFrom(s => s.LoadingPlace.Latitide))
+            .ForMember(d => d.LoadingLongitude, opt => opt.MapFrom(s => s.LoadingPlace.Longtitude))
+            .ForMember(d => d.UnloadingLatitude, opt => opt.MapFrom(s => s.UnloadingPlace.Latitide))
+            .ForMember(d => d.UnloadingLongitude, opt => opt.MapFrom(s => s.UnloadingPlace.Longtitude))
+
             .ReverseMap()
             .ForPath(s => s.LoadingPlace,
-                opt => opt.MapFrom(d => ConvertLocationReverse(d.LoadingLocalityName)))
+                opt => opt.MapFrom(d => ConvertLocationReverse(d.LoadingLocalityName, d.LoadingLatitude, d.LoadingLongitude)))
             .ForPath(s => s.UnloadingPlace,
-                opt => opt.MapFrom(d => ConvertLocationReverse(d.UnloadingLocalityName)));
+                opt => opt.MapFrom(d => ConvertLocationReverse(d.UnloadingLocalityName, d.UnloadingLatitude, d.UnloadingLongitude)));
 
         CreateMap<LocationDto, string>()
             .ConstructUsing(s => ConvertLocation(s));
@@ -433,11 +438,11 @@ public class TransportationOrderMapperProfile : Profile
         return $"{location.Country}{Constants.LocationDelimiter}{location.Region}{Constants.LocationDelimiter}{location.City}";
     }
     
-    public static LocationDto ConvertLocationReverse(string location)
+    public static LocationDto ConvertLocationReverse(string location, string latitide, string longtitude)
     {
         var res = location.Split(Constants.LocationDelimiter);
         if (res.Length >= 3)
-            return new LocationDto() { Country = res[0], Region = res[1], City = res[2], };
+            return new LocationDto() { Country = res[0], Region = res[1], City = res[2], Latitide = latitide, Longtitude = longtitude };
         return new LocationDto()
         {
             Country = "undefined",
