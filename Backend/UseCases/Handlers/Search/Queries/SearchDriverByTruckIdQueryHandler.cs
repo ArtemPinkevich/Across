@@ -42,6 +42,6 @@ public class SearchDriverByTruckIdQueryHandler : IRequestHandler<SearchDriverByT
             throw new Exception($"user id not driver {request.TruckId}");
         }
 
-        return await driver.ConvertToProfileDto(_userManager, _mapper);
+        return await driver.ConvertToProfileDtoAsync(_userManager, _mapper);
     }
 }

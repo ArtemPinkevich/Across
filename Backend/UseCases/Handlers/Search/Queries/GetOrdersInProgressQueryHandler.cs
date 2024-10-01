@@ -86,8 +86,8 @@ public class GetOrdersInProgressQueryHandler : IRequestHandler<GetOrdersInProgre
             var truck = await _trucksRepository.GetAsync(x => x.Id == driverRequest.TruckId);
             var dto = new CorrelationDto()
             {
-                Driver = await driver.ConvertToProfileDto(_userManager, _mapper),
-                Shipper = await shipper.ConvertToProfileDto(_userManager, _mapper),
+                Driver = await driver.ConvertToProfileDtoAsync(_userManager, _mapper),
+                Shipper = await shipper.ConvertToProfileDtoAsync(_userManager, _mapper),
                 Truck = _mapper.Map<TruckDto>(truck),
                 TransportationOrder = _mapper.Map<TransportationOrderDto>(order)
             };

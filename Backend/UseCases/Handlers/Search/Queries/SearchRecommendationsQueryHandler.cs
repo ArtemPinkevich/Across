@@ -10,6 +10,7 @@ using Entities;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using UseCases.Handlers.Cargo.Dto;
+using UseCases.Handlers.Common.Dto;
 using UseCases.Handlers.Common.Extensions;
 using UseCases.Handlers.Profiles.Dto;
 using UseCases.Handlers.Profiles.Helpers;
@@ -24,78 +25,83 @@ public class SearchRecommendationsQueryHandler : IRequestHandler<SearchRecommend
     private readonly UserManager<User> _userManager;
     private readonly IRepository<Entities.TransportationOrder> _ordersRepository;
     private readonly IRepository<Entities.Truck> _trucksRepository;
+    private readonly IRepository<Transportation> _transportationRepository;
 
     public SearchRecommendationsQueryHandler(IMapper mapper,
         UserManager<User> userManager,
         IRepository<Entities.TransportationOrder> ordersRepository,
-        IRepository<Entities.Truck> trucksRepository)
+        IRepository<Entities.Truck> trucksRepository,
+        IRepository<Transportation> transportationRepository)
     {
         _mapper = mapper;
         _userManager = userManager;
         _ordersRepository = ordersRepository;
         _trucksRepository = trucksRepository;
+        _transportationRepository = transportationRepository;
     }
     
-    #warning TODO доделать поиск рекомендаций (добавить проверку по городу(брать из заказа) и примерной дате)
     public async Task<RecommendationsResultDto> Handle(SearchRecommendationsQuery request, CancellationToken cancellationToken)
     {
         var recommendationsResultDto = new RecommendationsResultDto()
         {
             Recommendations = new List<CorrelationDto>()
         };
-        Expression <Func<Entities.TransportationOrder, bool>> searchByStatusExpression = x => x.TransportationOrderStatus == TransportationOrderStatus.CarrierFinding;
-        var orders = await _ordersRepository.GetAllAsync(searchByStatusExpression);
+        
+        var orders = await _ordersRepository.GetAllAsync(x => x.TransportationOrderStatus == TransportationOrderStatus.CarrierFinding);
         foreach (var order in orders)
         {
-            var trucks = await _trucksRepository.GetAllAsync(x => x.TruckLocation == order.TransportationInfo.LoadingLocalityName
-                                                                  && x.LoadingType == order.TruckRequirements.LoadingType
-                                                                  && x.InnerBodyHeight >= order.TruckRequirements.InnerBodyHeight
-                                                                  && x.CarryingCapacity >= order.TruckRequirements.CarryingCapacity
-                                                                  && x.InnerBodyLength >= order.TruckRequirements.InnerBodyLength
-                                                                  && x.InnerBodyWidth >= order.TruckRequirements.InnerBodyWidth);
-            
-            var shipper = await _userManager.FindByIdAsync(order.ShipperId);
-            var shipperRole = await _userManager.GetUserRole(shipper);
-            foreach (var truck in trucks)
-            {
-                var driver = await _userManager.FindByIdAsync(truck.DriverId);
-                var driverRole = await _userManager.GetUserRole(driver);
-                recommendationsResultDto.Recommendations.Add(new CorrelationDto()
-                {
-                    #warning Create mapper for ProfileDto
-                    Driver = new ProfileDto()
-                    {
-                        Name = driver.Name,
-                        Surname = driver.Surname,
-                        Patronymic = driver.Patronymic,
-                        BirthDate = driver.BirthDate,
-                        PhoneNumber = driver.PhoneNumber,
-                        Role = shipperRole,
-                        Status = driver.UserStatus,
-                        DocumentDtos = driverRole == UserRoles.Driver
-                            ? UserDocumentsHelper.CreateDriverDocumentsList(driver)
-                            : UserDocumentsHelper.CreateShipperDocumentsList(driver)
-                    },
-                    Shipper = new ProfileDto()
-                    {
-                        Name = shipper.Name,
-                        Surname = shipper.Surname,
-                        Patronymic = shipper.Patronymic,
-                        BirthDate = shipper.BirthDate,
-                        PhoneNumber = shipper.PhoneNumber,
-                        Role = shipperRole,
-                        Status = shipper.UserStatus,
-                        DocumentDtos = shipperRole == UserRoles.Driver
-                            ? UserDocumentsHelper.CreateDriverDocumentsList(shipper)
-                            : UserDocumentsHelper.CreateShipperDocumentsList(shipper)
-                    },
-                    TransportationOrder = _mapper.Map<TransportationOrderDto>(order),
-                    Truck = _mapper.Map<TruckDto>(truck)
-                });
-            }
-
+            recommendationsResultDto.Recommendations.AddRange(await FindCorrelationsForOrder(order));
         }
 
-        return null;
+        recommendationsResultDto.Result = ApiResult.Success;
+        return recommendationsResultDto;
+    }
+
+    private async Task<List<CorrelationDto>> FindCorrelationsForOrder(Entities.TransportationOrder order)
+    {
+        List<CorrelationDto> correlationDtos = new List<CorrelationDto>();
+        //находим все машины подходящие по фильтру, также убираются все грузовики которые уже в заявках у заказа
+        var trucks = await _trucksRepository.GetAllAsync(x => x.LoadingType == order.TruckRequirements.LoadingType
+                                                              && order.DriverRequests.All(driverRequest => driverRequest.TruckId != x.Id));
+            
+        var shipper = await _userManager.FindByIdAsync(order.ShipperId);
+        foreach (var truck in trucks)
+        {
+            if(!await IsTruckValidForOrder(truck, order))
+                continue;
+
+            var driver = await _userManager.FindByIdAsync(truck.DriverId);
+            correlationDtos.Add(new CorrelationDto()
+            {
+                Driver = await driver.ConvertToProfileDtoAsync(_userManager, _mapper),
+                Shipper = await shipper.ConvertToProfileDtoAsync(_userManager, _mapper),
+                TransportationOrder = _mapper.Map<TransportationOrderDto>(order),
+                Truck = _mapper.Map<TruckDto>(truck)
+            });
+        }
+
+        return correlationDtos;
+    }
+
+    private async Task<bool> IsTruckValidForOrder(Entities.Truck truck, Entities.TransportationOrder orderToCheck)
+    {
+        var transportation = await _transportationRepository.GetAsync(x => x.TruckId == truck.Id);
+        //если нет transportation значит машина не назначена на заказ
+        if(transportation == null)
+            return true;
+
+        var orderInProgress =  await _ordersRepository.GetAsync(x => x.Id == transportation.TransportationOrderId);
+        if (DateTime.TryParse(orderInProgress.TransportationInfo.LoadDateTo, out DateTime arrivingDate))
+        {
+            return false;
+        }
+        if (DateTime.TryParse(orderToCheck.TransportationInfo.LoadDateFrom, out DateTime requiredDate))
+        {
+            return false;
+        }
+
+        //проверка даты прибытия заказа в работе и требуемого заказа
+        //проверка локации
+        return DateTime.Compare(arrivingDate, requiredDate) <= 1  && orderInProgress.TransportationInfo.UnloadingLocalityName == orderToCheck.TransportationInfo.LoadingLocalityName;
     }
 }

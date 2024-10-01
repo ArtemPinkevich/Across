@@ -42,6 +42,6 @@ public class SearchShipperByOrderIdQueryHandler : IRequestHandler<SearchShipperB
             throw new Exception($"user is not shipper {request.OrderId}");
         }
 
-        return await shipper.ConvertToProfileDto(_userManager, _mapper);
+        return await shipper.ConvertToProfileDtoAsync(_userManager, _mapper);
     }
 }

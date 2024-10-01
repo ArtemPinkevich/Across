@@ -16,26 +16,6 @@ public class TransportationOrder : EntityBase
     public TransportationInfo TransportationInfo { set; get; }
     
     public int Price { set; get; }
-    /*
-    public string LoadDateFrom { set; get; }
-    
-    public string LoadDateTo { set; get; }
-    
-    public string LoadingLocalityName { set; get; }
-    
-    public string LoadingAddress { set; get; }
-    
-    public string LoadingLatitude { set; get; }
-    
-    public string LoadingLongitude { set; get; }
-    
-    public string UnloadingLocalityName { set; get; }
-    
-    public string UnloadingAddress { set; get; }
-    
-    public string UnLoadingLatitude { set; get; }
-    
-    public string UnLoadingLongitude { set; get; }*/
     
     public TransportationOrderStatus TransportationOrderStatus { set; get; }
     

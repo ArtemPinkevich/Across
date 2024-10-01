@@ -57,8 +57,8 @@ public class GetBidsQueryHandler : IRequestHandler<GetBidsQuery, BidsResultDto>
         var driver = await _userManager.FindByIdWithDocuments(driverRequest.DriverId);
         var truck = await _trucksRepository.GetAsync(x => x.Id == driverRequest.TruckId);
         var correlation = new CorrelationDto {
-            Shipper = await shipper.ConvertToProfileDto(_userManager, _mapper),
-            Driver = await driver.ConvertToProfileDto(_userManager, _mapper),
+            Shipper = await shipper.ConvertToProfileDtoAsync(_userManager, _mapper),
+            Driver = await driver.ConvertToProfileDtoAsync(_userManager, _mapper),
             Truck = _mapper.Map<TruckDto>(truck),
             TransportationOrder = _mapper.Map<TransportationOrderDto>(order)
         };
