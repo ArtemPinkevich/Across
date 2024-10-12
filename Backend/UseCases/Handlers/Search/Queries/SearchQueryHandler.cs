@@ -67,6 +67,10 @@ public class SearchQueryHandler : IRequestHandler<SearchQuery, SearchResultDto>
                 return;
             }
 
+            
+            filtredOrders.Add(order);
+            return;
+            
             if (desiredLoadDate.Date == loadDateFrom.Date)
             {
                 filtredOrders.Add(order);
