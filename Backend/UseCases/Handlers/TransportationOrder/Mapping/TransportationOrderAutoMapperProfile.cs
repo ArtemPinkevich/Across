@@ -104,8 +104,11 @@ public class TransportationOrderMapperProfile : Profile
             .ForMember(d => d.LoadingLongitude, opt => opt.MapFrom(s => s.LoadingPlace.Longtitude))
             .ForMember(d => d.UnloadingLatitude, opt => opt.MapFrom(s => s.UnloadingPlace.Latitide))
             .ForMember(d => d.UnloadingLongitude, opt => opt.MapFrom(s => s.UnloadingPlace.Longtitude))
-
+            .ForMember(d => d.LoadDateFrom, opt => opt.MapFrom(s => s.LoadingDateFrom))
+            .ForMember(d => d.LoadDateTo, opt => opt.MapFrom(s => s.LoadingDateTo))
             .ReverseMap()
+            .ForMember(d => d.LoadingDateFrom, opt => opt.MapFrom(s => s.LoadDateFrom))
+            .ForMember(d => d.LoadingDateTo, opt => opt.MapFrom(s => s.LoadDateTo))
             .ForPath(s => s.LoadingPlace,
                 opt => opt.MapFrom(d => ConvertLocationReverse(d.LoadingLocalityName, d.LoadingLatitude, d.LoadingLongitude)))
             .ForPath(s => s.UnloadingPlace,

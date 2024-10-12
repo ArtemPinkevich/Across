@@ -53,6 +53,7 @@ public class GetTransportationRouteCommandHandler : IRequestHandler<GetTransport
 
         return new TransportationOrderRouteResultDto()
         {
+            TransportationId = transportation.Id,
             Result = ApiResult.Success,
             DeparturePoint = new RoutePointDto()
             {
