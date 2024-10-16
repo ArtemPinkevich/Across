@@ -73,14 +73,20 @@
 
             modelBuilder.Entity<Transportation>()
                 .HasOne(x => x.TransportationOrder)
-                .WithOne()
-                .HasForeignKey<Transportation>(x => x.TransportationOrderId)
+                .WithMany()
+                .HasForeignKey(x => x.TransportationOrderId)
                 .IsRequired();
             
             modelBuilder.Entity<Transportation>()
                 .HasOne(x => x.Driver)
-                .WithOne()
-                .HasForeignKey<Transportation>(x => x.DriverId)
+                .WithMany()
+                .HasForeignKey(x => x.DriverId)
+                .IsRequired();
+            
+            modelBuilder.Entity<Transportation>()
+                .HasOne(x => x.Truck)
+                .WithMany()
+                .HasForeignKey(x => x.TruckId)
                 .IsRequired();
 
             base.OnModelCreating(modelBuilder);
