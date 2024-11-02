@@ -115,20 +115,6 @@ public class FileController : ControllerBase
         return PhysicalFile(@$"{fullFileName}", $"image/{extensionWithoutDot}");
     }
 
-    [Authorize(Roles = $"{UserRoles.All}")]
-    [HttpGet("get-truck-marker-icon")]
-    public IActionResult GetTruckMarkerIcon()
-    {
-        var path = Path.Combine(Directory.GetCurrentDirectory(), "Assets", "truck-map-marker.png");
-
-        if (!System.IO.File.Exists(path))
-        {
-            return NotFound();
-        }
-
-        return PhysicalFile(@$"{path}", $"image/png");
-    }
-
     private string GetUserFolderPath()
     {
         var basePath = Path.Combine(Directory.GetCurrentDirectory() + "Files");
