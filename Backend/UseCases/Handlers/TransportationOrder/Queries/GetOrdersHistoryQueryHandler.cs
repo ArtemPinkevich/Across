@@ -54,10 +54,10 @@ public class GetOrdersHistoryQueryHandler : IRequestHandler<GetOrdersHistoryQuer
 
         if (role == UserRoles.Shipper)
         {
-            var order = await _ordersRepository.GetAsync(x => x.ShipperId == user.Id && x.TransportationOrderStatus == TransportationOrderStatus.Done);
-            if (order != null)
+            var orders = await _ordersRepository.GetAllAsync(x => x.ShipperId == user.Id && x.TransportationOrderStatus == TransportationOrderStatus.Done);
+            if (orders != null)
             {
-                transportationOrderDtos.Add(_mapper.Map<TransportationOrderDto>(order));
+                orders.ForEach(order => transportationOrderDtos.Add(_mapper.Map<TransportationOrderDto>(order)));
             }
         }
 
