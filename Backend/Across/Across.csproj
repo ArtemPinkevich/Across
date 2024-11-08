@@ -35,6 +35,12 @@
     <None Remove="WashMe.db" />
     <None Remove="WashMe.db-shm" />
     <None Remove="WashMe.db-wal" />
+    <None Update="Assets\truck-map-marker.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\_truck-map-marker.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
   <ItemGroup>
