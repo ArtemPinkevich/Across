@@ -62,7 +62,8 @@ public class SearchRecommendationsQueryHandler : IRequestHandler<SearchRecommend
         List<CorrelationDto> correlationDtos = new List<CorrelationDto>();
         //находим все машины подходящие по фильтру, также убираются все грузовики которые уже в заявках у заказа
         var trucks = await _trucksRepository.GetAllAsync(x => x.LoadingType == order.TruckRequirements.LoadingType
-                                                              && order.DriverRequests.All(driverRequest => driverRequest.TruckId != x.Id));
+                                                              && order.DriverRequests.All(driverRequest => driverRequest.TruckId != x.Id)
+                                                              && x.IsActive);
             
         var shipper = await _userManager.FindByIdAsync(order.ShipperId);
         foreach (var truck in trucks)

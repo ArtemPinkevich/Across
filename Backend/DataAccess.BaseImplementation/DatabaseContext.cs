@@ -38,6 +38,8 @@
         public DbSet<TransportationStatusRecord> TransportationStatusRecords { set; get; }
         
         public DbSet<Document> Documents { set; get; }
+        
+        public DbSet<Payment> Payments { set; get; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -64,6 +66,11 @@
                 .WithOne(x => x.Shipper)
                 .HasForeignKey<LegalInformation>(info => info.ShipperId)
                 .IsRequired();
+
+            modelBuilder.Entity<User>()
+                .HasMany(user => user.Payments)
+                .WithOne(payment => payment.User)
+                .HasForeignKey(payment => payment.UserId);
 
             modelBuilder.Entity<TransportationOrder>()
                 .HasMany(x => x.DriverRequests)

@@ -50,7 +50,9 @@
         /// <summary>
         /// List of requests made by driver
         /// </summary>
-        public List<DriverRequest> DriverRequests { set; get; }      
+        public List<DriverRequest> DriverRequests { set; get; }     
+        
+        public List<Payment> Payments { set; get; }
 
         #endregion
     }

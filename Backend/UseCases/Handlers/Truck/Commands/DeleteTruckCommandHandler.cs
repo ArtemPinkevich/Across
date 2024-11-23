@@ -28,7 +28,8 @@ public class DeleteTruckCommandHandler:IRequestHandler<DeleteTruckCommand, Truck
             };
         }
 
-        await _repository.DeleteAsync(x => x.Id == request.TruckId);
+        truck.IsActive = false;
+        await _repository.UpdateAsync(truck);
         await _repository.SaveAsync();
         
         return new TruckResultDto()

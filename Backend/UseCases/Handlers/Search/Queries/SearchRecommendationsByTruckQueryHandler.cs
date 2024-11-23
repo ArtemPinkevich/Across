@@ -32,7 +32,7 @@ public class SearchRecommendationsByTruckQueryHandler : IRequestHandler<SearchRe
     
     public async Task<SearchResultDto> Handle(SearchRecommendationsByTruckQuery request, CancellationToken cancellationToken)
     {
-        var truck = await _trucksRepository.GetAsync(x => x.Id == request.TruckId);
+        var truck = await _trucksRepository.GetAsync(x => x.Id == request.TruckId && x.IsActive);
         if (truck == null)
         {
             return new SearchResultDto()

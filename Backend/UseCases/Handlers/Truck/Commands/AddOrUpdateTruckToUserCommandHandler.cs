@@ -39,6 +39,7 @@ public class AddOrUpdateTruckToUserCommandHandler : IRequestHandler<AddOrUpdateT
         {
             truck = _mapper.Map<Entities.Truck>(request.TruckDto);
             truck.DriverId = user.Id;
+            truck.IsActive = true;
             await _repository.AddAsync(new List<Entities.Truck>() { truck });
         }
         else

@@ -20,7 +20,7 @@ public class GetTruckByIdQueryHandler : IRequestHandler<GetTruckByIdQuery, Truck
 
     public async Task<TruckDto> Handle(GetTruckByIdQuery request, CancellationToken cancellationToken)
     {
-        Entities.Truck truck = await _repository.GetAsync(x => x.Id == request.TruckId);
+        Entities.Truck truck = await _repository.GetAsync(x => x.Id == request.TruckId && x.IsActive);
 
         var truckDto = _mapper.Map<TruckDto>(truck);
 

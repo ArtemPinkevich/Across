@@ -9,6 +9,8 @@ public class Truck: EntityBase
     
     public string Longitude { set; get; }
     
+    public bool IsActive { set; get; }
+    
     public string CreatedId { set; get; }
     
     public string RegNumber { set; get; }

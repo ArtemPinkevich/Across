@@ -40,6 +40,8 @@ public class SearchDriversQueryHandler : IRequestHandler<SearchDriversQuery, Sea
     {
         var whereExpressions = new List<Expression<Func<Entities.Truck, bool>>>();
         
+        whereExpressions.Add(x => x.IsActive);
+        
         if(request.BodyVolume.HasValue)
             whereExpressions.Add(x => x.BodyVolume == request.BodyVolume);    
         if(request.CarryingCapacity.HasValue)
