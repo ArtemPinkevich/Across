@@ -33,6 +33,7 @@ namespace Across.Extensions
             services.AddScoped<IRepository<TransportationStatusRecord>, TransportationStatusRecordRepository>();
             services.AddScoped<IRepository<DriverRequest>, DriverRequestRepository>();
             services.AddScoped<IRepository<Transportation>, TransportationRepository>();
+            services.AddScoped<IRepository<Payment>, PaymentRepository>();
         }
     }
 }
