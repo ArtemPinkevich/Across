@@ -10,7 +10,7 @@ namespace Across.Extensions
         public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
             services.Configure<SmsGatewayConfiuration>(configuration.GetSection("SmsGateway"));
-            services.AddScoped<ISmsGateway, PilotSmsGateway>();
+            services.AddScoped<ISmsGateway, MobizonSmsGateway>();
         }
     }
 }
